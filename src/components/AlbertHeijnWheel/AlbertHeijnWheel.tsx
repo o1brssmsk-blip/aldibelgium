@@ -185,17 +185,19 @@ export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function Alber
                       <text
                         key={p.rotationIndex}
                         x="50"
-                        y="17.5"
+                        y="18"
                         transform={`rotate(${p.rotationIndex * segmentAngle} 50 50)`}
                         textAnchor="middle"
                         dominantBaseline="middle"
-                        fontSize="5.6"
+                        fontSize="4.6"
                         fontWeight="800"
                         fontFamily="'Arial Narrow', 'Helvetica Neue', Arial, sans-serif"
-                        letterSpacing="0.03em"
+                        letterSpacing="0"
+                        textLength="17"
+                        lengthAdjust="spacingAndGlyphs"
                         fill={isRedSegment ? "#ffffff" : "#3f3f46"}
                         stroke={isRedSegment ? "rgba(0,0,0,0.4)" : "rgba(255,255,255,0.55)"}
-                        strokeWidth="0.5"
+                        strokeWidth="0.4"
                         paintOrder="stroke"
                       >
                         {p.popupLines[0] ?? ""}

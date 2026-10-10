@@ -4,19 +4,19 @@ import { useState, useEffect } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 
 const DEFAULT_PRIZES = [
-  { amount: 1000, weight: 560 },
-  { amount: 2000, weight: 460 },
-  { amount: 500, weight: 120 },
+  { amount: 1000, weight: 24 },
+  { amount: 2000, weight: 19 },
+  { amount: 500, weight: 5 },
   { amount: 3000, weight: 0 },
-  { amount: 750, weight: 260 },
-  { amount: 2500, weight: 340 },
-  { amount: 1500, weight: 640 },
+  { amount: 750, weight: 11 },
+  { amount: 2500, weight: 14 },
+  { amount: 1500, weight: 27 },
   { amount: 3600, weight: 0 },
 ];
 
 function normalizePrizes(raw: unknown) {
   const list = Array.isArray(raw) ? raw : [];
-  return DEFAULT_PRIZES.map((def, i) => {
+  const entries = DEFAULT_PRIZES.map((def, i) => {
     const entry = list[i] as { amount?: unknown; weight?: unknown } | undefined;
     const amount = Number(entry?.amount);
     const weight = Number(entry?.weight);
@@ -25,6 +25,24 @@ function normalizePrizes(raw: unknown) {
       weight: Number.isFinite(weight) && weight >= 0 ? Math.round(weight) : def.weight,
     };
   });
+
+  const total = entries.reduce((sum, e) => sum + e.weight, 0);
+  if (total <= 0) return DEFAULT_PRIZES.map((d) => ({ ...d }));
+  if (total === 100) return entries;
+
+  // Eski agirlik formatini (or. 560/2380) yuzdeye cevir, toplam %100'e tamamla
+  let acc = 0;
+  const percents = entries.map((e) => {
+    const p = Math.round((e.weight * 100) / total);
+    acc += p;
+    return { ...e, weight: p };
+  });
+  const diff = 100 - acc;
+  if (diff !== 0) {
+    const maxIdx = percents.reduce((mi, p, i) => (p.weight > percents[mi].weight ? i : mi), 0);
+    percents[maxIdx].weight = Math.max(0, percents[maxIdx].weight + diff);
+  }
+  return percents;
 }
 
 export function WheelSettingsTab({ darkMode }: { darkMode: boolean }) {
@@ -196,7 +214,7 @@ export function WheelSettingsTab({ darkMode }: { darkMode: boolean }) {
         <div className={`p-8 rounded-3xl border shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-xl ${darkMode ? 'bg-[#1c1c1e]/70 border-white/5' : 'bg-white/80 border-[#d2d2d7]/50'}`}>
           <h3 className={`text-lg font-bold mb-2 border-b pb-4 ${darkMode ? 'border-white/10 text-[#E30613]' : 'border-gray-200 text-[#E30613]'}`}>Ödül Tutarları ve Şans Oranları</h3>
           <p className={`text-xs mb-6 ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-            Çarkta 8 ödül dilimi + 1 "POSKUSITE ZNOVA" dilimi var. Dilim numaraları ibrenin üstünden saat yönünde sayılır — 1. dilim koyu "POSKUSITE ZNOVA"nın hemen sağındaki beyaz dilimdir. Şans oranı 0 olan dilim asla kazandırılmaz. "POSKUSITE ZNOVA" hiçbir zaman sonuç olarak çıkmaz.
+            Çarkta 8 ödül dilimi + 1 "POSKUSITE ZNOVA" dilimi var. Dilim numaraları ibrenin üstünden saat yönünde sayılır — 1. dilim koyu "POSKUSITE ZNOVA"nın hemen sağındaki beyaz dilimdir. Şans %0 olan dilim asla kazandırılmaz. "POSKUSITE ZNOVA" hiçbir zaman sonuç olarak çıkmaz. Toplam %100 olmalı.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {(settings.wheel_settings?.prizes ?? DEFAULT_PRIZES).map((p: { amount: number; weight: number }, i: number) => {
@@ -216,20 +234,32 @@ export function WheelSettingsTab({ darkMode }: { darkMode: boolean }) {
                       className={`w-full px-3 py-2 rounded-xl text-sm font-bold outline-none transition-all ${darkMode ? 'bg-black/30 text-white border border-white/10 focus:border-[#E30613]' : 'bg-white border border-gray-200 focus:border-[#E30613]'}`}
                     />
                   </div>
-                  <div className="w-24 space-y-1">
-                    <label className={`block text-[10px] font-bold uppercase tracking-wider ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Şans</label>
-                    <input
-                      type="number"
-                      min={0}
-                      value={p.weight}
-                      onChange={(e) => handlePrizeChange(i, "weight", e.target.value)}
-                      className={`w-full px-3 py-2 rounded-xl text-sm font-bold outline-none transition-all ${darkMode ? 'bg-black/30 text-white border border-white/10 focus:border-[#E30613]' : 'bg-white border border-gray-200 focus:border-[#E30613]'}`}
-                    />
+                  <div className="w-28 space-y-1">
+                    <label className={`block text-[10px] font-bold uppercase tracking-wider ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Şans (%)</label>
+                    <div className="relative">
+                      <input
+                        type="number"
+                        min={0}
+                        max={100}
+                        value={p.weight}
+                        onChange={(e) => handlePrizeChange(i, "weight", e.target.value)}
+                        className={`w-full px-3 py-2 pr-7 rounded-xl text-sm font-bold outline-none transition-all ${darkMode ? 'bg-black/30 text-white border border-white/10 focus:border-[#E30613]' : 'bg-white border border-gray-200 focus:border-[#E30613]'}`}
+                      />
+                      <span className={`absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-bold ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>%</span>
+                    </div>
                   </div>
                 </div>
               );
             })}
           </div>
+          {(() => {
+            const total = (settings.wheel_settings?.prizes ?? DEFAULT_PRIZES).reduce((s: number, p: { weight: number }) => s + (p.weight || 0), 0);
+            return (
+              <div className={`mt-4 text-sm font-bold ${total === 100 ? 'text-green-500' : 'text-red-500'}`}>
+                Toplam şans: %{total} {total !== 100 && "— %100 olmalı!"}
+              </div>
+            );
+          })()}
         </div>
 
         <div className="flex justify-end sticky bottom-6 z-20 pb-4">

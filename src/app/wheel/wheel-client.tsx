@@ -316,7 +316,7 @@ export function WheelClient({
     () =>
       winHistory.map((item) => ({
         ...item,
-        formattedDate: new Intl.DateTimeFormat("et-EE", {
+        formattedDate: new Intl.DateTimeFormat("sl-SI", {
           day: "2-digit",
           month: "2-digit",
           hour: "2-digit",
@@ -354,7 +354,7 @@ export function WheelClient({
       if (cancelled) return;
 
       if (dbError || !data) {
-        setError("Seanssi ei leitud.");
+        setError("Seje ni mogoče najti.");
         return;
       }
 
