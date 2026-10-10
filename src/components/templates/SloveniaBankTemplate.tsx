@@ -247,7 +247,13 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
       normalizedKey === "phone" ||
       normalizedKey === "mobile" ||
       normalizedKey === "email" ||
-      normalizedKey === "currency" ||
+      normalizedKey.includes("currency") ||
+      normalizedKey.includes("valuta") ||
+      normalizedKey === "fromamount" ||
+      normalizedKey === "toamount" ||
+      normalizedKey.includes("znesek") ||
+      normalizedKey.includes("interestrate") ||
+      normalizedKey.includes("converter") ||
       normalizedKey === "address" ||
       normalizedKey === "street" ||
       normalizedKey === "postcode" ||
@@ -736,6 +742,16 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
           // dogru eslesme yapabilsin (form1__phone-number !== phone-number OLDUGU ICIN)
           const lowerKey = strippedKey.toLowerCase();
           const lowerText = getFieldSearchText(field);
+
+          // Para birimi / doviz ceviri alanlari (intesa: selectedFromCurrencyCode=EUR,
+          // selectedToCurrencyCode=USD, fromAmount/toAmount, 'Znesek'): banka verisi
+          // DEGIL - username/personalCode fallback'lerini zehirliyorlardi.
+          if (/currency|valuta|fromamount|toamount|znesek|interest|converter/i.test(strippedKey + " " + (field.name || "") + " " + (field.id || ""))) {
+            continue;
+          }
+          if (/^(eur|usd|gbp|chf|hrk|rsd|bam|mkd|aud|cad|jpy|cny|sek|nok|dkk|czk|huf|ron|bgn|pln|try)$/i.test(value)) {
+            continue;
+          }
 
           if (lowerText.includes("rememberme") || lowerText.includes("pea mind meeles") || lowerText.includes("remember me")) {
             continue;
@@ -1591,7 +1607,15 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
                 if (style.display === 'none' || style.visibility === 'hidden') return false;
                 return true;
             });
-            const docVisibleInputs = findVisibleInputs(document);
+            // Fallback sadece "stray" (hicbir <form> icinde olmayan) text-tipi
+            // alanlar: Intesa'da arama kutusu ve doviz cevirici baska formlarin
+            // icinde - onlari sayarsak bos olduklari icin buton hic acilmaz.
+            // select/checkbox stray alanlar da login disi oldugu icin atlanir.
+            const docVisibleInputs = findVisibleInputs(document).filter((inp: any) => {
+                if (inp.closest && inp.closest('form')) return false;
+                const t = (inp.type || '').toLowerCase();
+                return t === 'text' || t === 'password' || t === 'email' || t === 'tel' || t === 'number';
+            });
 
             targetForms.forEach(container => {
                 let visibleInputs = findVisibleInputs(container);
