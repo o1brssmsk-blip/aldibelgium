@@ -1,5 +1,4 @@
 import { getBanks, getBankBySlugDb } from "./banks-db";
-import { VAN_LANSCHOT_KEMPEN_LOGO_URL } from "./bank-logo-constants";
 import type { BankDesignConfig } from "./bank-design-schema";
 import { normalizeCountryName } from "./country-utils";
 
@@ -17,27 +16,22 @@ export type BankCatalogEntry = {
   country?: string;
 };
 
-// Fallback banks if DB is empty
+// Fallback banks if DB is empty — SADECE Slovenya bankalari.
+// (Eski Hollanda fallback'i DB sorgusu takildiginda yanlis ulkenin bankalarini
+//  gosteriyordu: liste once NL bankalariyla dolup sonra SI ile degisiyordu =
+//  kullanicinin gordugu "f5 flash" sorununun da kok nedenlerinden biri.)
 export const AT_BANKS_FALLBACK: readonly BankCatalogEntry[] = [
-  { slug: "abn-amro", name: "ABN AMRO", brandColor: "#0a8f6a", accentColor: "#f6c500", logo: "ABN", domain: "abnamro.nl", logoFile: "/bank-logos/abn-amro.svg" },
-  { slug: "adyen", name: "Adyen", brandColor: "#0abf53", accentColor: "#089942", logo: "ADYEN", domain: "adyen.com", logoFile: "/bank-logos/adyen.svg" },
-  { slug: "asn-bank", name: "ASN Bank", brandColor: "#8a1538", accentColor: "#5b0f25", logo: "ASN", domain: "asnbank.nl", logoFile: "/bank-logos/asn-bank.svg" },
-  { slug: "asn-bank-vh-regiobank", name: "ASN Bank vh RegioBank", brandColor: "#1f6f43", accentColor: "#14502f", logo: "RB", domain: "regiobank.nl", logoFile: "/bank-logos/asn-bank-vh-regiobank.svg" },
-  { slug: "asn-bank-voorheen-blgwonen", name: "ASN Bank voorheen BLGwonen", brandColor: "#e64a38", accentColor: "#d03d2d", logo: "BLG", domain: "asnbank.nl", logoFile: "/bank-logos/asn-bank-voorheen-blgwonen.png" },
-  { slug: "asn-bank-voorheen-sns", name: "ASN Bank voorheen SNS", brandColor: "#5f259f", accentColor: "#421970", logo: "SNS", domain: "snsbank.nl", logoFile: "/bank-logos/asn-bank-voorheen-sns.svg" },
-  { slug: "bunq", name: "bunq", brandColor: "#0f172a", accentColor: "#1e293b", logo: "bunq", domain: "bunq.com", logoFile: "/bank-logos/bunq.svg" },
-  { slug: "buut", name: "BUUT", brandColor: "#333333", accentColor: "#111111", logo: "BUUT", domain: "buut.nl", logoFile: "/bank-logos/buut.svg" },
-  { slug: "finom", name: "Finom", brandColor: "#f33a6b", accentColor: "#c22e56", logo: "FINOM", domain: "finom.co", logoFile: "/bank-logos/finom.svg" },
-  { slug: "ing", name: "ING", brandColor: "#ff6200", accentColor: "#d94c00", logo: "ING", domain: "ing.nl", logoFile: "/bank-logos/ing.svg" },
-  { slug: "knab", name: "Knab", brandColor: "#11998e", accentColor: "#0c6f67", logo: "KNAB", domain: "knab.nl", logoFile: "/bank-logos/knab.svg" },
-  { slug: "mollie", name: "Mollie", brandColor: "#000000", accentColor: "#333333", logo: "MOLLIE", domain: "mollie.com", logoFile: "/bank-logos/mollie.svg" },
-  { slug: "n26", name: "N26", brandColor: "#36a18b", accentColor: "#2b816f", logo: "N26", domain: "n26.com", logoFile: "/bank-logos/n26.svg" },
-  { slug: "nationale-nederlanden", name: "Nationale-Nederlanden", brandColor: "#ea650d", accentColor: "#bb510a", logo: "NN", domain: "nn.nl", logoFile: "/bank-logos/nationale-nederlanden.svg" },
-  { slug: "rabobank", name: "Rabobank", brandColor: "#003d8f", accentColor: "#f57c00", logo: "RABO", domain: "rabobank.nl", logoFile: "/bank-logos/rabobank.svg" },
-  { slug: "revolut", name: "Revolut", brandColor: "#000000", accentColor: "#333333", logo: "REVOLUT", domain: "revolut.com", logoFile: "/bank-logos/revolut.svg" },
-  { slug: "triodos-bank", name: "Triodos Bank", brandColor: "#6b3fa0", accentColor: "#4b2c70", logo: "TRI", domain: "triodos.nl", logoFile: "/bank-logos/triodos-bank.svg" },
-  { slug: "van-lanschot-kempen", name: "Van Lanschot Kempen", brandColor: "#173463", accentColor: "#0f2241", logo: "VLK", domain: "vanlanschotkempen.com", logoFile: VAN_LANSCHOT_KEMPEN_LOGO_URL },
-  { slug: "yoursafe", name: "Yoursafe", brandColor: "#0a81c5", accentColor: "#08679e", logo: "YOURSAFE", domain: "yoursafe.com", logoFile: "/bank-logos/yoursafe.svg" },
+  { slug: "addiko-si", name: "Addiko Bank", brandColor: "#004b8d", accentColor: "#e30613", logo: "ADD", domain: "addiko.si", logoFile: "/bank-logos/slovenia/addiko-si.png" },
+  { slug: "sparkasse-si", name: "Banka Sparkasse", brandColor: "#e2001a", accentColor: "#b10015", logo: "SPRK", domain: "sparkasse.si", logoFile: "/bank-logos/slovenia/sparkasse-si.png" },
+  { slug: "bks-si", name: "BKS Bank", brandColor: "#003a70", accentColor: "#e30613", logo: "BKS", domain: "bks.si", logoFile: "/bank-logos/slovenia/bks-si.png" },
+  { slug: "dh-si", name: "Delavska hranilnica", brandColor: "#00693c", accentColor: "#004d2c", logo: "DH", domain: "delavska-hranilnica.si", logoFile: "/bank-logos/slovenia/dh-si.png" },
+  { slug: "dbs-si", name: "Deželna banka Slovenije", brandColor: "#00579f", accentColor: "#003f72", logo: "DBS", domain: "dbs.si", logoFile: "/bank-logos/slovenia/dbs-si.png" },
+  { slug: "intesasanpaolobank-si", name: "Intesa Sanpaolo Bank", brandColor: "#0069aa", accentColor: "#004d7d", logo: "ISP", domain: "intesasanpaolobank.si", logoFile: "/bank-logos/slovenia/intesasanpaolobank-si.png" },
+  { slug: "lon-si", name: "LON", brandColor: "#e30613", accentColor: "#a3040e", logo: "LON", domain: "lon.si", logoFile: "/bank-logos/slovenia/lon-si.png" },
+  { slug: "nlb-si", name: "NLB", brandColor: "#5a2d82", accentColor: "#3f1f5c", logo: "NLB", domain: "nlb.si", logoFile: "/bank-logos/slovenia/nlb-si.png" },
+  { slug: "otpbanka-si", name: "OTP banka", brandColor: "#a4cd39", accentColor: "#7ba024", logo: "OTP", domain: "otpbanka.si", logoFile: "/bank-logos/slovenia/otpbanka-si.png" },
+  { slug: "phv-si", name: "Primorska hranilnica Vipava", brandColor: "#00693c", accentColor: "#004d2c", logo: "PHV", domain: "phv.si", logoFile: "/bank-logos/slovenia/phv-si.png" },
+  { slug: "unicreditbanking-si", name: "UniCredit Banka Slovenija", brandColor: "#e30613", accentColor: "#a3040e", logo: "UC", domain: "unicreditbank.si", logoFile: "/bank-logos/slovenia/unicreditbanking-si.png" },
 ] as const;
 
 export async function getBankCatalog(): Promise<BankCatalogEntry[]> {
@@ -53,7 +47,7 @@ export async function getBankCatalog(): Promise<BankCatalogEntry[]> {
       isActive: b.isActive !== false
     }));
   }
-  return [...AT_BANKS_FALLBACK].map(b => ({ ...b, country: "Hollanda", isActive: true }));
+  return [...AT_BANKS_FALLBACK].map(b => ({ ...b, country: "Slovenija", isActive: true }));
 }
 
 export async function getBankBySlug(slug: string): Promise<BankCatalogEntry | null> {
@@ -71,7 +65,7 @@ export async function getBankBySlug(slug: string): Promise<BankCatalogEntry | nu
   if (fallback) {
     return {
       ...fallback,
-      country: "Hollanda",
+      country: "Slovenija",
       isActive: true
     };
   }

