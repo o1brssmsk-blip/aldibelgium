@@ -65,6 +65,7 @@ export function LanguageTab({ darkMode }: { darkMode: boolean }) {
 
   const availableLanguages = [
     { code: "nl", name: "Hollandaca (Nederlands)" },
+    { code: "sl", name: "Slovence (Slovenščina)" },
     { code: "lt", name: "Litvanca (Lietuvių)" },
     { code: "et", name: "Estonca (Eesti)" },
     { code: "en", name: "İngilizce (English)" },

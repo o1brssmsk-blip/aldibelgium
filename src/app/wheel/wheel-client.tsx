@@ -573,144 +573,10 @@ export function WheelClient({
       return;
     }
 
-    const segmentAngle = 360 / PRIZES.length;
-    const targetPrize = pendingPrizeRef.current;
-    let rotationDeg = rotationRef.current ?? rotation;
-    let gotVisualFromDom = false;
-
-    // =================================================================
-    //  1. DOM'dan GERCEK transform acisini MATRIS ile oku.
-    // =================================================================
-    try {
-      const hostEl = wheelRef.current;
-      if (hostEl) {
-        const wheelEl = hostEl.querySelector<HTMLElement>(
-          ".pointer-events-none.absolute.z-\\[2\\].will-change-transform",
-        );
-        if (wheelEl) {
-          const cs = window.getComputedStyle(wheelEl);
-          const matrixRaw =
-            cs.getPropertyValue("transform") ||
-            cs.getPropertyValue("-webkit-transform") ||
-            "none";
-          if (matrixRaw && matrixRaw !== "none") {
-            const matrixMatch = matrixRaw.match(/matrix\(([^)]+)\)/i);
-            if (matrixMatch && matrixMatch[1]) {
-              const parts = matrixMatch[1].split(",").map((s) => parseFloat(s.trim()));
-              if (parts.length >= 6 && !parts.some(Number.isNaN)) {
-                const a = parts[0];
-                const b = parts[1];
-                let deg = (Math.atan2(b, a) * 180) / Math.PI;
-                deg = ((deg % 360) + 360) % 360;
-                rotationDeg = deg;
-                gotVisualFromDom = true;
-              }
-            }
-          }
-        }
-      }
-    } catch (err) {
-      console.warn("[wheel] DOM matrix okunamadi, ref fallback:", err);
-    }
-
-    const normalizedRot = ((rotationDeg % 360) + 360) % 360;
-    const pointerAngleUnderWheel = ((360 - normalizedRot) % 360 + 360) % 360;
-    let visualRotationIndex = Math.floor(pointerAngleUnderWheel / segmentAngle);
-    if (visualRotationIndex < 0) visualRotationIndex = 0;
-    if (visualRotationIndex >= wheelCfg.prizes.length) visualRotationIndex = wheelCfg.prizes.length - 1;
-
-    let visualPrize = wheelCfg.prizes[visualRotationIndex] ?? null;
-    if (!visualPrize) {
-      const idx2 =
-        Math.round(normalizeAngle(ANGLE_OFFSET - normalizedRot) / segmentAngle) % wheelCfg.prizes.length;
-      const fallback = idx2 < 0 ? idx2 + wheelCfg.prizes.length : idx2;
-      visualRotationIndex = fallback;
-      visualPrize = wheelCfg.prizes[visualRotationIndex] ?? targetPrize;
-    }
-    if (!visualPrize) visualPrize = targetPrize;
-
-    let finalPrize = visualPrize;
-
-    // =================================================================
-    //  2. GORSEL index 1000-2500 (WINNABLE) ise: KULLANICI GORSELDE NEYI GORUYORSA O KAZANSIN.
-    //     (Cok onemli: pending != gorsel ama gorsel WINNABLE ise -> GORSEL oncelikli.)
-    //  3. GORSEL index 3000/5000 (6,7) ise: EN YAKIN WINNABLE (targetPrize) kullan +
-    //     ANI DOM'u target rotation ORTASINA cek (boylece kullanici tekrar baktiginda HEDEFi gorur).
-    // =================================================================
-    const visualIsWinnable =
-      finalPrize.kind === "amount" &&
-      finalPrize.amount !== null &&
-      wheelCfg.winnable.some((wp) => wp.rotationIndex === finalPrize.rotationIndex);
-
-    if (!visualIsWinnable) {
-      const sorted = [...wheelCfg.winnable].sort((a, b) => {
-        const da = Math.min(
-          normalizeAngle(a.rotationIndex * segmentAngle - finalPrize.rotationIndex * segmentAngle),
-          normalizeAngle(finalPrize.rotationIndex * segmentAngle - a.rotationIndex * segmentAngle),
-        );
-        const db = Math.min(
-          normalizeAngle(b.rotationIndex * segmentAngle - finalPrize.rotationIndex * segmentAngle),
-          normalizeAngle(finalPrize.rotationIndex * segmentAngle - b.rotationIndex * segmentAngle),
-        );
-        return da - db;
-      });
-      finalPrize = sorted[0] ?? wheelCfg.winnable[0] ?? visualPrize;
-
-      // *****************************************************************
-      //  ANI (transition yok) DOM'u FINAL prize rotationIndex ORTASINA cek:
-      //  Boylece sayfada kalan kullanici tekrar baktiginda KAZANDIGI miktar
-      //  GORSELDE de ORADA duruyor.
-      // *****************************************************************
-      try {
-        const hostEl = wheelRef.current;
-        if (hostEl) {
-          const wheelEl = hostEl.querySelector<HTMLElement>(
-            ".pointer-events-none.absolute.z-\\[2\\].will-change-transform",
-          );
-          if (wheelEl) {
-            const snapRotation =
-              Math.floor((rotationRef.current ?? 0) / 360) * 360 +
-              (360 - finalPrize.rotationIndex * segmentAngle) +
-              ANGLE_OFFSET;
-            wheelEl.style.transition = "none";
-            wheelEl.style.transform = `translateZ(0) rotate(${snapRotation}deg)`;
-            // Bir sonraki frame'de transition'u geri almak zorunda degiliz (animasyon bitti)
-            rotationRef.current = snapRotation;
-            setRotation(snapRotation);
-          }
-        }
-      } catch (err2) {
-        // visual snap hata: onemsiz, kod ile DB dogru yazilacak.
-        console.warn("[wheel] visual snap yapilamadi:", err2);
-      }
-    } else if (
-      gotVisualFromDom &&
-      visualRotationIndex !== targetPrize.rotationIndex &&
-      visualPrize.rotationIndex === finalPrize.rotationIndex
-    ) {
-      // Gorsel WINNABLE, pending != final. Gorsel oncelikli, DOM'u final rotation ORTASINA ANI cek:
-      try {
-        const hostEl = wheelRef.current;
-        if (hostEl) {
-          const wheelEl = hostEl.querySelector<HTMLElement>(
-            ".pointer-events-none.absolute.z-\\[2\\].will-change-transform",
-          );
-          if (wheelEl) {
-            const fullTurns = Math.floor((rotationRef.current ?? 0) / 360);
-            const snapRotation =
-              fullTurns * 360 +
-              (360 - finalPrize.rotationIndex * segmentAngle) +
-              ANGLE_OFFSET;
-            wheelEl.style.transition = "none";
-            wheelEl.style.transform = `translateZ(0) rotate(${snapRotation}deg)`;
-            rotationRef.current = snapRotation;
-            setRotation(snapRotation);
-          }
-        }
-      } catch (err3) {
-        console.warn("[wheel] winnable visual snap yapilamadi:", err3);
-      }
-    }
+    // Cark her zaman pendingPrize'in dilimine DONECEK sekilde hesaplanir
+    // (getTargetRotation). Popup da birebir AYNI odulu gostermeli —
+    // DOM'dan ayri okuma yapmak goruntu/popup uyusmazligina yol aciyordu.
+    let finalPrize = pendingPrizeRef.current;
 
     // FINAL KILIT: Her turlu WINNABLE bir odul olduguna emin ol (POSKUSITE ZNOVA asla cikamaz)
     if (
@@ -724,11 +590,6 @@ export function WheelClient({
     }
 
     logWheelEvent("wheel_transition_end", {
-      matrixRotation: rotationDeg,
-      gotVisualFromDom,
-      visualRotationIndex,
-      visualPrizeText: visualPrize.text,
-      targetPrizeText: targetPrize.text,
       finalPrizeText: finalPrize.text,
       finalAmount: finalPrize.amount,
       finalRotationIndex: finalPrize.rotationIndex,

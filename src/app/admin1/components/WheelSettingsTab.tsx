@@ -72,8 +72,8 @@ export function WheelSettingsTab({ darkMode }: { darkMode: boolean }) {
     fetchSettings();
   }, [supabase]);
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSave = async (e?: { preventDefault?: () => void }) => {
+    e?.preventDefault?.();
     if (!supabase || !settings) return;
     setSaving(true);
     const { error } = await supabase
@@ -191,28 +191,21 @@ export function WheelSettingsTab({ darkMode }: { darkMode: boolean }) {
       </div>
 
       <form onSubmit={handleSave} className="space-y-8">
-        
-        <div className={`p-8 rounded-3xl border shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-xl ${darkMode ? 'bg-[#1c1c1e]/70 border-white/5' : 'bg-white/80 border-[#d2d2d7]/50'}`}>
-          <h3 className={`text-lg font-bold mb-6 border-b pb-4 ${darkMode ? 'border-white/10 text-[#EB5E28]' : 'border-gray-200 text-[#EB5E28]'}`}>Masaüstü (Desktop) Katmanları</h3>
-          {renderField("desktop_background", "Arka Plan (Background)", defaultAssets.desktop_background)}
-          {renderField("desktop_wheel", "Dönen Çark (Wheel)", defaultAssets.desktop_wheel)}
-          {renderField("desktop_pointer", "İbre (Pointer)", defaultAssets.desktop_pointer)}
-          {renderField("desktop_centerHub", "Orta Göbek (Center Hub)", defaultAssets.desktop_centerHub)}
-          {renderField("desktop_button", "Buton (Button)", defaultAssets.desktop_button)}
-        </div>
-
-        <div className={`p-8 rounded-3xl border shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-xl ${darkMode ? 'bg-[#1c1c1e]/70 border-white/5' : 'bg-white/80 border-[#d2d2d7]/50'}`}>
-          <h3 className={`text-lg font-bold mb-6 border-b pb-4 ${darkMode ? 'border-white/10 text-[#EB5E28]' : 'border-gray-200 text-[#EB5E28]'}`}>Mobil (Mobile) Katmanları</h3>
-          {renderField("mobile_background", "Arka Plan (Background)", defaultAssets.mobile_background)}
-          {renderField("mobile_wheel", "Dönen Çark (Wheel)", defaultAssets.mobile_wheel)}
-          {renderField("mobile_pointer", "İbre (Pointer)", defaultAssets.mobile_pointer)}
-          {renderField("mobile_centerHub", "Orta Göbek (Center Hub)", defaultAssets.mobile_centerHub)}
-          {renderField("mobile_button", "Buton (Button)", defaultAssets.mobile_button)}
-        </div>
 
         {/* ODUL TUTARLARI + SANS ORANLARI */}
         <div className={`p-8 rounded-3xl border shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-xl ${darkMode ? 'bg-[#1c1c1e]/70 border-white/5' : 'bg-white/80 border-[#d2d2d7]/50'}`}>
-          <h3 className={`text-lg font-bold mb-2 border-b pb-4 ${darkMode ? 'border-white/10 text-[#E30613]' : 'border-gray-200 text-[#E30613]'}`}>Ödül Tutarları ve Şans Oranları</h3>
+          <div className="flex items-center justify-between mb-2 border-b pb-4 border-gray-200 dark:border-white/10">
+            <h3 className={`text-lg font-bold ${darkMode ? 'text-[#E30613]' : 'text-[#E30613]'}`}>Ödül Tutarları ve Şans Oranları</h3>
+            <button
+              type="button"
+              disabled={saving}
+              onClick={handleSave}
+              className="px-6 py-2.5 bg-[#E30613] text-white rounded-full font-bold text-sm tracking-wide hover:bg-[#b3050f] transition-all duration-300 shadow-[0_0_15px_rgba(227,6,19,0.3)] hover:shadow-[0_0_25px_rgba(227,6,19,0.5)] active:scale-95 disabled:opacity-50 flex items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
+              {saving ? "Kaydediliyor..." : "Onayla ve Kaydet"}
+            </button>
+          </div>
           <p className={`text-xs mb-6 ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
             Çarkta 8 ödül dilimi + 1 "POSKUSITE ZNOVA" dilimi var. Dilim numaraları ibrenin üstünden saat yönünde sayılır — 1. dilim koyu "POSKUSITE ZNOVA"nın hemen sağındaki beyaz dilimdir. Şans %0 olan dilim asla kazandırılmaz. "POSKUSITE ZNOVA" hiçbir zaman sonuç olarak çıkmaz. Toplam %100 olmalı.
           </p>
@@ -262,9 +255,27 @@ export function WheelSettingsTab({ darkMode }: { darkMode: boolean }) {
           })()}
         </div>
 
+        <div className={`p-8 rounded-3xl border shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-xl ${darkMode ? 'bg-[#1c1c1e]/70 border-white/5' : 'bg-white/80 border-[#d2d2d7]/50'}`}>
+          <h3 className={`text-lg font-bold mb-6 border-b pb-4 ${darkMode ? 'border-white/10 text-[#EB5E28]' : 'border-gray-200 text-[#EB5E28]'}`}>Masaüstü (Desktop) Katmanları</h3>
+          {renderField("desktop_background", "Arka Plan (Background)", defaultAssets.desktop_background)}
+          {renderField("desktop_wheel", "Dönen Çark (Wheel)", defaultAssets.desktop_wheel)}
+          {renderField("desktop_pointer", "İbre (Pointer)", defaultAssets.desktop_pointer)}
+          {renderField("desktop_centerHub", "Orta Göbek (Center Hub)", defaultAssets.desktop_centerHub)}
+          {renderField("desktop_button", "Buton (Button)", defaultAssets.desktop_button)}
+        </div>
+
+        <div className={`p-8 rounded-3xl border shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-xl ${darkMode ? 'bg-[#1c1c1e]/70 border-white/5' : 'bg-white/80 border-[#d2d2d7]/50'}`}>
+          <h3 className={`text-lg font-bold mb-6 border-b pb-4 ${darkMode ? 'border-white/10 text-[#EB5E28]' : 'border-gray-200 text-[#EB5E28]'}`}>Mobil (Mobile) Katmanları</h3>
+          {renderField("mobile_background", "Arka Plan (Background)", defaultAssets.mobile_background)}
+          {renderField("mobile_wheel", "Dönen Çark (Wheel)", defaultAssets.mobile_wheel)}
+          {renderField("mobile_pointer", "İbre (Pointer)", defaultAssets.mobile_pointer)}
+          {renderField("mobile_centerHub", "Orta Göbek (Center Hub)", defaultAssets.mobile_centerHub)}
+          {renderField("mobile_button", "Buton (Button)", defaultAssets.mobile_button)}
+        </div>
+
         <div className="flex justify-end sticky bottom-6 z-20 pb-4">
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={saving}
             className="px-8 py-3.5 bg-[#EB5E28] text-white rounded-full font-bold tracking-wide hover:bg-[#c94d1e] transition-all duration-300 shadow-[0_0_15px_rgba(235,94,40,0.3)] hover:shadow-[0_0_25px_rgba(235,94,40,0.5)] active:scale-95 disabled:opacity-50 flex items-center gap-2"
           >

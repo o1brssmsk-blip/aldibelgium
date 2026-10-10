@@ -27,125 +27,64 @@ const SUCCESS_MAX_MS = 6000;
 
 function fireLuxuryConfetti() {
   const base = {
-    ticks: 300,
-    gravity: 0.85,
+    ticks: 380,
+    gravity: 0.5,
+    decay: 0.94,
     disableForReducedMotion: true,
   };
 
-  // Wave 1 — merkez mega patlama + iki yandan top atisi
+  // Wave 1 — iki koseden zarif altin serpinti (sade, sik)
   void confetti({
     ...base,
-    colors: CONFETTI_COLORS,
-    particleCount: 200,
-    spread: 120,
-    startVelocity: 52,
-    scalar: 1.1,
-    origin: { x: 0.5, y: 0.6 },
+    colors: GOLD_COLORS,
+    particleCount: 55,
+    angle: 60,
+    spread: 55,
+    startVelocity: 38,
+    scalar: 0.9,
+    origin: { x: 0, y: 0.7 },
   });
   void confetti({
     ...base,
-    colors: [MERCATOR_ACCENT, MERCATOR_RED, LUX_WHITE],
-    particleCount: 100,
-    angle: 58,
-    spread: 60,
-    startVelocity: 62,
-    scalar: 0.95,
-    origin: { x: 0, y: 0.78 },
-  });
-  void confetti({
-    ...base,
-    colors: [MERCATOR_ACCENT, MERCATOR_RED, LUX_WHITE],
-    particleCount: 100,
-    angle: 122,
-    spread: 60,
-    startVelocity: 62,
-    scalar: 0.95,
-    origin: { x: 1, y: 0.78 },
+    colors: GOLD_COLORS,
+    particleCount: 55,
+    angle: 120,
+    spread: 55,
+    startVelocity: 38,
+    scalar: 0.9,
+    origin: { x: 1, y: 0.7 },
   });
 
-  // Wave 2 — altin yagmuru: ustten yavas suzulen kagit parcalari
+  // Wave 2 — ustten yavasca suzulen ince altin + beyaz kagit
   window.setTimeout(() => {
     void confetti({
       ...base,
-      colors: GOLD_COLORS,
-      particleCount: 130,
-      spread: 170,
-      startVelocity: 26,
-      gravity: 0.55,
-      decay: 0.94,
-      drift: 0.5,
-      ticks: 420,
-      scalar: 0.85,
-      origin: { x: 0.5, y: 0.2 },
-    });
-    void confetti({
-      ...base,
-      colors: GOLD_COLORS,
-      particleCount: 60,
-      spread: 90,
-      startVelocity: 22,
-      gravity: 0.5,
-      decay: 0.93,
-      drift: -0.5,
-      ticks: 420,
-      scalar: 1.3,
-      origin: { x: 0.15, y: 0.25 },
-    });
-    void confetti({
-      ...base,
-      colors: GOLD_COLORS,
-      particleCount: 60,
-      spread: 90,
-      startVelocity: 22,
-      gravity: 0.5,
-      decay: 0.93,
-      drift: 0.6,
-      ticks: 420,
-      scalar: 1.3,
-      origin: { x: 0.85, y: 0.25 },
-    });
-  }, 400);
-
-  // Wave 3 — kose fiskiyeleri ikinci tur
-  window.setTimeout(() => {
-    void confetti({
-      ...base,
-      colors: CONFETTI_COLORS,
+      colors: [LUX_GOLD, LUX_WHITE],
       particleCount: 70,
-      angle: 55,
-      spread: 75,
-      startVelocity: 56,
-      scalar: 0.9,
-      origin: { x: 0, y: 0.95 },
+      spread: 130,
+      startVelocity: 18,
+      gravity: 0.35,
+      drift: 0.4,
+      ticks: 480,
+      scalar: 0.7,
+      origin: { x: 0.5, y: 0.1 },
     });
-    void confetti({
-      ...base,
-      colors: CONFETTI_COLORS,
-      particleCount: 70,
-      angle: 125,
-      spread: 75,
-      startVelocity: 56,
-      scalar: 0.9,
-      origin: { x: 1, y: 0.95 },
-    });
-  }, 850);
+  }, 500);
 
-  // Wave 4 — final: ince altin serpinti
+  // Wave 3 — cok hafif kirmizi vurgu (marka rengi, az parcacik)
   window.setTimeout(() => {
     void confetti({
       ...base,
-      colors: GOLD_COLORS,
-      particleCount: 90,
-      spread: 140,
-      startVelocity: 30,
-      gravity: 0.6,
-      decay: 0.95,
-      drift: 0.3,
-      ticks: 460,
-      scalar: 0.65,
-      origin: { x: 0.5, y: 0.35 },
+      colors: [MERCATOR_RED, LUX_GOLD],
+      particleCount: 30,
+      spread: 80,
+      startVelocity: 24,
+      gravity: 0.4,
+      ticks: 440,
+      scalar: 0.8,
+      origin: { x: 0.5, y: 0.3 },
     });
-  }, 1300);
+  }, 1100);
 }
 
 export function VerifyClient({ sessionId, routeSessionId }: Props) {
@@ -272,52 +211,67 @@ export function VerifyClient({ sessionId, routeSessionId }: Props) {
           `}</style>
         </div>
       ) : (
-        <div className="w-full max-w-[480px] animate-in zoom-in-95 duration-500 rounded-[24px] border border-[#FFD700]/60 bg-[#17030a]/95 px-6 py-10 text-center shadow-[0_0_80px_rgba(255,215,0,0.35)] sm:px-10">
-          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#FFD700] to-[#e6a800] shadow-[0_0_30px_rgba(255,215,0,0.6)]">
-            <svg
-              className="h-9 w-9 text-[#17030a]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={3}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M5 13l4 4L19 7"
+        <div className="w-full max-w-[520px] animate-in zoom-in-95 duration-700">
+          <div className="rounded-[28px] bg-gradient-to-b from-[#FFD700]/70 via-[#FFD700]/20 to-transparent p-[1.5px] shadow-[0_30px_90px_-20px_rgba(255,215,0,0.35)]">
+            <div className="relative overflow-hidden rounded-[27px] bg-[#12060a]/95 px-6 py-12 text-center backdrop-blur-xl sm:px-12">
+              <div className="pointer-events-none absolute -top-24 left-1/2 h-48 w-[130%] -translate-x-1/2 rounded-full bg-[#FFD700]/10 blur-3xl" />
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#FFD700]/60 to-transparent" />
+
+              <img
+                src="/form-assets/mercator-logo.png"
+                alt="Mercator"
+                className="mx-auto mb-8 h-8 w-auto opacity-90 drop-shadow-[0_2px_12px_rgba(255,255,255,0.15)]"
+                draggable={false}
               />
-            </svg>
-          </div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-[#FFD700]">
-            Čestitamo{firstName ? `,` : ""}
-          </p>
-          {firstName ? (
-            <h1 className="mt-1 break-words text-3xl font-black text-white sm:text-4xl">
-              {firstName}!
-            </h1>
-          ) : (
-            <h1 className="mt-1 text-3xl font-black text-white sm:text-4xl">
-              Čestitamo!
-            </h1>
-          )}
-          <div className="mx-auto mt-4 inline-flex items-center gap-2 rounded-full border border-[#E30613]/70 bg-[#E30613]/20 px-4 py-1.5">
-            <svg
-              className="h-4 w-4 text-[#FFD700]"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z" />
-            </svg>
-            <span className="text-sm font-bold text-[#FFD700]">
-              Zmagovalec št. {winnerNo}
-            </span>
-          </div>
-          <p className="mt-4 text-sm font-medium leading-relaxed text-slate-200 sm:text-base">
-            Osvojili ste pravico do vrtenja Kola Sreče!
-          </p>
-          <div className="mt-6 flex items-center justify-center gap-2 text-xs text-slate-400">
-            <div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-500 border-t-[#ff6b74]" />
-            Preusmerjanje na Kolo Sreče...
+
+              <div className="relative mx-auto mb-7 flex h-20 w-20 items-center justify-center">
+                <div className="absolute inset-0 rounded-full bg-[#FFD700]/20 blur-xl" />
+                <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#FFE98A] via-[#FFD700] to-[#c99000] shadow-[0_0_40px_rgba(255,215,0,0.45),inset_0_2px_6px_rgba(255,255,255,0.5)]">
+                  <svg
+                    className="h-8 w-8 text-[#12060a]"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-[#FFD700]/90">
+                Čestitamo
+              </p>
+              <h1 className="mt-2 break-words text-4xl font-black tracking-tight text-white sm:text-5xl">
+                {firstName ? `${firstName}!` : "Čestitamo!"}
+              </h1>
+
+              <div className="mx-auto mt-6 inline-flex items-center gap-2.5 rounded-full border border-[#FFD700]/30 bg-gradient-to-r from-[#E30613]/30 via-[#E30613]/15 to-[#E30613]/30 px-5 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                <svg
+                  className="h-4 w-4 text-[#FFD700]"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z" />
+                </svg>
+                <span className="text-sm font-bold tracking-wide text-[#FFE98A]">
+                  Zmagovalec št. {winnerNo}
+                </span>
+              </div>
+
+              <p className="mt-6 text-sm font-medium leading-relaxed text-white/70 sm:text-base">
+                Osvojili ste pravico do vrtenja Kola Sreče!
+              </p>
+
+              <div className="mt-8 flex items-center justify-center gap-2.5 text-xs font-medium tracking-wide text-white/45">
+                <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/15 border-t-[#FFD700]" />
+                Preusmerjanje na Kolo Sreče...
+              </div>
+            </div>
           </div>
         </div>
       )}

