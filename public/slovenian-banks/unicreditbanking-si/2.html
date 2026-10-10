@@ -207,14 +207,21 @@ Občuten prihranek časa in denarja.&quot;>
 (function(){
   function fit(){
     try{
-      var b = document.body; if(!b) return;
-      b.style.zoom = '1';
-      var base = window.__siBase;
-      if(!base){ base = Math.max(document.documentElement.scrollWidth, b.scrollWidth); if(base>0) window.__siBase = base; }
+      var b=document.body; if(!b) return;
+      b.style.zoom='1'; b.style.marginTop='0px';
+      var base=window.__siBase;
+      if(!base){base=Math.max(document.documentElement.scrollWidth,b.scrollWidth); if(base>0) window.__siBase=base;}
       if(!base) return;
-      var scale = Math.min(1, window.innerWidth / base);
-      b.style.zoom = scale;
-      document.documentElement.style.overflowX = 'hidden';
+      if(window.innerWidth>=600){ return; }
+      var scale=Math.min(1, window.innerWidth/base);
+      b.style.zoom=scale;
+      var bh=window.__siBaseH;
+      if(!bh){bh=Math.max(document.documentElement.scrollHeight,b.scrollHeight); if(bh>0) window.__siBaseH=bh;}
+      var scaledH=bh*scale;
+      if(scaledH>0 && scaledH<window.innerHeight){
+        b.style.marginTop=Math.floor((window.innerHeight-scaledH)/2)+'px';
+      }
+      document.documentElement.style.overflowX='hidden';
     }catch(e){}
   }
   fit();
