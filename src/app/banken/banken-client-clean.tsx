@@ -91,12 +91,11 @@ export function BankenClientClean({ sessionId, routeSessionId, initialBanks }: P
     }
   }, []);
 
-  useEffect(() => {
-    if (!sessionId) return;
-    if (window.location.search.includes("session=")) {
-      window.history.replaceState(window.history.state, "", "/banken");
-    }
-  }, [sessionId]);
+  // NOT: Burada window.history.replaceState ile ?session= parami siliniyordu.
+  // Next.js history metodlarini patch'ledigi icin bu cagri router'u tetikleyip
+  // sayfayi IKINCI KEZ server-render ettiriyordu -> kullanicinin gordugu
+  // "once session banken sonra normal banken / f5 flash" sorunu buydu.
+  // Parametre URL'de kalabilir; session cozumleme zaten sessionId state'inde.
 
   useEffect(() => {
     const resetUi = () => {

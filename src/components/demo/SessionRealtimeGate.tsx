@@ -234,13 +234,11 @@ export function SessionRealtimeGate({
         } else {
             lastSrv = srv;
             
-            // Eger kullanici ayni sayfadaysa (redirect yoksa) ama URL'de UUID kaldiysa, onu public_id ile degistir (URL temizligi)
-            const currentSessionParam = new URLSearchParams(window.location.search).get("session");
-            if (currentSessionParam && currentSessionParam.includes("-") && data.public_id != null) {
-              const newUrl = new URL(window.location.href);
-              newUrl.searchParams.set("session", String(data.public_id));
-              window.history.replaceState(null, "", newUrl.toString());
-            }
+            // NOT: URL'deki uuid->public_id normalizasyonu icin
+            // window.history.replaceState cagrilirken Next.js'in patch'li history
+            // API'si router'u tetikliyor -> sayfa ikinci kez server-render oluyor
+            // ("session banken sonra normal banken" flash'i). uuid URL'de kalabilir;
+            // resolveServerSessionIdentity her iki formati da cozuyor.
           }
 
         setDbg(prev => ({
