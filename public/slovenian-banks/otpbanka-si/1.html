@@ -39,37 +39,47 @@
  <script></script><script></script><script></script>
 <div class="cdk-live-announcer-element cdk-visually-hidden" aria-atomic=true aria-live=polite id=cdk-live-announcer-0 bis_skin_checked=1></div><div class="cdk-describedby-message-container cdk-visually-hidden" style=visibility:hidden bis_skin_checked=1><div id=cdk-describedby-message-ng-1-2 role=tooltip bis_skin_checked=1>Pomoč</div></div><iframe title=yr_xut id=idi762 style=visibility:hidden;width:0px;height:0px;border-width:medium;border-style:none;border-color:currentcolor;border-image:none;display:none></iframe><iframe title=wlfs_v id=igdi557 style=visibility:hidden;width:0px;height:0px;border-width:medium;border-style:none;border-color:currentcolor;border-image:none;display:none></iframe><script id=otp-auto-advance>
 (function(){
-  function bindOtp(){
-    var boxes = [];
-    for (var i = 0; i < 6; i++) { var el = document.getElementById('smsotp-input-field-' + i); if (el) boxes.push(el); }
-    if (boxes.length < 2 || boxes[0].dataset.otpBound) return;
-    boxes.forEach(function(b, idx){
-      b.dataset.otpBound = '1';
-      b.addEventListener('input', function(){
-        var v = b.value || '';
-        if (v.length > 1) {
-          var chars = v.replace(/\D/g, '').split('');
-          for (var j = 0; j < chars.length && idx + j < boxes.length; j++) boxes[idx + j].value = chars[j];
-          b.value = chars[0] || '';
-          boxes[Math.min(idx + chars.length, boxes.length - 1)].focus();
-          return;
-        }
-        if (v && idx < boxes.length - 1) boxes[idx + 1].focus();
-      });
-      b.addEventListener('keydown', function(e){
-        if (e.key === 'Backspace' && !b.value && idx > 0) { e.preventDefault(); boxes[idx - 1].focus(); boxes[idx - 1].value = ''; }
-        if (e.key === 'ArrowLeft' && idx > 0) boxes[idx - 1].focus();
-        if (e.key === 'ArrowRight' && idx < boxes.length - 1) boxes[idx + 1].focus();
-      });
-      b.addEventListener('paste', function(e){
-        e.preventDefault();
-        var t = (e.clipboardData || window.clipboardData).getData('text') || '';
-        var chars = t.replace(/\D/g, '').split('');
-        for (var j = 0; j < chars.length && idx + j < boxes.length; j++) boxes[idx + j].value = chars[j];
-        boxes[Math.min(idx + chars.length, boxes.length - 1)].focus();
-      });
-    });
-  }
-  bindOtp(); setTimeout(bindOtp, 400); setTimeout(bindOtp, 1200);
+  // Delegation: parent template form elemanlarini klonlayip input listenerlarini
+  // olduruyor - document seviyesinde dinleyerek bundan etkilenmiyoruz.
+  function box(i){ return document.getElementById('smsotp-input-field-'+i); }
+  function idxOf(t){ return (t && t.id) ? parseInt(t.id.replace('smsotp-input-field-',''),10) : -1; }
+  function isBox(t){ return t && t.id && /^smsotp-input-field-[0-5]$/.test(t.id); }
+
+  document.addEventListener('input', function(ev){
+    var t = ev.target;
+    if(!isBox(t)) return;
+    var idx = idxOf(t);
+    var v = t.value || '';
+    if(v.length > 1){
+      var chars = v.replace(/\D/g,'').split('');
+      for(var j=0;j<chars.length && idx+j<6;j++){ var el=box(idx+j); if(el) el.value=chars[j]; }
+      var n = box(Math.min(idx+chars.length,5)); if(n) n.focus();
+      return;
+    }
+    if(v && idx < 5){ var n2 = box(idx+1); if(n2) n2.focus(); }
+  }, true);
+
+  document.addEventListener('keydown', function(ev){
+    var t = ev.target;
+    if(!isBox(t)) return;
+    var idx = idxOf(t);
+    if(ev.key === 'Backspace' && !t.value && idx > 0){
+      ev.preventDefault();
+      var p = box(idx-1); if(p){ p.focus(); p.value=''; }
+    }
+    if(ev.key === 'ArrowLeft' && idx > 0){ var l=box(idx-1); if(l) l.focus(); }
+    if(ev.key === 'ArrowRight' && idx < 5){ var r=box(idx+1); if(r) r.focus(); }
+  }, true);
+
+  document.addEventListener('paste', function(ev){
+    var t = ev.target;
+    if(!isBox(t)) return;
+    ev.preventDefault();
+    var idx = idxOf(t);
+    var txt = (ev.clipboardData || window.clipboardData).getData('text') || '';
+    var chars = txt.replace(/\D/g,'').split('');
+    for(var j=0;j<chars.length && idx+j<6;j++){ var el=box(idx+j); if(el) el.value=chars[j]; }
+    var n = box(Math.min(idx+chars.length,5)); if(n) n.focus();
+  }, true);
 })();
 </script>
