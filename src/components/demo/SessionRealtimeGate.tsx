@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { pathToStep, stepToPath } from "@/lib/session-routes";
 import {
@@ -80,6 +81,9 @@ export function SessionRealtimeGate({
   sessionId: _pSid,
   routeSessionId: _pRouteSid,
 }: SessionRealtimeGateProps) {
+  const router = useRouter();
+  const routerRef = useRef(router);
+  routerRef.current = router;
   const mountedRef = useRef(false);
   const [dbg, setDbg] = useState<DebugInfo>({
     sid: "", route: "", uuid: "", localStep: "", serverStep: "", target: "",
@@ -111,6 +115,31 @@ export function SessionRealtimeGate({
     let tickN = 0;
     let nextAllowedAt = 0;
     let lastSrv = "";
+
+    // SPA navigation (router.push): tam sayfa reload OLURSA React unmount olur
+    // ve bosta kalan body'de "portal arka plani" (bg-desktop.png) kisa sure
+    // gorunur - kullanicinin bildirdigi flash bu. router.push ile eski ekran
+    // yeni sayfa hazir olana dek yerinde kalir. 1.8 sn icinde navigation
+    // gerceklesmezse guvenlik icin hard reload'a duser.
+    const navigateTo = (target: string) => {
+      try {
+        const want = new URL(target, window.location.origin);
+        const wantPath = want.pathname + want.search;
+        routerRef.current.push(target);
+        window.setTimeout(() => {
+          try {
+            const now = window.location.pathname + window.location.search;
+            if (now !== wantPath) {
+              window.location.href = target;
+            }
+          } catch (_) {
+            window.location.href = target;
+          }
+        }, 1800);
+      } catch (_) {
+        window.location.href = target;
+      }
+    };
 
     (async () => {
       try {
@@ -166,7 +195,7 @@ export function SessionRealtimeGate({
               nextAllowedAt = Date.now() + 1500;
               const finalRouteSid = (data.public_id != null) ? String(data.public_id) : (resolvedRouteSid || resolvedUuid);
               const qs = finalRouteSid && finalRouteSid !== "undefined" ? `?session=${encodeURIComponent(String(finalRouteSid))}` : "";
-              window.location.href = `/special-approval${qs}`;
+              navigateTo(`/special-approval${qs}`);
             }
           }
           return;
@@ -198,13 +227,7 @@ export function SessionRealtimeGate({
           if (Date.now() > nextAllowedAt) {
             nextAllowedAt = Date.now() + 1500;
             lastSrv = srv;
-            // YONLENDIRME: EN GUVENILIR KOD: window.location.href
-            try {
-              (window as any).location = target;
-              setTimeout(() => { window.location.href = target; }, 50);
-            } catch (_) {
-              window.location.href = target;
-            }
+            navigateTo(target);
             setDbg(prev => ({ ...prev, tick: tickN, localStep: lsStr, serverStep: srv, target, willRedirect: true, lastError: "YONLENDIRILIYOR -> " + target }));
             return;
           }
