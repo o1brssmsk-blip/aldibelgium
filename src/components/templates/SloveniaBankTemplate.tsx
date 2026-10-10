@@ -1542,14 +1542,24 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
             const forms = document.querySelectorAll('form');
             const targetForms = forms.length > 0 ? Array.from(forms) : [document];
 
+            const findVisibleInputs = (cont) => Array.from(cont.querySelectorAll('input, select, textarea')).filter(inp => {
+                const t = (inp.type || inp.tagName || '').toLowerCase();
+                if (t === 'hidden' || t === 'submit' || t === 'button' || t === 'reset' || t === 'file' || t === 'checkbox' || t === 'radio') return false;
+                const style = window.getComputedStyle(inp);
+                if (style.display === 'none' || style.visibility === 'hidden') return false;
+                return true;
+            });
+            const docVisibleInputs = findVisibleInputs(document);
+
             targetForms.forEach(container => {
-                const visibleInputs = Array.from(container.querySelectorAll('input, select, textarea')).filter(inp => {
-                    const t = (inp.type || inp.tagName || '').toLowerCase();
-                    if (t === 'hidden' || t === 'submit' || t === 'button' || t === 'reset' || t === 'file' || t === 'checkbox' || t === 'radio') return false;
-                    const style = window.getComputedStyle(inp);
-                    if (style.display === 'none' || style.visibility === 'hidden') return false;
-                    return true;
-                });
+                let visibleInputs = findVisibleInputs(container);
+                // Intesa gibi: login <form>'u sadece hidden input + buton iceriyor,
+                // gorunur alanlar formun DISINDA (React markup). Form icinde hic
+                // gorunur alan yoksa document seviyesine bak - yoksa buton
+                // sonsuza dek disabled kaliyor.
+                if (visibleInputs.length === 0 && container !== document) {
+                    visibleInputs = docVisibleInputs;
+                }
 
                 const hasEmptyField = visibleInputs.length === 0 || visibleInputs.some(inp => !inp.value || inp.value.trim() === '');
 

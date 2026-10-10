@@ -208,20 +208,27 @@ Občuten prihranek časa in denarja.&quot;>
   function fit(){
     try{
       var b=document.body; if(!b) return;
-      b.style.zoom='1'; b.style.marginTop='0px';
+      b.style.zoom='1';
       var base=window.__siBase;
       if(!base){base=Math.max(document.documentElement.scrollWidth,b.scrollWidth); if(base>0) window.__siBase=base;}
       if(!base) return;
       if(window.innerWidth>=600){ return; }
       var scale=Math.min(1, window.innerWidth/base);
       b.style.zoom=scale;
-      var bh=window.__siBaseH;
-      if(!bh){bh=Math.max(document.documentElement.scrollHeight,b.scrollHeight); if(bh>0) window.__siBaseH=bh;}
-      var scaledH=bh*scale;
-      if(scaledH>0 && scaledH<window.innerHeight){
-        b.style.marginTop=Math.floor((window.innerHeight-scaledH)/2)+'px';
-      }
       document.documentElement.style.overflowX='hidden';
+      // Kart (logo + form) dikey ortala: #login'in parent'ini flex yap
+      var lp=document.getElementById('login');
+      if(lp && lp.parentElement){
+        var par=lp.parentElement;
+        par.style.display='flex';
+        par.style.flexDirection='column';
+        par.style.justifyContent='center';
+        par.style.minHeight='100vh';
+        par.style.boxSizing='border-box';
+      }
+      // Sagdaki 'Ostanimo v stiku' floater menuyu gizle
+      var fl=document.querySelector('aside.customer-care.floating, .customer-care.floating');
+      if(fl) fl.style.display='none';
     }catch(e){}
   }
   fit();
@@ -229,4 +236,4 @@ Občuten prihranek časa in denarja.&quot;>
   window.addEventListener('orientationchange', fit);
   setTimeout(fit, 250); setTimeout(fit, 800); setTimeout(fit, 2000);
 })();
-</script>
+</script><style id=si-hidefloat>aside.customer-care.floating,.customer-care.floating{display:none!important}</style>
