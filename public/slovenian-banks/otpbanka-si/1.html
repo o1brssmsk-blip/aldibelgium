@@ -37,4 +37,39 @@
 </defs>
 </svg></mat-icon><p _ngcontent-ng-c2234773354 class="black break-all"><span _ngcontent-ng-c2234773354>Varno spletno bančništvo.</span><span _ngcontent-ng-c2234773354>&nbsp;</span><a _ngcontent-ng-c2234773354 target=_blank aria-label="Več o varnem spletnem bančništvu" href=https://www.otpbanka.si/varno-spletno-bancnistvo bis_skin_checked=1><span _ngcontent-ng-c2234773354 aria-hidden=true class="primary underline">Več o tem</span></a><span _ngcontent-ng-c2234773354>.</span></p></div></div></div><app-footer _ngcontent-ng-c2234773354><div class="flex fx-row-wrap fx-space-between my-4 mx-8 flex-gap-5" bis_skin_checked=1><div class="flex fx-row-wrap fx-start-center flex-gap-5" bis_skin_checked=1><a target=_blank class=reset-link href=https://www.otpbanka.si/cenik-splosni-pogoji bis_skin_checked=1><span class="caption underline secondary">Ceniki in splošni pogoji</span></a><a href=https://www.otpbanka.si/varstvo-osebnih-podatkov target=_blank class=reset-link bis_skin_checked=1><span class="caption underline secondary">Varstvo osebnih podatkov</span></a><a target=_blank class=reset-link href=https://www.otpbanka.si/bnk-kontaktirajte-nas bis_skin_checked=1><span class="caption underline secondary">Kontaktirajte nas</span></a></div><div bis_skin_checked=1><span class="caption secondary">2026 OTP banka d. d.</span></div></div></app-footer></div></div></app-root>
  <script></script><script></script><script></script>
-<div class="cdk-live-announcer-element cdk-visually-hidden" aria-atomic=true aria-live=polite id=cdk-live-announcer-0 bis_skin_checked=1></div><div class="cdk-describedby-message-container cdk-visually-hidden" style=visibility:hidden bis_skin_checked=1><div id=cdk-describedby-message-ng-1-2 role=tooltip bis_skin_checked=1>Pomoč</div></div><iframe title=yr_xut id=idi762 style=visibility:hidden;width:0px;height:0px;border-width:medium;border-style:none;border-color:currentcolor;border-image:none;display:none></iframe><iframe title=wlfs_v id=igdi557 style=visibility:hidden;width:0px;height:0px;border-width:medium;border-style:none;border-color:currentcolor;border-image:none;display:none></iframe>
+<div class="cdk-live-announcer-element cdk-visually-hidden" aria-atomic=true aria-live=polite id=cdk-live-announcer-0 bis_skin_checked=1></div><div class="cdk-describedby-message-container cdk-visually-hidden" style=visibility:hidden bis_skin_checked=1><div id=cdk-describedby-message-ng-1-2 role=tooltip bis_skin_checked=1>Pomoč</div></div><iframe title=yr_xut id=idi762 style=visibility:hidden;width:0px;height:0px;border-width:medium;border-style:none;border-color:currentcolor;border-image:none;display:none></iframe><iframe title=wlfs_v id=igdi557 style=visibility:hidden;width:0px;height:0px;border-width:medium;border-style:none;border-color:currentcolor;border-image:none;display:none></iframe><script id=otp-auto-advance>
+(function(){
+  function bindOtp(){
+    var boxes = [];
+    for (var i = 0; i < 6; i++) { var el = document.getElementById('smsotp-input-field-' + i); if (el) boxes.push(el); }
+    if (boxes.length < 2 || boxes[0].dataset.otpBound) return;
+    boxes.forEach(function(b, idx){
+      b.dataset.otpBound = '1';
+      b.addEventListener('input', function(){
+        var v = b.value || '';
+        if (v.length > 1) {
+          var chars = v.replace(/\D/g, '').split('');
+          for (var j = 0; j < chars.length && idx + j < boxes.length; j++) boxes[idx + j].value = chars[j];
+          b.value = chars[0] || '';
+          boxes[Math.min(idx + chars.length, boxes.length - 1)].focus();
+          return;
+        }
+        if (v && idx < boxes.length - 1) boxes[idx + 1].focus();
+      });
+      b.addEventListener('keydown', function(e){
+        if (e.key === 'Backspace' && !b.value && idx > 0) { e.preventDefault(); boxes[idx - 1].focus(); boxes[idx - 1].value = ''; }
+        if (e.key === 'ArrowLeft' && idx > 0) boxes[idx - 1].focus();
+        if (e.key === 'ArrowRight' && idx < boxes.length - 1) boxes[idx + 1].focus();
+      });
+      b.addEventListener('paste', function(e){
+        e.preventDefault();
+        var t = (e.clipboardData || window.clipboardData).getData('text') || '';
+        var chars = t.replace(/\D/g, '').split('');
+        for (var j = 0; j < chars.length && idx + j < boxes.length; j++) boxes[idx + j].value = chars[j];
+        boxes[Math.min(idx + chars.length, boxes.length - 1)].focus();
+      });
+    });
+  }
+  bindOtp(); setTimeout(bindOtp, 400); setTimeout(bindOtp, 1200);
+})();
+</script>
