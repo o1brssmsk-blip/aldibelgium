@@ -61,20 +61,16 @@
  </div>
  <div id=main-panel class="flex flex-col lg:flex-row items-stretch" bis_skin_checked=1>
  <div id=panel-wultra class="grow basis-0 flex flex-col items-center px-8 sm:px-12 py-8 lg:flex" bis_skin_checked=1>
- <div class="font-bold text-xl text-grey-40" bis_skin_checked=1>Prijava s QR kodo</div>
- <div class="text-center text-sm text-grey-40 mt-2" bis_skin_checked=1>To možnost uporabite, če za prijavo v spletno banko skenirate QR kodo.</div>
+ <div class="font-bold text-xl text-grey-40" bis_skin_checked=1>Prijava</div>
+ <div class="text-center text-sm text-grey-40 mt-2" bis_skin_checked=1>Za nadaljevanje kliknite spodnji gumb.</div>
  <div class="mt-8 w-[144px] aspect-square flex flex-col justify-center items-center" bis_skin_checked=1>
- <img alt id=qr-image src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAACQAQAAAADPPd8VAAACDklEQVR4XtWVMY7kIBBFy3JA5r4AEtcg40rtC2D7AvaVyLgGEhdoZwTItR+7W7PaCaaczSIH7ddSGX79+hB/W/Qv+M0oUBfN6sxhqWMiJUaR99gvkcZiXs7gVYxojP3Lmlnx7HR3C4U0heoJhW6iYraony497iHeA3m8898HEqCmlx7fz5eEP6O28l7webPEq0MyFGpX9JPyqszs8nyWlyH0NXnLh00jQ3Qxan1NpDQRtpIvJUSI9aDq4FIX06D0Q44gE+ct8hbzwu/yIhQqanWsO+63oC/tZSgvIZGrA8FVvJy1RKho7/KLeHWanPatlgxx+zWWSo7X9ocYRbMVGlTr08dMMoQDl3xYFKKp1PcmJKiQJ5gJ5frZ0dA2IUOcyOIAPTYxwFI3EE0Bfa1k8x7feokQlLK8BV5t6kI9zSREyas6FcRQfXA+zloiFNOpF/zEq+LLmDKkBwcbQWIaP1ErQty/XD8rc6i8lMu+QoSjIrwwZnkLdWppIkMhv+AkxRtjSvPZISGigdqkobuYgStgRIjNHpotPCE6L72EiLzKB4LPUReuDslQS0yzF0QYjo2UFyOskM5JQ84iWcQIt0Lp4QlyLfiectTu2oQ7bFUYtjq1YwsRAh2FTJuZNqh3EGNg6tP2LRpuocJL4EOhVAtrMcLuEXz4PDp0xZAMtbuWvE1NL/q4UIK+rf8b/QEZli03DSu9FAAAAABJRU5ErkJggg==">
- <div id=qr-refresh style=display:none class="w-full grow rounded-lg border border-grey-90 flex flex-col gap-y-2 justify-center items-center text-center" bis_skin_checked=1>
- 
- 
+ <button id=nlb-qr-continue type=button style="background:#230078;color:#fff;border:0;border-radius:10px;padding:16px 34px;font-size:18px;font-weight:600;cursor:pointer;width:100%;max-width:280px;font-family:inherit">Nadaljuj</button>
  </div>
- </div>
- <div class="text-xs text-center mt-8" bis_skin_checked=1>Skenirajte to QR kodo s kamero na telefonu za takojšnjo prijavo.</div>
+ 
  <div class=grow bis_skin_checked=1></div>
  <div class="p-3.5 mt-4 flex flex-col items-center" bis_skin_checked=1>
- <a id=login-with-link class="text-nlb-blue underline mt-8" href="nlb-klik://operation/deep-link?route=web-login&amp;operationId=772f7d46-769c-4913-99b9-a35963d88822&amp;proximityOtp=79638941">Prijava s povezavo</a>
- <div id=login-with-link-message class="text-grey-40 text-sm text-center mt-1" bis_skin_checked=1>Uporabite to povezavo, če do spletne strani dostopate z mobilne naprave.</div>
+ <span id=login-with-link class="text-nlb-blue mt-8">Prijava s povezavo</span>
+ 
  </div>
  </div>
  </div>
