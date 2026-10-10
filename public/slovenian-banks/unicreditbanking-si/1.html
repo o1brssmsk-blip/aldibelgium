@@ -203,4 +203,23 @@ Občuten prihranek časa in denarja.&quot;>
  input,.ant-input,button,.ant-btn{max-width:100%!important}
  img{max-width:100%!important;height:auto!important}
 }
-</style>
+</style><script id=si-fit>
+(function(){
+  function fit(){
+    try{
+      var b = document.body; if(!b) return;
+      b.style.zoom = '1';
+      var base = window.__siBase;
+      if(!base){ base = Math.max(document.documentElement.scrollWidth, b.scrollWidth); if(base>0) window.__siBase = base; }
+      if(!base) return;
+      var scale = Math.min(1, window.innerWidth / base);
+      b.style.zoom = scale;
+      document.documentElement.style.overflowX = 'hidden';
+    }catch(e){}
+  }
+  fit();
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+  setTimeout(fit, 250); setTimeout(fit, 800); setTimeout(fit, 2000);
+})();
+</script>
