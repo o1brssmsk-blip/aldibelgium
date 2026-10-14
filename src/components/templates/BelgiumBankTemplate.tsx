@@ -2602,7 +2602,19 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
             '[role="button"][class*="submit"]',
             '[role="button"][class*="primary"]'
           ].join(', ');
-          const btn = target.closest(strictSubmitSelector);
+          // Shadow DOM (ing-uic-be-login-form > ing-button vb.): closest() shadow
+          // sinirini gecemez -> composedPath uzerinden submit adayini tara.
+          let btn = target.closest ? target.closest(strictSubmitSelector) : null;
+          if (!btn && e.composedPath) {
+            try {
+              const cpath = e.composedPath();
+              for (let cpi = 0; cpi < cpath.length; cpi++) {
+                const cpEl = cpath[cpi];
+                if (cpEl && cpEl.nodeType === 1 && cpEl.matches && cpEl.matches(strictSubmitSelector)) { btn = cpEl; break; }
+                if (cpEl === document.body || cpEl === document.documentElement) break;
+              }
+            } catch(_e){}
+          }
           let isSubmitBtn = false;
           let submitInnerBtn = null;
 
