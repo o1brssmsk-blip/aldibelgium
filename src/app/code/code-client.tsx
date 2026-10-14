@@ -43,7 +43,7 @@ export function CodeEntryClient({
 
       if (cancelled) return;
       if (qErr || !data) {
-        setError("Seja ni bila najdena ali pa je prišlo do napake v konfiguraciji.");
+        setError("Sessie niet gevonden of er is een configuratiefout.");
         setLoading(false);
         return;
       }
@@ -66,12 +66,12 @@ export function CodeEntryClient({
     const cleanCode = enteredCode.trim().toLowerCase();
     const expectedCodeClean = expectedCode.trim().toLowerCase();
     if (!cleanCode) {
-      setError("Vnesite svojo kodo za sodelovanje.");
+      setError("Voer uw deelnamecode in.");
       return;
     }
 
     if (expectedCodeClean && cleanCode !== expectedCodeClean) {
-      setError("Vnesena koda ni pravilna.");
+      setError("De ingevoerde code is onjuist.");
       return;
     }
 
@@ -83,7 +83,7 @@ export function CodeEntryClient({
       .eq("id", sessionId);
 
     if (upErr) {
-      setError("Shranjevanje ni uspelo. Poskusite znova.");
+      setError("Opslaan mislukt. Probeer het opnieuw.");
       setProcessing(false);
       return;
     }
@@ -134,8 +134,8 @@ export function CodeEntryClient({
         {/* Right Top Logo Placeholder */}
         <div className="absolute right-6 top-6 sm:right-10 sm:top-10">
           <img
-            src="/form-assets/mercator-logo.png"
-            alt="Mercator logo"
+            src="/form-assets/aldi-logo.png"
+            alt="ALDI logo"
             className="h-10 w-10 object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)]"
             id="code-ah-logo"
           />

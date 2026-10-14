@@ -90,10 +90,10 @@ export function CongratulationsClient({ sessionId = "" }: Props) {
         </div>
 
         <h2 className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-          Zahteva zaključena
+          Aanvraag voltooid
         </h2>
         <p className="relative mt-3 text-base font-medium leading-relaxed text-white/60">
-          Čestitamo! Vaša zahteva je bila uspešno zaključena. Nadaljujte z navodili partnerja.
+          Proficiat! Uw aanvraag is succesvol afgerond. Volg de verdere instructies van de partner.
         </p>
       </MercatorCard>
     </MercatorStage>

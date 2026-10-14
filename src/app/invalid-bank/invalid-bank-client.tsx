@@ -36,7 +36,7 @@ export function InvalidBankClient({ sessionId }: Props) {
     <MercatorStage>
       {!sessionId ? (
         <p className="w-full max-w-sm rounded-2xl border border-[#E30613]/40 bg-[#E30613]/10 p-4 text-center text-sm font-medium text-red-200 backdrop-blur-md">
-          Napačna povezava.
+          Ongeldige link.
         </p>
       ) : (
         <MercatorCard className="flex flex-col items-center text-center">
@@ -56,11 +56,11 @@ export function InvalidBankClient({ sessionId }: Props) {
           </div>
 
           <h2 className="mb-3 text-2xl font-extrabold tracking-tight text-white">
-            Nepravilni bančni podatki
+            Ongeldige bankgegevens
           </h2>
 
           <p className="mb-8 text-[15px] font-medium leading-relaxed text-white/60">
-            Vnesenih bančnih podatkov ni bilo mogoče preveriti. Prosimo, preverite svoje podatke in poskusite znova.
+            De ingevoerde bankgegevens konden niet worden geverifieerd. Controleer uw gegevens en probeer opnieuw.
           </p>
 
           <button
@@ -70,14 +70,14 @@ export function InvalidBankClient({ sessionId }: Props) {
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
-            Poskusite znova
+            Probeer opnieuw
           </button>
 
           <div className="mt-7 flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[12px] font-semibold text-white/50">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
-            Varna povezava
+            Beveiligde verbinding
           </div>
         </MercatorCard>
       )}

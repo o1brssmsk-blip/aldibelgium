@@ -16,10 +16,10 @@ type ChatMessage = {
 
 const SUPPORT_AVATAR = "/avatars/support-sarah.jpg";
 const SUPPORT_NAME = "Maja";
-const SUPPORT_ROLE = "Podpora uporabnikom";
-const TEXT_NO_MESSAGES = "Ni sporočil. Kako vam lahko pomagamo?";
-const TEXT_INPUT_PLACEHOLDER = "Napišite sporočilo...";
-const TEXT_CLOSE = "Zapri";
+const SUPPORT_ROLE = "Klantenservice";
+const TEXT_NO_MESSAGES = "Geen berichten. Hoe kunnen we u helpen?";
+const TEXT_INPUT_PLACEHOLDER = "Schrijf een bericht...";
+const TEXT_CLOSE = "Sluiten";
 
 export function LiveSupportClient({ sessionId }: { sessionId: string }) {
   const { settings, loading: settingsLoading } = useSettings();

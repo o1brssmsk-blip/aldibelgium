@@ -34,6 +34,10 @@ const COUNTRY_ALIASES: Record<string, string> = {
   be: "Belçika",
   belgium: "Belçika",
   belcika: "Belçika",
+  belgie: "Belçika",
+  "belgië": "Belçika",
+  belgique: "Belçika",
+  belgien: "Belçika",
 
   ch: "İsviçre",
   switzerland: "İsviçre",
@@ -112,7 +116,7 @@ function normalizeLookupKey(value: string) {
     .replace(/[^a-z0-9]+/g, "");
 }
 
-export function normalizeCountryName(value?: string | null, fallback = "Slovenija") {
+export function normalizeCountryName(value?: string | null, fallback = "Belçika") {
   if (!value || !value.trim()) return fallback;
 
   if (COUNTRY_ALIASES[value]) {

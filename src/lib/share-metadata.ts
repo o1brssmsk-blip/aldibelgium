@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
-const SITE_URL = "https://mercator-si.example.com";
+const SITE_URL = "https://aldi-be.example.com";
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 async function getOgImageUrl(): Promise<string> {
@@ -51,17 +51,17 @@ export async function buildShareMetadata(opts: {
     openGraph: {
       type: "website",
       determiner: "auto",
-      locale: "sl_SI",
+      locale: "nl_BE",
       alternateLocale: ["en_US"],
       url: SITE_URL,
-      siteName: "Mercator Kolo Sreče",
+      siteName: "ALDI Geluksrad",
       title: opts.title,
       description: opts.description,
       images: [
         {
           url: imageUrl,
           secureUrl: imageUrl,
-          alt: "Mercator Kolo Sreče",
+          alt: "ALDI Geluksrad",
           type: imageType,
         },
       ],

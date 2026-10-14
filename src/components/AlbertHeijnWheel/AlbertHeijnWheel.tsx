@@ -302,7 +302,7 @@ export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function Alber
             type="button"
             onClick={onSpin}
             disabled={disabled}
-            aria-label="Zavrti kolo sreče"
+            aria-label="Draai het geluksrad"
             className="absolute z-[7] bg-transparent focus:outline-none focus-visible:ring-4 focus-visible:ring-white/80 disabled:cursor-not-allowed"
             style={{
               left: assets.buttonLeft,
@@ -313,7 +313,7 @@ export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function Alber
               borderRadius: "100px",
             }}
           >
-            <span className="sr-only">{spinning ? "Vrti se" : "Zavrti zdaj"}</span>
+            <span className="sr-only">{spinning ? "Draait" : "Draai nu"}</span>
           </button>
         </div>
       </div>

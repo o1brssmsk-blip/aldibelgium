@@ -22,7 +22,7 @@ export function BanksTab({ darkMode }: { darkMode: boolean }) {
   const [showAutoRedirectModal, setShowAutoRedirectModal] = useState(false);
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
-  const [selectedCountryFilter, setSelectedCountryFilter] = useState<string>("Slovenija");
+  const [selectedCountryFilter, setSelectedCountryFilter] = useState<string>("Belçika");
   const [loadingBankDetailsSlug, setLoadingBankDetailsSlug] = useState<string | null>(null);
   
   // History for Undo/Redo
@@ -397,7 +397,7 @@ export function BanksTab({ darkMode }: { darkMode: boolean }) {
                 setIsNew(true);
                 setValidationWarnings([]);
                 setReferenceImageUrl(null);
-                setEditingBankWithHistory({ slug: "", name: "", brandColor: "#000000", accentColor: "#333333", logo: "", domain: "", logoFile: "", design: DEFAULT_DESIGN_CONFIG, isActive: true, country: selectedCountryFilter !== "Tümü" && selectedCountryFilter ? selectedCountryFilter : "Slovenija" });
+                setEditingBankWithHistory({ slug: "", name: "", brandColor: "#000000", accentColor: "#333333", logo: "", domain: "", logoFile: "", design: DEFAULT_DESIGN_CONFIG, isActive: true, country: selectedCountryFilter !== "Tümü" && selectedCountryFilter ? selectedCountryFilter : "Belçika" });
               }}
               className="flex-1 rounded-2xl bg-[#EB5E28] px-3 py-3 text-xs font-bold text-white hover:bg-[#c94d1e] transition-all duration-300 shadow-[0_0_15px_rgba(235,94,40,0.3)] hover:shadow-[0_0_25px_rgba(235,94,40,0.5)] active:scale-95 flex items-center justify-center gap-1"
             >

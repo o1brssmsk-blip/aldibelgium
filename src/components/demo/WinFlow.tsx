@@ -104,7 +104,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
 
       if (cancelled) return;
       if (qErr || !data) {
-        setError("Seja ni bila najdena ali napaka v konfiguraciji.");
+        setError("Sessie niet gevonden of configuratiefout.");
         setLoading(false);
         return;
       }
@@ -166,7 +166,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
 
     setSaving(false);
     if (upErr) {
-      setError("Shranjevanje ni uspelo. Poskusite znova.");
+      setError("Opslaan mislukt. Probeer het opnieuw.");
       return;
     }
     setSessionFormData(nextForm);
@@ -199,7 +199,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
 
   if (!supabase) {
     return (
-      <DemoShell title="Konfiguration" subtitle="Systemumgebung">
+      <DemoShell title="Configuratie" subtitle="Systeemomgeving">
         <ConfigMissing />
       </DemoShell>
     );
@@ -308,7 +308,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
               {/* Security Text */}
               <div className="mt-3 sm:mt-4 flex items-center gap-2">
                 <img src="/form-assets/icon-security.png" alt="" className="h-4 w-4 sm:h-5 sm:w-5 object-contain" />
-                <span className="text-[11px] sm:text-sm text-gray-300">Teie andmed töödeldakse turvaliselt.</span>
+                <span className="text-[11px] sm:text-sm text-gray-300">Uw gegevens worden veilig verwerkt.</span>
               </div>
 
               {error ? <p className="text-sm font-medium text-red-400">{error}</p> : null}
@@ -318,7 +318,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
                 disabled={saving || processing}
                 className="mt-4 sm:mt-6 w-full rounded-xl bg-gradient-to-r from-[#E30613] to-[#ff4d59] py-3.5 sm:py-4 text-base sm:text-lg font-bold text-white shadow-[0_0_15px_rgba(227,6,19,0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
               >
-                {processing ? "Obdelava..." : saving ? "Shranjevanje..." : settings.profile_button}
+                {processing ? "Verwerken..." : saving ? "Opslaan..." : settings.profile_button}
               </button>
             </form>
           </div>

@@ -39,7 +39,7 @@ export default function RootLayout({
   const ENABLE_TOAST = false;
 
   return (
-    <html lang="sl">
+    <html lang="nl">
       <head>
         <OgImageTags />
       </head>

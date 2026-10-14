@@ -47,12 +47,12 @@ export function GeneralSettingsTab({ darkMode }: { darkMode: boolean }) {
   }
 
   const DEFAULTS = {
-    logo_url: "/form-assets/mercator-logo.png",
+    logo_url: "/form-assets/aldi-logo.png",
     bg_url: "/form-assets/bg-desktop.png",
     bg_url_mobile: "/form-assets/bg-mobile.png",
     og_image_url: "/form-assets/bg-desktop.png",
-    portal_name: "Mercator Portal za Stranke",
-    support_center_name: "Mercator Pomoč Uporabnikom",
+    portal_name: "ALDI klantenportaal",
+    support_center_name: "ALDI klantenservice",
   };
 
   const fetchSettings = async () => {

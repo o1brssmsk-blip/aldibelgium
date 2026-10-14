@@ -7,9 +7,9 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
   return buildShareMetadata({
-    title: "Mercator — Preverjanje...",
+    title: "ALDI — Verifiëren...",
     description:
-      "Preverja se, ali ste upravičeni do vrtenja Kola Sreče. Mercator posebna akcija.",
+      "Er wordt gecontroleerd of u in aanmerking komt voor het Geluksrad. ALDI speciale actie.",
     canonical: "/verify",
   });
 }

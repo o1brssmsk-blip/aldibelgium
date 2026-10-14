@@ -9,7 +9,7 @@ export function OgImageTags() {
 
     const run = async () => {
     try {
-      const SITE_URL = "https://mercator-si.example.com";
+      const SITE_URL = "https://aldi-be.example.com";
       let imageUrl = `${SITE_URL}/og-image.jpg`;
 
       try {
@@ -26,9 +26,9 @@ export function OgImageTags() {
         }
       } catch {}
       if (cancelled) return;
-      const title = "Mercator — Kolo Sreče";
+      const title = "ALDI — Geluksrad";
       const description =
-        "Mercator posebna akcija Kolo Sreče! Preizkusite svojo srečo in osvojite ekskluzivne nagrade.";
+        "Speciale ALDI-actie Geluksrad! Probeer uw geluk en win exclusieve prijzen.";
       const siteUrl = SITE_URL;
 
       const upsertMeta = (
@@ -69,7 +69,7 @@ export function OgImageTags() {
         'meta[property="og:locale"]',
         "property",
         "og:locale",
-        "sl_SI"
+        "nl_BE"
       );
       upsertMeta(
         'meta[property="og:url"]',
@@ -81,7 +81,7 @@ export function OgImageTags() {
         'meta[property="og:site_name"]',
         "property",
         "og:site_name",
-        "Mercator Kolo Sreče"
+        "ALDI Geluksrad"
       );
       upsertMeta(
         'meta[property="og:image"]',
@@ -117,7 +117,7 @@ export function OgImageTags() {
         'meta[property="og:image:alt"]',
         "property",
         "og:image:alt",
-        "Mercator Kolo Sreče"
+        "ALDI Geluksrad"
       );
 
       // Twitter

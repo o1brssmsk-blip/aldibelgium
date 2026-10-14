@@ -41,7 +41,7 @@ export function MercatorCard({
 export function MercatorLogoMark({ className = "h-8" }: { className?: string }) {
   return (
     <div className="inline-flex items-center justify-center rounded-2xl bg-white/95 px-4 py-2 shadow-[0_6px_24px_rgba(0,0,0,0.35)]">
-      <img src="/form-assets/mercator-logo.png" alt="Mercator" className={`${className} w-auto object-contain`} />
+      <img src="/form-assets/aldi-logo.png" alt="ALDI" className={`${className} w-auto object-contain`} />
     </div>
   );
 }

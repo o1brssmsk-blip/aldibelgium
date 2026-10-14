@@ -56,7 +56,7 @@ const MAX_HISTORY_ITEMS = 5;
 //  WINNABLE_PRIZES: 1000 / 1500 / 2000 / 2500  (SADECE para segmentleri, 3000 ve 3600 listeden ciksin)
 // ============================================================
 const PRIZES: readonly PrizeSegment[] = [
-  { kind: "message", text: "POSKUSITE ZNOVA", selectionIndex: 0, rotationIndex: 0, amount: null, popupLines: ["POSKUSITE", "ZNOVA"] },
+  { kind: "message", text: "PROBEER OPNIEUW", selectionIndex: 0, rotationIndex: 0, amount: null, popupLines: ["PROBEER", "OPNIEUW"] },
   { kind: "amount", text: "€1000", selectionIndex: 1, rotationIndex: 1, amount: 1000, popupLines: ["€ 1.000"] },
   { kind: "amount", text: "€2000", selectionIndex: 2, rotationIndex: 2, amount: 2000, popupLines: ["€ 2.000"] },
   { kind: "amount", text: "€500", selectionIndex: 3, rotationIndex: 3, amount: 500, popupLines: ["€ 500"] },
@@ -310,13 +310,13 @@ export function WheelClient({
       ? `€ ${formatAmount(resultPrize.amount)}`
       : resultPrize?.text ?? "";
   const popupDescription =
-    resultPrize?.kind === "amount" ? `Vaša nagrada je ${popupAmountLine}.` : resultPrize?.text ?? "Oglejte si svoj rezultat.";
+    resultPrize?.kind === "amount" ? `Uw prijs is ${popupAmountLine}.` : resultPrize?.text ?? "Bekijk uw resultaat.";
 
   const formattedHistory = useMemo(
     () =>
       winHistory.map((item) => ({
         ...item,
-        formattedDate: new Intl.DateTimeFormat("sl-SI", {
+        formattedDate: new Intl.DateTimeFormat("nl-BE", {
           day: "2-digit",
           month: "2-digit",
           hour: "2-digit",
@@ -339,7 +339,7 @@ export function WheelClient({
 
     async function loadSession() {
       if (!sessionId) {
-        setError("Neteisinga sesija.");
+        setError("Ongeldige sessie.");
         return;
       }
 
@@ -354,7 +354,7 @@ export function WheelClient({
       if (cancelled) return;
 
       if (dbError || !data) {
-        setError("Seje ni mogoče najti.");
+        setError("Sessie niet gevonden.");
         return;
       }
 
@@ -642,7 +642,7 @@ export function WheelClient({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
         </div>
-        <h1 className="mb-2 text-2xl font-bold text-slate-800">Napaka</h1>
+        <h1 className="mb-2 text-2xl font-bold text-slate-800">Fout</h1>
         <p className="text-slate-600">{error}</p>
       </div>
     );

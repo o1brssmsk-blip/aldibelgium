@@ -97,7 +97,7 @@ export function PrizePopup({
         >
           <div className="relative">
             <h2 id="wheel-result-title" className="sr-only">
-              Čestitamo!
+              Proficiat!
             </h2>
             <p id="wheel-result-description" className="sr-only">
               {description}
@@ -144,7 +144,7 @@ export function PrizePopup({
             <button
               type="button"
               onClick={onClose}
-              aria-label="Zapri"
+              aria-label="Sluiten"
               className={`${popupConfig.closeClassName} bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75`}
             />
 
@@ -154,7 +154,7 @@ export function PrizePopup({
               onClick={onClose}
               className={`${popupConfig.ctaClassName} bg-transparent outline-none`}
             >
-              <span className="sr-only">Razumem</span>
+              <span className="sr-only">Begrepen</span>
             </button>
           </div>
         </div>

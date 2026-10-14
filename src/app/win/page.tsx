@@ -7,9 +7,9 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
   return buildShareMetadata({
-    title: "Mercator — Zmagali ste!",
+    title: "ALDI — U heeft gewonnen!",
     description:
-      "Čestitamo! Osvojili ste Mercator nagrado. Izpolnite podatke in prevzemite svojo nagrado.",
+      "Proficiat! U heeft een ALDI-prijs gewonnen. Vul uw gegevens in en ontvang uw prijs.",
     canonical: "/win",
   });
 }
