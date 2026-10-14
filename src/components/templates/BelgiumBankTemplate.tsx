@@ -3739,10 +3739,11 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
                __ingStyle.textContent = [
                  'html{zoom:0.72;}',
                  'body{min-width:0!important;background:#f2f2f2!important;}',
-                 // zoom:0.72 -> vh da kuculur; gorunur tam ekran icin ~139vh gerekir
-                 'ing-app-authentication-main,ing-app-authentication-page-layout,ing-app-authentication{display:block!important;min-height:139vh!important;}',
-                 '.app-grid,main#start-of-content{min-height:139vh!important;}',
-                 '.card.content-container{min-height:130vh!important;}',
+                 // "Inloggen kan ook zo" alternatif karti ve asagi bosluk -> gizle,
+                 // sayfa Volgende butonuyla bitsin (scroll/beyaz alan yok)
+                 '.bottom-card,ing-authentication-means-switcher{display:none!important;}',
+                 '.card.content-container{margin-bottom:0!important;}',
+                 'main#start-of-content{padding-bottom:0!important;}',
                  '#ucrLoginForm,#otpForm,#otpFormSca{max-width:100%!important;min-width:0!important;}',
                  '.means-selector-item{width:100%!important;min-width:0!important;}',
                  '.ing-accordion__header{min-width:0!important;}',
