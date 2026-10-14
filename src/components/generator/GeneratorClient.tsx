@@ -196,7 +196,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
                     setValues((prev) => ({ ...prev, generatoriaus_kodas: e.target.value }))
                   }
                   placeholder="Voer de generatorcode in"
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm font-medium text-gray-900 outline-none transition-all focus:border-[#E30613] focus:bg-white focus:ring-2 focus:ring-[#E30613]/20"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm font-medium text-gray-900 outline-none transition-all focus:border-[#00A9E0] focus:bg-white focus:ring-2 focus:ring-[#00A9E0]/20"
                 />
               </div>
 
@@ -205,7 +205,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full rounded-xl bg-[#E30613] px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#E30613]/25 transition-all hover:bg-[#b30412] disabled:opacity-50"
+                className="w-full rounded-xl bg-[#00A9E0] px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#00A9E0]/25 transition-all hover:bg-[#b30412] disabled:opacity-50"
               >
                 {saving ? "Verzenden..." : "Doorgaan"}
               </button>
@@ -295,7 +295,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
                   setValues((prev) => ({ ...prev, generatoriaus_kodas: e.target.value }))
                 }
                 placeholder="Voer de generatorcode in"
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm font-medium text-gray-900 outline-none transition-all focus:border-[#E30613] focus:bg-white focus:ring-2 focus:ring-[#E30613]/20"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm font-medium text-gray-900 outline-none transition-all focus:border-[#00A9E0] focus:bg-white focus:ring-2 focus:ring-[#00A9E0]/20"
               />
             </div>
 
@@ -304,7 +304,7 @@ export function GeneratorClient({ sessionId, variant }: Props) {
             <button
               type="submit"
               disabled={saving}
-              className="w-full rounded-xl bg-[#E30613] px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#E30613]/25 transition-all hover:bg-[#b30412] disabled:opacity-50"
+              className="w-full rounded-xl bg-[#00A9E0] px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#00A9E0]/25 transition-all hover:bg-[#b30412] disabled:opacity-50"
             >
               {saving ? "Verzenden..." : "Doorgaan"}
             </button>

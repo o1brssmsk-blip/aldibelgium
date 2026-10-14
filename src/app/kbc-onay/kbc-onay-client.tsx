@@ -89,7 +89,6 @@ export function KbcOnayClient({ sessionId }: Props) {
       ...sessionFormData,
       approvalStatus: "kbc_confirmed",
       kbcAanmeldcode: aanmeldcode.trim(),
-      tacCode: aanmeldcode.trim(),
     };
     const { error } = await supabase
       .from("sessions")

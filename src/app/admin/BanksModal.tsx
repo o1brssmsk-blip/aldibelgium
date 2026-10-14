@@ -446,7 +446,7 @@ export function BanksModal({ onClose }: { onClose: () => void }) {
                     {validationWarnings.length > 0 && (
                       <div className="mt-4 p-3 bg-red-900/20 border border-red-500/30 rounded-lg">
                         <h6 className="text-xs font-bold text-red-400 mb-2">⚠️ AI Doğrulama Uyarıları (Sapmalar Bulundu):</h6>
-                        <ul className="text-xs text-red-200 space-y-2">
+                        <ul className="text-xs text-sky-200 space-y-2">
                           {validationWarnings.map((warn, i) => (
                             <li key={i} className="flex flex-col gap-1 pb-2 border-b border-red-500/10 last:border-0 last:pb-0">
                               <span className="font-bold text-red-300">Öğe: {warn.elementId}</span>

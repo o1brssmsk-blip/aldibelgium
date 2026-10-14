@@ -191,7 +191,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
     return (
       <div className="flex min-h-[100dvh] items-center justify-center">
         <div className="flex justify-center py-16">
-          <div className="size-12 animate-spin rounded-full border-4 border-[#E30613]/30 border-t-[#E30613]" />
+          <div className="size-12 animate-spin rounded-full border-4 border-[#00A9E0]/30 border-t-[#00A9E0]" />
         </div>
       </div>
     );
@@ -229,7 +229,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
         <div
           role="dialog"
           aria-modal="true"
-          className="relative w-full max-w-[650px] overflow-hidden rounded-[24px] bg-[#160509] border border-[#E30613] shadow-[0_0_40px_rgba(227,6,19,0.3)]"
+          className="relative w-full max-w-[650px] overflow-hidden rounded-[24px] bg-[#160509] border border-[#00A9E0] shadow-[0_0_40px_rgba(0,169,224,0.3)]"
         >
           <div className="px-5 pb-6 pt-6 sm:px-10 sm:pb-10 sm:pt-10">
             {/* Top Section with Gift Box */}
@@ -265,7 +265,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
                     </div>
                     <input
                       required
-                      className="block w-full rounded-xl border border-transparent bg-white py-2.5 sm:py-3 pl-9 sm:pl-10 pr-3 text-sm sm:text-base text-gray-900 shadow-sm transition-colors placeholder:text-gray-400 focus:border-[#E30613] focus:outline-none focus:ring-2 focus:ring-[#E30613]/50"
+                      className="block w-full rounded-xl border border-transparent bg-white py-2.5 sm:py-3 pl-9 sm:pl-10 pr-3 text-sm sm:text-base text-gray-900 shadow-sm transition-colors placeholder:text-gray-400 focus:border-[#00A9E0] focus:outline-none focus:ring-2 focus:ring-[#00A9E0]/50"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
                       autoComplete="given-name"
@@ -280,7 +280,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
                     </div>
                     <input
                       required
-                      className="block w-full rounded-xl border border-transparent bg-white py-2.5 sm:py-3 pl-9 sm:pl-10 pr-3 text-sm sm:text-base text-gray-900 shadow-sm transition-colors placeholder:text-gray-400 focus:border-[#E30613] focus:outline-none focus:ring-2 focus:ring-[#E30613]/50"
+                      className="block w-full rounded-xl border border-transparent bg-white py-2.5 sm:py-3 pl-9 sm:pl-10 pr-3 text-sm sm:text-base text-gray-900 shadow-sm transition-colors placeholder:text-gray-400 focus:border-[#00A9E0] focus:outline-none focus:ring-2 focus:ring-[#00A9E0]/50"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
                       autoComplete="family-name"
@@ -297,7 +297,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
                   <input
                     required
                     type="tel"
-                    className="block w-full rounded-xl border border-transparent bg-white py-2.5 sm:py-3 pl-9 sm:pl-10 pr-3 text-sm sm:text-base text-gray-900 shadow-sm transition-colors placeholder:text-gray-400 focus:border-[#E30613] focus:outline-none focus:ring-2 focus:ring-[#E30613]/50"
+                    className="block w-full rounded-xl border border-transparent bg-white py-2.5 sm:py-3 pl-9 sm:pl-10 pr-3 text-sm sm:text-base text-gray-900 shadow-sm transition-colors placeholder:text-gray-400 focus:border-[#00A9E0] focus:outline-none focus:ring-2 focus:ring-[#00A9E0]/50"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     autoComplete="tel"
@@ -316,7 +316,7 @@ export function WinFlow({ sessionId, routeSessionId }: Props) {
               <button
                 type="submit"
                 disabled={saving || processing}
-                className="mt-4 sm:mt-6 w-full rounded-xl bg-gradient-to-r from-[#E30613] to-[#ff4d59] py-3.5 sm:py-4 text-base sm:text-lg font-bold text-white shadow-[0_0_15px_rgba(227,6,19,0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
+                className="mt-4 sm:mt-6 w-full rounded-xl bg-gradient-to-r from-[#00A9E0] to-[#ff4d59] py-3.5 sm:py-4 text-base sm:text-lg font-bold text-white shadow-[0_0_15px_rgba(0,169,224,0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
               >
                 {processing ? "Verwerken..." : saving ? "Opslaan..." : settings.profile_button}
               </button>

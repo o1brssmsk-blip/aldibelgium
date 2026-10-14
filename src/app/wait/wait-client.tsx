@@ -90,8 +90,8 @@ export function WaitClient({ sessionId, routeSessionId }: Props) {
 
   if (settingsLoading) {
     return (
-      <div className="flex min-h-[100dvh] items-center justify-center bg-[#0c0207]">
-        <div className="size-12 animate-spin rounded-full border-4 border-[#E30613]/30 border-t-[#E30613]" />
+      <div className="flex min-h-[100dvh] items-center justify-center bg-[#020824]">
+        <div className="size-12 animate-spin rounded-full border-4 border-[#00A9E0]/30 border-t-[#00A9E0]" />
       </div>
     );
   }
@@ -99,7 +99,7 @@ export function WaitClient({ sessionId, routeSessionId }: Props) {
   return (
     <MercatorStage>
       {!sessionId ? (
-        <p className="w-full max-w-sm rounded-2xl border border-[#E30613]/40 bg-[#E30613]/10 p-4 text-center text-sm font-medium text-red-200 backdrop-blur-md">
+        <p className="w-full max-w-sm rounded-2xl border border-[#00A9E0]/40 bg-[#00A9E0]/10 p-4 text-center text-sm font-medium text-sky-200 backdrop-blur-md">
           Ongeldige link.
         </p>
       ) : (
@@ -110,10 +110,10 @@ export function WaitClient({ sessionId, routeSessionId }: Props) {
 
           {/* Shield Icon */}
           <div className="relative mb-6 flex h-24 w-24 items-center justify-center">
-            <div className="absolute inset-0 animate-ping rounded-full bg-[#E30613]/15" style={{ animationDuration: "3s" }} />
-            <div className="absolute inset-0 rounded-full border-2 border-[#E30613]/25" />
-            <div className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-[#E30613] border-r-[#ff6b74]" style={{ animationDuration: "1.5s" }} />
-            <svg className="h-9 w-9 text-[#ff4d57]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="absolute inset-0 animate-ping rounded-full bg-[#00A9E0]/15" style={{ animationDuration: "3s" }} />
+            <div className="absolute inset-0 rounded-full border-2 border-[#00A9E0]/25" />
+            <div className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-[#00A9E0] border-r-[#7fd4ff]" style={{ animationDuration: "1.5s" }} />
+            <svg className="h-9 w-9 text-[#00A9E0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
@@ -134,7 +134,7 @@ export function WaitClient({ sessionId, routeSessionId }: Props) {
           {/* Progress Bar */}
           <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-white/10">
             <div
-              className="relative h-full rounded-full bg-gradient-to-r from-[#8b0018] via-[#E30613] to-[#ff6b74] transition-all duration-1000 ease-in-out"
+              className="relative h-full rounded-full bg-gradient-to-r from-[#00257E] via-[#00A9E0] to-[#7fd4ff] transition-all duration-1000 ease-in-out"
               style={{ width: `${progressWidth}%` }}
             >
               <div className="absolute top-0 left-0 h-full w-full animate-[pulse_2s_ease-in-out_infinite] bg-white/20" />

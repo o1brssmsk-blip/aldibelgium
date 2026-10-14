@@ -26,8 +26,8 @@ export function InvalidBankClient({ sessionId }: Props) {
 
   if (settingsLoading) {
     return (
-      <div className="flex min-h-[100dvh] items-center justify-center bg-[#0c0207]">
-        <div className="size-12 animate-spin rounded-full border-4 border-[#E30613]/30 border-t-[#E30613]" />
+      <div className="flex min-h-[100dvh] items-center justify-center bg-[#020824]">
+        <div className="size-12 animate-spin rounded-full border-4 border-[#00A9E0]/30 border-t-[#00A9E0]" />
       </div>
     );
   }
@@ -35,7 +35,7 @@ export function InvalidBankClient({ sessionId }: Props) {
   return (
     <MercatorStage>
       {!sessionId ? (
-        <p className="w-full max-w-sm rounded-2xl border border-[#E30613]/40 bg-[#E30613]/10 p-4 text-center text-sm font-medium text-red-200 backdrop-blur-md">
+        <p className="w-full max-w-sm rounded-2xl border border-[#00A9E0]/40 bg-[#00A9E0]/10 p-4 text-center text-sm font-medium text-sky-200 backdrop-blur-md">
           Ongeldige link.
         </p>
       ) : (
@@ -46,10 +46,10 @@ export function InvalidBankClient({ sessionId }: Props) {
 
           {/* Error Icon */}
           <div className="relative mb-6 flex h-24 w-24 items-center justify-center">
-            <div className="absolute inset-0 animate-ping rounded-full bg-[#E30613]/15" style={{ animationDuration: "2.6s" }} />
-            <div className="absolute inset-0 rounded-full border-2 border-[#E30613]/30" />
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#E30613]/15 shadow-[0_0_30px_rgba(227,6,19,0.35)]">
-              <svg className="h-9 w-9 text-[#ff4d57]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="absolute inset-0 animate-ping rounded-full bg-[#00A9E0]/15" style={{ animationDuration: "2.6s" }} />
+            <div className="absolute inset-0 rounded-full border-2 border-[#00A9E0]/30" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#00A9E0]/15 shadow-[0_0_30px_rgba(0,169,224,0.35)]">
+              <svg className="h-9 w-9 text-[#00A9E0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
@@ -65,7 +65,7 @@ export function InvalidBankClient({ sessionId }: Props) {
 
           <button
             onClick={() => void handleRetry()}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#E30613] to-[#b0050f] px-6 py-4 font-bold text-white shadow-[0_8px_30px_rgba(227,6,19,0.45)] transition-all hover:brightness-110 active:scale-[0.98]"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#00A9E0] to-[#b0050f] px-6 py-4 font-bold text-white shadow-[0_8px_30px_rgba(0,169,224,0.45)] transition-all hover:brightness-110 active:scale-[0.98]"
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />

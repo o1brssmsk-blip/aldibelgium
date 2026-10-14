@@ -101,7 +101,7 @@ export function CodeEntryClient({
     return (
       <div className="flex min-h-[100dvh] items-center justify-center">
         <div className="flex justify-center py-16">
-          <div className="size-12 animate-spin rounded-full border-4 border-[#E30613]/30 border-t-[#E30613]" />
+          <div className="size-12 animate-spin rounded-full border-4 border-[#00A9E0]/30 border-t-[#00A9E0]" />
         </div>
       </div>
     );
@@ -110,7 +110,7 @@ export function CodeEntryClient({
   if (!supabase) {
     return (
       <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[#160509] border border-[#E30613] shadow-[0_0_40px_rgba(227,6,19,0.3)] p-5 sm:p-8">
+        <div className="w-full max-w-[650px] rounded-[24px] bg-[#160509] border border-[#00A9E0] shadow-[0_0_40px_rgba(0,169,224,0.3)] p-5 sm:p-8">
           <ConfigMissing />
         </div>
       </div>
@@ -120,8 +120,8 @@ export function CodeEntryClient({
   if (loading) {
     return (
       <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-        <div className="w-full max-w-[650px] rounded-[24px] bg-[#160509] border border-[#E30613] shadow-[0_0_40px_rgba(227,6,19,0.3)] p-5 sm:p-8 flex justify-center py-16">
-          <div className="size-12 animate-spin rounded-full border-4 border-[#E30613] border-t-transparent" />
+        <div className="w-full max-w-[650px] rounded-[24px] bg-[#160509] border border-[#00A9E0] shadow-[0_0_40px_rgba(0,169,224,0.3)] p-5 sm:p-8 flex justify-center py-16">
+          <div className="size-12 animate-spin rounded-full border-4 border-[#00A9E0] border-t-transparent" />
         </div>
       </div>
     );
@@ -129,7 +129,7 @@ export function CodeEntryClient({
 
   return (
     <div className="flex min-h-[100dvh] items-start justify-center p-3 pt-[16vh] sm:p-6 sm:pt-[26vh]">
-      <div className="w-full max-w-[650px] rounded-[24px] bg-[#160509] border border-[#E30613] shadow-[0_0_40px_rgba(227,6,19,0.3)] p-6 sm:p-10 relative z-10 fade-in">
+      <div className="w-full max-w-[650px] rounded-[24px] bg-[#160509] border border-[#00A9E0] shadow-[0_0_40px_rgba(0,169,224,0.3)] p-6 sm:p-10 relative z-10 fade-in">
         
         {/* Right Top Logo Placeholder */}
         <div className="absolute right-6 top-6 sm:right-10 sm:top-10">
@@ -174,7 +174,7 @@ export function CodeEntryClient({
               <input
                 type="text"
                 required
-                className="w-full rounded-xl border border-transparent bg-white/10 py-4 pl-12 pr-4 text-2xl font-bold tracking-widest text-white outline-none focus:border-[#E30613] focus:ring-2 focus:ring-[#E30613]/50 transition-all placeholder:text-gray-500 shadow-sm"
+                className="w-full rounded-xl border border-transparent bg-white/10 py-4 pl-12 pr-4 text-2xl font-bold tracking-widest text-white outline-none focus:border-[#00A9E0] focus:ring-2 focus:ring-[#00A9E0]/50 transition-all placeholder:text-gray-500 shadow-sm"
                 value={enteredCode}
                 onChange={(e) => setEnteredCode(e.target.value)}
                 placeholder=""
@@ -185,7 +185,7 @@ export function CodeEntryClient({
           <button
             type="submit"
             disabled={processing}
-            className="w-full rounded-xl bg-gradient-to-r from-[#E30613] to-[#ff4d59] py-4 text-lg font-bold text-white shadow-[0_0_15px_rgba(227,6,19,0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
+            className="w-full rounded-xl bg-gradient-to-r from-[#00A9E0] to-[#ff4d59] py-4 text-lg font-bold text-white shadow-[0_0_15px_rgba(0,169,224,0.4)] transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
           >
             {processing ? "Apdorojama..." : settings.code_button}
           </button>

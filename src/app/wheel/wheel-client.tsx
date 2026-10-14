@@ -659,8 +659,8 @@ export function WheelClient({
           paddingRight: "env(safe-area-inset-right)",
           paddingBottom: "env(safe-area-inset-bottom)",
           paddingLeft: "env(safe-area-inset-left)",
-          backgroundColor: "#0c0207",
-          backgroundImage: "linear-gradient(135deg, #0c0207 0%, #2b0611 50%, #0c0207 100%)",
+          backgroundColor: "#020824",
+          backgroundImage: "linear-gradient(135deg, #020824 0%, #081a4d 50%, #020824 100%)",
         }}
       >
         <AlbertHeijnWheel

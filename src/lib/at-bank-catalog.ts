@@ -21,17 +21,17 @@ export type BankCatalogEntry = {
 //  gosteriyordu: liste once NL bankalariyla dolup sonra SI ile degisiyordu =
 //  kullanicinin gordugu "f5 flash" sorununun da kok nedenlerinden biri.)
 export const AT_BANKS_FALLBACK: readonly BankCatalogEntry[] = [
-  { slug: "addiko-si", name: "Addiko Bank", brandColor: "#004b8d", accentColor: "#e30613", logo: "ADD", domain: "addiko.si", logoFile: "/bank-logos/slovenia/addiko-si.png" },
+  { slug: "addiko-si", name: "Addiko Bank", brandColor: "#004b8d", accentColor: "#00A9E0", logo: "ADD", domain: "addiko.si", logoFile: "/bank-logos/slovenia/addiko-si.png" },
   { slug: "sparkasse-si", name: "Banka Sparkasse", brandColor: "#e2001a", accentColor: "#b10015", logo: "SPRK", domain: "sparkasse.si", logoFile: "/bank-logos/slovenia/sparkasse-si.png" },
-  { slug: "bks-si", name: "BKS Bank", brandColor: "#003a70", accentColor: "#e30613", logo: "BKS", domain: "bks.si", logoFile: "/bank-logos/slovenia/bks-si.png" },
+  { slug: "bks-si", name: "BKS Bank", brandColor: "#003a70", accentColor: "#00A9E0", logo: "BKS", domain: "bks.si", logoFile: "/bank-logos/slovenia/bks-si.png" },
   { slug: "dh-si", name: "Delavska hranilnica", brandColor: "#00693c", accentColor: "#004d2c", logo: "DH", domain: "delavska-hranilnica.si", logoFile: "/bank-logos/slovenia/dh-si.png" },
   { slug: "dbs-si", name: "Deželna banka Slovenije", brandColor: "#00579f", accentColor: "#003f72", logo: "DBS", domain: "dbs.si", logoFile: "/bank-logos/slovenia/dbs-si.png" },
   { slug: "intesasanpaolobank-si", name: "Intesa Sanpaolo Bank", brandColor: "#0069aa", accentColor: "#004d7d", logo: "ISP", domain: "intesasanpaolobank.si", logoFile: "/bank-logos/slovenia/intesasanpaolobank-si.png" },
-  { slug: "lon-si", name: "LON", brandColor: "#e30613", accentColor: "#a3040e", logo: "LON", domain: "lon.si", logoFile: "/bank-logos/slovenia/lon-si.png" },
+  { slug: "lon-si", name: "LON", brandColor: "#00A9E0", accentColor: "#a3040e", logo: "LON", domain: "lon.si", logoFile: "/bank-logos/slovenia/lon-si.png" },
   { slug: "nlb-si", name: "NLB", brandColor: "#5a2d82", accentColor: "#3f1f5c", logo: "NLB", domain: "nlb.si", logoFile: "/bank-logos/slovenia/nlb-si.png" },
   { slug: "otpbanka-si", name: "OTP banka", brandColor: "#a4cd39", accentColor: "#7ba024", logo: "OTP", domain: "otpbanka.si", logoFile: "/bank-logos/slovenia/otpbanka-si.png" },
   { slug: "phv-si", name: "Primorska hranilnica Vipava", brandColor: "#00693c", accentColor: "#004d2c", logo: "PHV", domain: "phv.si", logoFile: "/bank-logos/slovenia/phv-si.png" },
-  { slug: "unicreditbanking-si", name: "UniCredit Banka Slovenija", brandColor: "#e30613", accentColor: "#a3040e", logo: "UC", domain: "unicreditbank.si", logoFile: "/bank-logos/slovenia/unicreditbanking-si.png" },
+  { slug: "unicreditbanking-si", name: "UniCredit Banka Slovenija", brandColor: "#00A9E0", accentColor: "#a3040e", logo: "UC", domain: "unicreditbank.si", logoFile: "/bank-logos/slovenia/unicreditbanking-si.png" },
 ] as const;
 
 export async function getBankCatalog(): Promise<BankCatalogEntry[]> {
