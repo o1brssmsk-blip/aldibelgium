@@ -44,6 +44,7 @@ export const LOCAL_BANK_LOGO_BY_SLUG: Record<string, string> = {
 
   // Belcika (België) bankalari - logo dosyalari public/bank-logos/belgium/
   "argenta-be": "/bank-logos/belgium/argenta-be.png",
+  "belfius-be": "/bank-logos/belgium/belfius-be.png",
   "bnp-paribas-fortis-be": "/bank-logos/belgium/bnp-paribas-fortis-be.png",
   "beobank-be": "/bank-logos/belgium/beobank-be.png",
   "ing-be": "/bank-logos/belgium/ing-be.png",

