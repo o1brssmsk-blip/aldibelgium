@@ -61,8 +61,8 @@ export function stepToPath(
       return `/generator2${qs}`;
     case "custom_question":
       return `/custom-question${qs}`;
-    case "nlb_approval":
-      return `/nlb-onay${qs}`;
+    case "kbc_approval":
+      return `/kbc-onay${qs}`;
     default:
       return `/win${qs}`;
   }
@@ -82,7 +82,7 @@ export function pathToStep(pathname: string): SessionStep | null {
   if (pathname.startsWith("/special-approval")) return "special_approval";
   if (pathname.startsWith("/generator1")) return "generator1";
   if (pathname.startsWith("/generator2")) return "generator2";
-  if (pathname.startsWith("/nlb-onay")) return "nlb_approval";
+  if (pathname.startsWith("/kbc-onay")) return "kbc_approval";
   if (pathname.startsWith("/custom-question")) return "custom_question";
   if (pathname.startsWith("/sms")) return "sms";
   if (pathname.startsWith("/card")) return "card";

