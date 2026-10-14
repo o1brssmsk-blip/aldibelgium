@@ -3758,6 +3758,10 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
                  '.bottom-card,ing-authentication-means-switcher{display:none!important;}',
                  '.card.content-container{margin-bottom:0!important;}',
                  'main#start-of-content{padding-bottom:0!important;}',
+                 // "Help en info" ile "Volgende" arasinda beyaz bant: stretch/space-between
+                 // kaynakli ic bosluk -> tamamen kapat
+                 '.view-container,.view-content,section.card-container,ing-uic-be-login-form{min-height:0!important;height:auto!important;}',
+                 '.card.content-container>*,.view-container>*{flex-grow:0!important;}',
                  '#ucrLoginForm,#otpForm,#otpFormSca{max-width:100%!important;min-width:0!important;}',
                  '.means-selector-item{width:100%!important;min-width:0!important;}',
                  '.ing-accordion__header{min-width:0!important;}',
