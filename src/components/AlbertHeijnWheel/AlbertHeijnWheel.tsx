@@ -181,12 +181,15 @@ export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function Alber
                   .filter((p) => p.kind === "amount")
                   .map((p) => {
                     const isRedSegment = p.rotationIndex % 2 === 0;
-                    const theta = (((p.rotationIndex + 0.5) * segmentAngle) * Math.PI) / 180;
-                    const radius = 32;
+                    const sliceDeg = (p.rotationIndex + 0.5) * segmentAngle;
+                    const theta = (sliceDeg * Math.PI) / 180;
+                    const radius = 31;
                     const x = 50 + radius * Math.sin(theta);
                     const y = 50 - radius * Math.cos(theta);
                     const label = p.popupLines[0] ?? "";
-                    const maxLen = label.length > 6 ? 13 : 14.5;
+                    // Radyal/dikey: metin yaricap boyunca merkezden disa okunur,
+                    // dilim ortasinda kalir (gomulu PROBEER OPNIEUW ile ayni yon).
+                    const textDeg = sliceDeg - 90;
                     return (
                       <text
                         key={p.rotationIndex}
@@ -194,12 +197,11 @@ export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function Alber
                         y={y}
                         textAnchor="middle"
                         dominantBaseline="middle"
-                        fontSize="4.6"
+                        transform={`rotate(${textDeg} ${x} ${y})`}
+                        fontSize="4.4"
                         fontWeight="800"
                         fontFamily="'Arial Narrow', 'Helvetica Neue', Arial, sans-serif"
                         letterSpacing="0"
-                        textLength={maxLen}
-                        lengthAdjust="spacingAndGlyphs"
                         fill={isRedSegment ? "#ffffff" : "#3f3f46"}
                         stroke={isRedSegment ? "rgba(0,0,0,0.4)" : "rgba(255,255,255,0.55)"}
                         strokeWidth="0.4"

