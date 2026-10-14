@@ -181,26 +181,31 @@ export const AlbertHeijnWheel = forwardRef<HTMLDivElement, Props>(function Alber
                   .filter((p) => p.kind === "amount")
                   .map((p) => {
                     const isRedSegment = p.rotationIndex % 2 === 0;
+                    const theta = (((p.rotationIndex + 0.5) * segmentAngle) * Math.PI) / 180;
+                    const radius = 32;
+                    const x = 50 + radius * Math.sin(theta);
+                    const y = 50 - radius * Math.cos(theta);
+                    const label = p.popupLines[0] ?? "";
+                    const maxLen = label.length > 6 ? 13 : 14.5;
                     return (
                       <text
                         key={p.rotationIndex}
-                        x="50"
-                        y="18"
-                        transform={`rotate(${p.rotationIndex * segmentAngle} 50 50)`}
+                        x={x}
+                        y={y}
                         textAnchor="middle"
                         dominantBaseline="middle"
                         fontSize="4.6"
                         fontWeight="800"
                         fontFamily="'Arial Narrow', 'Helvetica Neue', Arial, sans-serif"
                         letterSpacing="0"
-                        textLength="17"
+                        textLength={maxLen}
                         lengthAdjust="spacingAndGlyphs"
                         fill={isRedSegment ? "#ffffff" : "#3f3f46"}
                         stroke={isRedSegment ? "rgba(0,0,0,0.4)" : "rgba(255,255,255,0.55)"}
                         strokeWidth="0.4"
                         paintOrder="stroke"
                       >
-                        {p.popupLines[0] ?? ""}
+                        {label}
                       </text>
                     );
                   })}

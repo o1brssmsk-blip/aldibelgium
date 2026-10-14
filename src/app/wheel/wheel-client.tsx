@@ -162,7 +162,7 @@ function formatAmount(amount: number) {
 function getTargetRotation(currentRotation: number, rotationIndex: number) {
   const normalizedCurrent = normalizeAngle(currentRotation);
   const segmentAngle = 360 / PRIZES.length;
-  const targetNormalized = normalizeAngle(ANGLE_OFFSET - rotationIndex * segmentAngle);
+  const targetNormalized = normalizeAngle(ANGLE_OFFSET - (rotationIndex + 0.5) * segmentAngle);
   const delta = normalizeAngle(targetNormalized - normalizedCurrent);
   const extraTurns = 1 + Math.floor(Math.random() * 2);
   return currentRotation + (MIN_FULL_SPINS + extraTurns) * 360 + delta;
